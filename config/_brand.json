@@ -1,0 +1,23 @@
+{
+  "brand": "ADC&E",
+  "fullName": "Cabinet ADCE Assurances",
+  "phone": "0 800 014 033",
+  "phoneFormatted": "0800014033",
+  "phoneNote": "Appel gratuit",
+  "emailGeneral": "chasse.assurance@gmail.com",
+  "emailSinistres": "chasse.assurance@gmail.com",
+  "address": "5 allée de Tourny",
+  "addressZip": "33000",
+  "addressCity": "Bordeaux",
+  "courtierName": "Cabinet Poncey Lebas",
+  "courtierAddress": "BP 22214 — 14402 Bayeux Cedex",
+  "orias": "21006219",
+  "siteUrlBase": "https://www.assurancechasse",
+  "tagline": "L'assureur référence de votre fédération départementale",
+  "slogan": "Avec ADCE, Chassez Heureux",
+  "tarifs": {
+    "securiteChasse": 25,
+    "chiensChassePerDog": 50,
+    "fraisAdminPerOption": 1
+  }
+}
