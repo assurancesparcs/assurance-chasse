@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi sinistres — {{fullName}}</title>
+<meta name="robots" content="noindex">
+<style>
+{{stylesCommon}}
+.header { background: linear-gradient(135deg,#0d1b4b,#1a0a2e); padding: 32px 40px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+.header h1 { font-size: 22px; font-weight: 400; color: #e0eaf8; }
+.header p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #7a9ab8; margin-top: 4px; }
+.btn-export { background: #2d6a3f; color: #e0f5e8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; }
+.btn-clear { background: transparent; color: #c05050; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; border: 1px solid #c05050; padding: 10px 16px; border-radius: 8px; cursor: pointer; }
+.stats-bar { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; padding: 24px 40px; background: #f5f0e8; border-bottom: 1px solid #e0d8c8; }
+@media(max-width:600px){.stats-bar{grid-template-columns:1fr 1fr;}}
+.stat-card { background: #fff; border-radius: 10px; padding: 16px 20px; }
+.stat-card .val { font-size: 28px; font-weight: 400; color: #0d1b4b; font-family: Georgia,serif; }
+.stat-card .lbl { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #7a8a9e; margin-top: 2px; }
+.toolbar { padding: 20px 40px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.search-box { flex: 1; min-width: 200px; border: 1px solid #d0d8e0; border-radius: 8px; padding: 9px 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; outline: none; }
+.filter-sel { border: 1px solid #d0d8e0; border-radius: 8px; padding: 9px 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; outline: none; background: #fff; }
+.table-wrap { padding: 0 40px 40px; overflow-x: auto; }
+@media(max-width:700px){.table-wrap,.toolbar,.stats-bar,.header{padding-left:16px;padding-right:16px;}}
+table { width: 100%; border-collapse: collapse; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; min-width: 760px; }
+thead th { background: #0d1b4b; color: #c0d0e8; font-weight: 600; padding: 12px 14px; text-align: left; font-size: 11px; text-transform: uppercase; }
+tbody tr { border-bottom: 1px solid #e8f0e0; }
+tbody tr:hover { background: #f5f8f0; }
+tbody td { padding: 12px 14px; color: #1a2e0a; vertical-align: top; }
+.ref-cell { font-family: 'Courier New',monospace; font-weight: 700; color: #3a1a7a; font-size: 12px; }
+.statut-sel { border: none; background: transparent; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; padding: 3px 6px; border-radius: 6px; outline: none; }
+.badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.badge.recu { background: #dce8ff; color: #1a3a7a; }
+.badge.encours { background: #fff3dc; color: #7a5010; }
+.badge.clos { background: #dcf0e0; color: #1a5a2a; }
+.empty-state { text-align: center; padding: 60px 20px; color: #7a8a9e; font-family: 'Helvetica Neue',Arial,sans-serif; }
+</style>
+</head>
+<body>
+{{nav}}
+<div class="header">
+  <div><h1>Suivi sinistres — {{name}} ({{code}})</h1><p>Vue dédiée des déclarations · Mis à jour en temps réel</p></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <button class="btn-export" onclick="exportCSV()">Exporter CSV</button>
+    <button class="btn-clear" onclick="clearAll()">Vider</button>
+  </div>
+</div>
+<div class="stats-bar">
+  <div class="stat-card"><div class="val" id="stat-total">0</div><div class="lbl">Total</div></div>
+  <div class="stat-card"><div class="val" id="stat-recu">0</div><div class="lbl">Reçus</div></div>
+  <div class="stat-card"><div class="val" id="stat-encours">0</div><div class="lbl">En traitement</div></div>
+  <div class="stat-card"><div class="val" id="stat-clos">0</div><div class="lbl">Clôturés</div></div>
+</div>
+<div class="toolbar">
+  <input class="search-box" type="text" id="search" placeholder="Rechercher nom, référence, email…" oninput="renderTable()">
+  <select class="filter-sel" id="filter-statut" onchange="renderTable()"><option value="">Tous les statuts</option><option>Reçu</option><option>En cours</option><option>Clôturé</option></select>
+</div>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Référence</th><th>Date</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>Date sinistre</th><th>Description</th><th>Statut</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="empty-state" id="empty" style="display:none">Aucune déclaration pour le moment.</div>
+</div>
+{{footer}}
+<script>
+function getData() { return JSON.parse(localStorage.getItem('adce_sinistres') || '[]'); }
+function saveData(d) { localStorage.setItem('adce_sinistres', JSON.stringify(d)); }
+function badgeClass(s) { return s === 'En cours' ? 'encours' : s === 'Clôturé' ? 'clos' : 'recu'; }
+function renderTable() {
+  var data = getData();
+  var search = document.getElementById('search').value.toLowerCase();
+  var fstat = document.getElementById('filter-statut').value;
+  document.getElementById('stat-total').textContent = data.length;
+  document.getElementById('stat-recu').textContent = data.filter(function(d){ return d.statut === 'Reçu'; }).length;
+  document.getElementById('stat-encours').textContent = data.filter(function(d){ return d.statut === 'En cours'; }).length;
+  document.getElementById('stat-clos').textContent = data.filter(function(d){ return d.statut === 'Clôturé'; }).length;
+  var filtered = data.filter(function(d) {
+    var ms = !search || (d.ref && d.ref.toLowerCase().includes(search)) || (d.nom && d.nom.toLowerCase().includes(search)) || (d.email && d.email.toLowerCase().includes(search));
+    var st = !fstat || d.statut === fstat;
+    return ms && st;
+  });
+  var tbody = document.getElementById('tbody');
+  var empty = document.getElementById('empty');
+  if (filtered.length === 0) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = filtered.slice().reverse().map(function(d) {
+    var realIdx = data.indexOf(d);
+    return '<tr><td><span class="ref-cell">' + (d.ref||'—') + '</span></td>' +
+      '<td>' + (d.date||'') + '</td>' +
+      '<td><strong>' + (d.nom||'') + '</strong><br>' + (d.prenom||'') + '</td>' +
+      '<td><a href="mailto:' + (d.email||'') + '" style="color:#2d6a3f">' + (d.email||'') + '</a></td>' +
+      '<td>' + (d.tel||'—') + '</td>' +
+      '<td>' + (d.date_sin ? d.date_sin.split('-').reverse().join('/') : '—') + '</td>' +
+      '<td style="max-width:180px;color:#5a6a7e">' + (d.desc||'') + '</td>' +
+      '<td><select class="statut-sel badge ' + badgeClass(d.statut) + '" onchange="changeStatut(' + realIdx + ',this.value,this)">' +
+        '<option' + (d.statut==='Reçu'?' selected':'') + '>Reçu</option>' +
+        '<option' + (d.statut==='En cours'?' selected':'') + '>En cours</option>' +
+        '<option' + (d.statut==='Clôturé'?' selected':'') + '>Clôturé</option>' +
+      '</select></td></tr>';
+  }).join('');
+}
+function changeStatut(idx, val, el) {
+  var d = getData();
+  if (d[idx]) { d[idx].statut = val; saveData(d); el.className = 'statut-sel badge ' + badgeClass(val); renderTable(); }
+}
+function exportCSV() {
+  var d = getData();
+  if (d.length === 0) { alert('Aucune déclaration à exporter.'); return; }
+  var rows = d.map(function(x){ return [x.ref,x.date,x.heure,x.nom,x.prenom,x.email,x.tel,x.date_sin,'"'+(x.desc||'').replace(/"/g,'""')+'"',x.statut].join(';'); });
+  var csv = 'Référence;Date;Heure;Nom;Prénom;Email;Téléphone;Date sinistre;Description;Statut\n' + rows.join('\n');
+  var blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ADCE_{{slug}}_sinistres_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+}
+function clearAll() {
+  if (confirm('Vider toutes les déclarations ?')) {
+    localStorage.removeItem('adce_sinistres'); renderTable();
+  }
+}
+renderTable();
+setInterval(renderTable, 10000);
+</script>
+</body>
+</html>

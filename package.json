@@ -1,6 +1,6 @@
 {
   "name": "assurance-chasse",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Sites ADC&E Assurances Chasse — Gironde, Calvados, Dordogne, Lot-et-Garonne",
   "scripts": {
@@ -10,5 +10,8 @@
     "build:dordogne": "node scripts/build.js dordogne",
     "build:lot-et-garonne": "node scripts/build.js lot-et-garonne",
     "vercel-build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "stripe": "^17.0.0"
   }
 }

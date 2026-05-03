@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmation de souscription — {{siteTitle}}</title>
+<meta name="robots" content="noindex">
+<style>
+{{stylesCommon}}
+
+.page-wrap { max-width: 640px; margin: 0 auto; padding: 48px 32px 64px; }
+.success-icon { width: 80px; height: 80px; background: #eaf3de; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+@keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.title-block { text-align: center; margin-bottom: 36px; animation: fadeUp 0.5s ease 0.2s both; }
+@keyframes fadeUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.title-block h1 { font-size: clamp(22px,4vw,30px); font-weight: normal; color: #0d1b4b; margin-bottom: 10px; }
+.title-block p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; color: #5a6a7e; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+.email-highlight { font-weight: 600; color: #2d6a3f; }
+
+.contrat-box { background: linear-gradient(135deg, #0d1b4b, #162e1a); border-radius: 14px; padding: 28px 32px; text-align: center; margin-bottom: 24px; animation: fadeUp 0.5s ease 0.3s both; }
+.contrat-box .label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #7aaa8a; margin-bottom: 10px; }
+.contrat-num { font-family: 'Courier New',monospace; font-size: 26px; font-weight: 700; color: #6abf7b; letter-spacing: 3px; margin-bottom: 8px; }
+.contrat-box .sub { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a8a6a; }
+
+.recap-card { background: #fff; border-radius: 12px; border: 1px solid #e0e8d0; overflow: hidden; margin-bottom: 20px; animation: fadeUp 0.5s ease 0.4s both; }
+.recap-section-title { background: #f5f8f0; padding: 12px 20px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #5a6a4e; border-bottom: 1px solid #e0e8d0; }
+.recap-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 20px; border-bottom: 1px solid #f0f4e8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; }
+.recap-row:last-child { border-bottom: none; }
+.recap-row .rl { color: #7a8a7e; }
+.recap-row .rv { font-weight: 600; color: #1a2e0a; text-align: right; }
+.recap-row .rv.green { color: #2d6a3f; }
+.recap-row .rv.big { font-size: 18px; font-family: Georgia,serif; color: #0d1b4b; }
+
+.chien-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid #f0f4e8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; }
+.chien-item:last-child { border-bottom: none; }
+.chien-avatar { width: 34px; height: 34px; background: #faeeda; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.chien-name { font-weight: 600; color: #1a2e0a; }
+.chien-race { font-size: 11px; color: #8a7a6a; margin-top: 1px; }
+
+.next-steps { background: #f5f8f0; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; animation: fadeUp 0.5s ease 0.5s both; }
+.next-steps h3 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #5a6a4e; margin-bottom: 16px; }
+.next-item { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
+.next-item:last-child { margin-bottom: 0; }
+.next-num { width: 26px; height: 26px; border-radius: 50%; background: #0d1b4b; color: #c0d0e8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.next-item h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; color: #1a2e0a; margin-bottom: 2px; }
+.next-item p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #6a7a6e; line-height: 1.55; }
+
+.contact-band { border: 1px solid #e0e8d0; border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; animation: fadeUp 0.5s ease 0.6s both; }
+@media(max-width:520px){ .contact-band { flex-direction: column; text-align: center; } }
+.contact-band h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; color: #1a2e0a; margin-bottom: 3px; }
+.contact-band p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #7a8a7e; }
+.contact-band a { color: #2d6a3f; text-decoration: none; font-weight: 600; }
+.tel-num { font-size: 20px; font-weight: normal; color: #0d1b4b; font-family: Georgia,serif; letter-spacing: 1px; white-space: nowrap; }
+.tel-sub { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #9aaa9e; text-align: right; }
+
+.mention { text-align: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #b0b8b0; margin-top: 24px; line-height: 1.6; animation: fadeUp 0.5s ease 0.7s both; }
+.stripe-verified { background: #eaf3de; border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #2d5016; text-align: center; }
+
+#page-blocked { display: none; position: fixed; inset: 0; background: #f5f8f0; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 32px; text-align: center; }
+.blocked-icon { width: 72px; height: 72px; background: #faeeda; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+#page-blocked h2 { font-size: 22px; font-weight: normal; color: #0d1b4b; margin-bottom: 12px; font-family: Georgia,serif; }
+#page-blocked p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #5a6a7e; line-height: 1.7; max-width: 440px; margin: 0 auto 24px; }
+.btn-back-home { display: inline-block; background: #0d1b4b; color: #e0eaf8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; padding: 12px 28px; border-radius: 8px; text-decoration: none; }
+</style>
+</head>
+<body>
+{{nav}}
+
+<div id="page-blocked">
+  <div class="blocked-icon">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c8860a" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </div>
+  <h2>Accès non autorisé</h2>
+  <p>
+    Cette page de confirmation n'est accessible qu'après validation d'un paiement.<br>
+    Si vous venez de souscrire, vérifiez votre email de confirmation Stripe.<br><br>
+    Pour toute question, contactez-nous au <strong>{{phone}}</strong> ou à <a href="mailto:{{emailGeneral}}" style="color:#2d6a3f">{{emailGeneral}}</a>
+  </p>
+  <a href="/options-chasse.html" class="btn-back-home">Retour au formulaire de souscription</a>
+</div>
+
+<div id="page-content" style="display:none">
+<div class="page-wrap">
+
+  <div class="success-icon">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2d6a3f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+
+  <div class="title-block">
+    <h1>Votre souscription est confirmée</h1>
+    <p>Paiement accepté. Votre attestation d'assurance a été envoyée à <span class="email-highlight" id="display-email">votre adresse email</span>.<br>Conservez précieusement votre numéro de contrat ci-dessous.</p>
+  </div>
+
+  <div class="contrat-box">
+    <div class="label">Numéro de contrat</div>
+    <div class="contrat-num" id="display-ref">ADCE-2025-XXXXX</div>
+    <div class="sub">Saison <span id="display-saison">2025 – 2026</span></div>
+  </div>
+
+  <div class="recap-card">
+    <div class="recap-section-title">Garanties souscrites</div>
+    <div id="recap-garanties"></div>
+    <div class="recap-row">
+      <span class="rl">N° permis de chasse</span>
+      <span class="rv" id="display-permis">—</span>
+    </div>
+    <div class="recap-row" style="border-top:2px solid #e0e8d0">
+      <span class="rl" style="font-weight:600">Total annuel réglé</span>
+      <span class="rv big" id="display-total">—</span>
+    </div>
+  </div>
+
+  <div class="recap-card" id="card-chiens" style="display:none">
+    <div class="recap-section-title">Chiens assurés</div>
+    <div id="recap-chiens"></div>
+  </div>
+
+  <div class="next-steps">
+    <h3>Et maintenant ?</h3>
+    <div class="next-item">
+      <div class="next-num">1</div>
+      <div>
+        <h4>Vérifiez vos emails</h4>
+        <p>Votre attestation d'assurance en PDF vous a été envoyée. Si vous ne la trouvez pas, vérifiez vos spams ou contactez-nous.</p>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">2</div>
+      <div>
+        <h4>Conservez votre numéro de contrat</h4>
+        <p>Il vous sera demandé en cas de sinistre. Pensez à le noter ou à faire une capture d'écran de cette page.</p>
+      </div>
+    </div>
+    <div class="next-item">
+      <div class="next-num">3</div>
+      <div>
+        <h4>En cas de sinistre</h4>
+        <p>Déclarez-le en ligne sur notre site dans les 5 jours ouvrés, ou appelez directement le {{phone}}.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-band">
+    <div>
+      <h4>Une question sur votre contrat ?</h4>
+      <p>Notre équipe est disponible du lundi au vendredi.<br>
+      <a href="mailto:{{emailGeneral}}">{{emailGeneral}}</a></p>
+    </div>
+    <div>
+      <div class="tel-num">{{phone}}</div>
+      <div class="tel-sub">{{phoneNote}}</div>
+    </div>
+  </div>
+
+  <div class="stripe-verified">
+    ✓ Paiement vérifié et validé par Stripe · Ce document est généré uniquement après confirmation du règlement
+  </div>
+  <div class="mention">
+    {{fullName}} · {{address}}, {{addressZip}} {{addressCity}} · ORIAS {{orias}}<br>
+    Cette page récapitule votre souscription à titre informatif. L'attestation PDF faisant foi vous a été transmise par email.
+  </div>
+
+</div>
+</div>
+
+{{footer}}
+
+<script>
+function loadConfirmation() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var sessionId = urlParams.get('session_id');
+  var paymentIntent = urlParams.get('payment_intent');
+  var paiementValide = sessionId || paymentIntent;
+
+  if (!paiementValide) {
+    document.getElementById('page-content').style.display = 'none';
+    document.getElementById('page-blocked').style.display = 'flex';
+    return;
+  }
+
+  var raw = localStorage.getItem('adce_last_souscription');
+  var data = raw ? JSON.parse(raw) : null;
+  localStorage.removeItem('adce_last_souscription');
+
+  if (!data) {
+    data = {
+      ref: 'ADCE-' + new Date().getFullYear() + '-' + (sessionId ? sessionId.slice(-5).toUpperCase() : 'XXXXX'),
+      email: 'Vérifiez votre boîte email',
+      saison: '—',
+      options: ['Vérifiez votre email de confirmation Stripe'],
+      chiens: [],
+      montant: 0
+    };
+  }
+
+  document.getElementById('page-content').style.display = 'block';
+
+  document.getElementById('display-ref').textContent    = data.ref || '—';
+  document.getElementById('display-email').textContent  = data.email || '—';
+  document.getElementById('display-saison').textContent = data.saison || '—';
+  document.getElementById('display-permis').textContent = data.npermis || '—';
+  document.getElementById('display-total').textContent  = (data.montant || 0) + ' €';
+
+  var opts = data.options || [];
+  var garantiesHtml = '';
+  if (opts.includes('Sécurité chasse')) {
+    garantiesHtml += '<div class="recap-row">' +
+      '<span class="rl">Sécurité chasse</span>' +
+      '<span class="rv green">✓ Incluse — {{tarifSecurite}} €/an</span>' +
+      '</div>';
+  }
+  if (opts.includes('Chiens de chasse')) {
+    var nbChiens = (data.chiens || []).length || 1;
+    garantiesHtml += '<div class="recap-row">' +
+      '<span class="rl">Chiens de chasse (' + nbChiens + ' chien' + (nbChiens > 1 ? 's' : '') + ')</span>' +
+      '<span class="rv green">✓ Incluse — ' + ({{tarifChienPerDog}} * nbChiens) + ' €/an</span>' +
+      '</div>';
+  }
+  if (opts.length > 0 && opts[0] !== 'Vérifiez votre email de confirmation Stripe') {
+    garantiesHtml += '<div class="recap-row">' +
+      '<span class="rl">Frais administratifs</span>' +
+      '<span class="rv">' + opts.length + ' €</span>' +
+      '</div>';
+  }
+  document.getElementById('recap-garanties').innerHTML = garantiesHtml;
+
+  var chiens = data.chiens || [];
+  if (chiens.length > 0 && opts.includes('Chiens de chasse')) {
+    document.getElementById('card-chiens').style.display = 'block';
+    document.getElementById('recap-chiens').innerHTML = chiens.map(function(c, i) {
+      return '<div class="chien-item">' +
+        '<div class="chien-avatar">' +
+          '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5e0a" stroke-width="1.5" stroke-linecap="round">' +
+            '<path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/>' +
+            '<path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/>' +
+            '<path d="M8 14v.5M16 14v.5M11.25 16.25h1.5L12 17z"/>' +
+            '<path d="M4.42 11.247A13.152 13.152 0 0 0 4 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0 1 12 4.5c.78 0 1.5.108 2.161.306"/>' +
+          '</svg>' +
+        '</div>' +
+        '<div>' +
+          '<div class="chien-name">' + (c.nom || 'Chien ' + (i+1)) + '</div>' +
+          '<div class="chien-race">' + (c.race || 'Race non renseignée') + (c.age ? ' · ' + c.age + ' ans' : '') + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+}
+
+loadConfirmation();
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — {{siteTitle}}</title>
+<style>
+{{stylesCommon}}
+.hero { background: linear-gradient(135deg, #0d1b4b 0%, #162e1a 100%); padding: 48px 32px 40px; text-align: center; }
+.hero-badge { display: inline-block; background: rgba(106,191,123,0.15); color: #6abf7b; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(106,191,123,0.3); margin-bottom: 20px; text-transform: uppercase; }
+.hero h1 { font-size: clamp(20px,3.5vw,32px); color: #e0f0e8; font-weight: normal; line-height: 1.35; max-width: 480px; margin: 0 auto 12px; }
+.hero p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #7aaa8a; line-height: 1.7; max-width: 440px; margin: 0 auto; }
+.content { max-width: 760px; margin: 0 auto; padding: 48px 32px; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 40px; }
+@media(max-width:540px){.contact-grid{grid-template-columns:1fr;}}
+.contact-card { background: #fff; border-radius: 12px; padding: 22px; border-top: 3px solid #0d1b4b; }
+.contact-card h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #5a6a7e; margin-bottom: 6px; }
+.contact-card .val { font-size: 18px; font-weight: normal; color: #0d1b4b; margin: 6px 0 2px; display: block; font-family: Georgia,serif; }
+.contact-card .sub { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #9aaabe; }
+.contact-card p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #7a8a9e; line-height: 1.6; margin-top: 4px; }
+.contact-card a { color: #2d6a3f; text-decoration: none; }
+.tel-green { color: #2d6a3f !important; font-size: 20px !important; }
+.section-title { font-size: 20px; color: #1a2e0a; font-weight: normal; margin-bottom: 20px; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a6a4e; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.field label .req { color: #c0306a; }
+.field input, .field select, .field textarea { width: 100%; border: 1px solid #d0d8c0; border-radius: 8px; padding: 10px 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #1a2e0a; background: #fff; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: #2d6a3f; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:520px){.two-col{grid-template-columns:1fr;}}
+.btn-send { width: 100%; background: #0d1b4b; color: #e0eaf8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 600; padding: 16px; border: none; border-radius: 10px; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+.btn-send:hover { background: #162770; }
+.adresse-band { background: #f5f0e8; border-radius: 12px; padding: 24px 28px; margin-top: 32px; display: flex; gap: 14px; align-items: flex-start; }
+.adresse-band p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #5a6a4e; line-height: 1.8; }
+.adresse-band strong { color: #1a2e0a; }
+.orias-line { text-align: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #9a9a8a; margin-top: 28px; }
+.success-band { display: none; background: #eaf3de; border: 1px solid #6abf7b; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #2d5016; }
+.success-band.show { display: block; }
+.error-band { display: none; background: #ffeeee; border: 1px solid #c08080; border-radius: 10px; padding: 16px 20px; margin-bottom: 16px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #7a1a1a; }
+.error-band.show { display: block; }
+</style>
+</head>
+<body>
+{{nav}}
+<div class="hero">
+  <span class="hero-badge">{{fullName}} — {{name}} ({{code}})</span>
+  <h1>Nous sommes là pour vous répondre</h1>
+  <p>Une question sur votre contrat, une option à souscrire, ou simplement besoin d'un renseignement ? Contactez-nous.</p>
+</div>
+<div class="content">
+  <div class="contact-grid">
+    <div class="contact-card"><h4>Téléphone</h4><span class="val tel-green">{{phone}}</span><span class="sub">{{phoneNote}} · lun–ven 9h–17h30</span></div>
+    <div class="contact-card"><h4>Email général</h4><span class="val" style="font-size:14px"><a href="mailto:{{emailGeneral}}">{{emailGeneral}}</a></span><span class="sub">Réponse sous 48h ouvrées</span></div>
+    <div class="contact-card"><h4>Sinistres</h4><span class="val" style="font-size:14px"><a href="mailto:{{emailSinistres}}">{{emailSinistres}}</a></span><span class="sub">Joindre permis + validation {{fdcShort}}</span></div>
+    <div class="contact-card"><h4>Horaires</h4><p>Lun – Ven : 9h00 – 12h30 / 14h00 – 17h30<br>Fermé le week-end et jours fériés</p></div>
+  </div>
+  <h2 class="section-title">Formulaire de contact</h2>
+  <div class="success-band" id="success-band">✓ Votre message a bien été envoyé. Nous vous répondrons sous 48h ouvrées.</div>
+  <div class="error-band" id="error-band"></div>
+  <form id="contact-form" onsubmit="event.preventDefault(); sendMessage();">
+    <div class="two-col">
+      <div class="field"><label>Nom <span class="req">*</span></label><input type="text" id="ct-nom" required placeholder="Dupont"/></div>
+      <div class="field"><label>Prénom <span class="req">*</span></label><input type="text" id="ct-prenom" required placeholder="Jean"/></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="ct-email" required placeholder="jean@email.com"/></div>
+      <div class="field"><label>Téléphone</label><input type="tel" id="ct-tel" placeholder="06 00 00 00 00"/></div>
+    </div>
+    <div class="field">
+      <label>Objet <span class="req">*</span></label>
+      <select id="ct-objet" required>
+        <option value="">Sélectionnez…</option>
+        <option>Question sur une option (sécurité chasse / chiens)</option>
+        <option>Question sur mon contrat en cours</option>
+        <option>Déclaration ou suivi de sinistre</option>
+        <option>Documents contractuels (CG, notices)</option>
+        <option>Autre demande</option>
+      </select>
+    </div>
+    <div class="field"><label>Message <span class="req">*</span></label><textarea id="ct-message" rows="5" required placeholder="Décrivez votre demande…" style="resize:vertical;font-family:inherit;font-size:14px;color:#1a2e0a;border:1px solid #d0d8c0;border-radius:8px;padding:10px 14px;width:100%;outline:none;box-sizing:border-box"></textarea></div>
+    <button class="btn-send" id="btn-send" type="submit">Envoyer mon message</button>
+  </form>
+  <div class="adresse-band">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5a6a4e" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    <p><strong>{{fullName}}</strong><br>{{address}} — {{addressZip}} {{addressCity}}<br>Pour tout envoi postal (dossiers sinistres, courriers contractuels)</p>
+  </div>
+  <p class="orias-line">{{fullName}} · ORIAS {{orias}} · Intermédiaire en assurance enregistré auprès de l'ORIAS</p>
+</div>
+{{footer}}
+<script>
+async function sendMessage() {
+  var btn = document.getElementById('btn-send');
+  var success = document.getElementById('success-band');
+  var error = document.getElementById('error-band');
+  success.classList.remove('show'); error.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Envoi en cours…';
+  var payload = {
+    department: '{{slug}}',
+    nom: document.getElementById('ct-nom').value,
+    prenom: document.getElementById('ct-prenom').value,
+    email: document.getElementById('ct-email').value,
+    tel: document.getElementById('ct-tel').value,
+    objet: document.getElementById('ct-objet').value,
+    message: document.getElementById('ct-message').value
+  };
+  try {
+    var res = await fetch('/api/contact-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if (!res.ok) throw new Error('Erreur ' + res.status);
+    success.classList.add('show');
+    document.getElementById('contact-form').reset();
+  } catch(e) {
+    error.textContent = 'Une erreur est survenue. Contactez-nous directement au {{phone}} ou à {{emailGeneral}}.';
+    error.classList.add('show');
+  }
+  btn.disabled = false; btn.textContent = 'Envoyer mon message';
+}
+</script>
+</body>
+</html>

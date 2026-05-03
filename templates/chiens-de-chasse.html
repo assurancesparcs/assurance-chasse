@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chiens de chasse — {{siteTitle}}</title>
+<meta name="description" content="Option Chiens de chasse — frais vétérinaires, chirurgie, hospitalisation. À partir de {{tarifChienPerDog}} €/chien/an.">
+<style>
+{{stylesCommon}}
+.hero { background: linear-gradient(135deg, #2a1a06 0%, #3d2a08 60%, #0d1b4b 100%); padding: 52px 32px 44px; text-align: center; }
+.hero-badge { display: inline-block; background: rgba(212,151,10,0.15); color: #d4970a; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(212,151,10,0.3); margin-bottom: 20px; text-transform: uppercase; }
+.hero h1 { font-size: clamp(22px,4vw,34px); color: #f5e8d0; font-weight: normal; line-height: 1.35; max-width: 560px; margin: 0 auto 14px; }
+.hero p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; color: #b8986a; line-height: 1.75; max-width: 520px; margin: 0 auto; }
+.content { max-width: 760px; margin: 0 auto; padding: 48px 32px; }
+.section-title { font-size: 22px; color: #1a0e00; font-weight: normal; margin-bottom: 24px; }
+.garanties-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+.garantie-row { display: flex; align-items: flex-start; gap: 16px; background: #fff; border-radius: 10px; padding: 20px; border-left: 3px solid #8b5e0a; }
+.g-dot { width: 10px; height: 10px; border-radius: 50%; background: #8b5e0a; margin-top: 5px; flex-shrink: 0; }
+.garantie-row h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 600; color: #1a0e00; margin-bottom: 4px; }
+.garantie-row p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #6a5a3e; line-height: 1.6; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+@media(max-width:520px){.info-grid{grid-template-columns:1fr;}}
+.info-card { background: #faf6ee; border-radius: 10px; padding: 20px; }
+.info-card h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; color: #1a0e00; margin-bottom: 6px; }
+.info-card p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #6a5a3e; line-height: 1.55; }
+.tarif-band { background: linear-gradient(135deg, #2a1a06, #3d2a08); border-radius: 12px; padding: 32px; text-align: center; margin-bottom: 40px; }
+.tarif-band p.label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8a7040; margin-bottom: 8px; }
+.tarif-band .prix { font-size: 48px; font-weight: normal; color: #d4970a; line-height: 1; margin-bottom: 4px; }
+.tarif-band .prix-sub { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #9a8060; margin-bottom: 24px; }
+.btn-souscrire { display: inline-block; background: #8b5e0a; color: #faf0d8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; padding: 14px 32px; border-radius: 8px; text-decoration: none; transition: background 0.2s; }
+.btn-souscrire:hover { background: #a8720c; }
+.note { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #a08040; margin-top: 10px; }
+.condition { background: #faf6ee; border-radius: 10px; padding: 20px 24px; margin-bottom: 40px; border: 1px solid #e8d8b0; }
+.condition p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #5a4a2e; line-height: 1.65; }
+.condition strong { color: #1a0e00; }
+.warn-band { background: #fff8ee; border-left: 3px solid #c8860a; border-radius: 0 8px 8px 0; padding: 14px 20px; margin-bottom: 32px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #7a5010; line-height: 1.6; }
+.warn-band strong { color: #4a3010; }
+.faq-item { border-top: 1px solid #e0d8c0; padding: 18px 0; }
+.faq-item:last-child { border-bottom: 1px solid #e0d8c0; }
+.faq-item h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; color: #1a0e00; margin-bottom: 6px; }
+.faq-item p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #6a5a3e; line-height: 1.6; }
+</style>
+</head>
+<body>
+{{nav}}
+<div class="hero">
+  <span class="hero-badge">Option 1 — Chiens de chasse</span>
+  <h1>Votre chien mérite autant de protection que vous</h1>
+  <p>Un chien blessé sur le terrain, c'est des frais vétérinaires imprévus et parfois une saison entière compromise. Notre option vous couvre pour que vous chassiez l'esprit tranquille.</p>
+</div>
+<div class="content">
+  <h2 class="section-title">Ce que couvre l'option chiens de chasse</h2>
+  <div class="garanties-list">
+    <div class="garantie-row"><div class="g-dot"></div><div><h4>Frais vétérinaires suite à blessure</h4><p>Prise en charge des soins après une blessure survenue pendant la chasse : coupures, fractures, morsures, piqûres de sanglier.</p></div></div>
+    <div class="garantie-row"><div class="g-dot"></div><div><h4>Chirurgie et hospitalisation</h4><p>Couverture des interventions chirurgicales et des nuits en clinique vétérinaire si l'état de votre chien le nécessite.</p></div></div>
+    <div class="garantie-row"><div class="g-dot"></div><div><h4>Blessure par arme à feu accidentelle</h4><p>Votre chien est pris en charge même en cas de tir accidentel, un risque réel sur le terrain que peu de contrats couvrent.</p></div></div>
+    <div class="garantie-row"><div class="g-dot"></div><div><h4>Décès accidentel</h4><p>Indemnisation en cas de décès de votre chien consécutif à un accident de chasse, sur la base de la valeur vénale de l'animal.</p></div></div>
+  </div>
+  <div class="info-grid">
+    <div class="info-card"><h4>Quels chiens sont assurables ?</h4><p>Tous les chiens de chasse identifiés (tatouage ou puce électronique), quelle que soit la race ou le gibier chassé, et âgés de <strong>11 ans maximum</strong>.</p></div>
+    <div class="info-card"><h4>Combien de chiens puis-je assurer ?</h4><p>Jusqu'à 3 chiens par chasseur dans un même contrat. La cotisation s'adapte au nombre de chiens déclarés.</p></div>
+  </div>
+  <div class="warn-band"><strong>Condition d'âge :</strong> les chiens de plus de 11 ans ne peuvent pas être couverts par cette option. Cette limite s'applique à la date de souscription.</div>
+  <div class="tarif-band">
+    <p class="label">Cotisation annuelle</p>
+    <div class="prix">À partir de {{tarifChienPerDog}} €</div>
+    <p class="prix-sub">par chien · maximum 3 chiens par chasseur</p>
+    <a href="/options-chasse.html" class="btn-souscrire">Souscrire en ligne</a>
+    <p class="note">Attestation envoyée automatiquement après souscription</p>
+  </div>
+  <div class="condition"><p><strong>Condition préalable :</strong> cette option est réservée aux chasseurs titulaires d'un permis de chasse valide et assurés en responsabilité civile chasse auprès de la {{fdcShort}}.</p></div>
+  <h3 style="font-size:18px;font-weight:normal;color:#1a0e00;margin-bottom:20px;">Questions fréquentes</h3>
+  <div>
+    <div class="faq-item"><h4>Mon chien est-il couvert s'il se blesse à l'entraînement ?</h4><p>La garantie s'applique pendant les parties de chasse et les entraînements officiels. Renseignez-vous lors de la souscription pour les situations spécifiques.</p></div>
+    <div class="faq-item"><h4>Y a-t-il une limite d'âge pour mes chiens ?</h4><p>Oui. L'option Chiens de chasse est réservée aux chiens âgés de 11 ans maximum à la date de souscription.</p></div>
+    <div class="faq-item"><h4>Y a-t-il un délai de carence ?</h4><p>Non. La couverture est effective dès la confirmation de votre souscription et le paiement de votre cotisation.</p></div>
+    <div class="faq-item"><h4>Comment déclarer un sinistre ?</h4><p>Contactez-nous dans les 5 jours suivant l'accident avec le compte-rendu vétérinaire, à {{emailSinistres}} ou au {{phone}}.</p></div>
+  </div>
+</div>
+{{footer}}
+</body>
+</html>

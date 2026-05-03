@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentions légales — {{siteTitle}}</title>
+<style>
+{{stylesCommon}}
+.content { max-width: 760px; margin: 0 auto; padding: 48px 32px 64px; }
+.content h1 { font-size: 28px; color: #0d1b4b; font-weight: normal; margin-bottom: 8px; }
+.content .subtitle { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #7a8a9e; margin-bottom: 36px; }
+.content h2 { font-size: 18px; color: #0d1b4b; font-weight: 600; margin-top: 32px; margin-bottom: 12px; font-family: 'Helvetica Neue',Arial,sans-serif; }
+.content p, .content li { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #3a4e3a; line-height: 1.75; margin-bottom: 12px; }
+.content strong { color: #0d1b4b; }
+.content ul { margin-left: 20px; margin-bottom: 16px; }
+.content a { color: #2d6a3f; text-decoration: none; }
+.content a:hover { text-decoration: underline; }
+.box { background: #f5f8f0; border-radius: 10px; padding: 20px 24px; margin: 16px 0; }
+</style>
+</head>
+<body>
+{{nav}}
+<div class="content">
+  <h1>Mentions légales</h1>
+  <p class="subtitle">Site {{domain}} · Édition {{name}} ({{code}})</p>
+  <h2>Éditeur du site</h2>
+  <div class="box">
+    <p><strong>{{fullName}}</strong><br>
+    {{address}} — {{addressZip}} {{addressCity}}<br>
+    Téléphone : {{phone}} ({{phoneNote}})<br>
+    Email : <a href="mailto:{{emailGeneral}}">{{emailGeneral}}</a></p>
+    <p><strong>ORIAS :</strong> {{orias}}<br>
+    Intermédiaire en assurance enregistré auprès de l'ORIAS — <a href="https://www.orias.fr" target="_blank">www.orias.fr</a><br>
+    Soumis au contrôle de l'Autorité de Contrôle Prudentiel et de Résolution (ACPR), 4 Place de Budapest, CS 92459, 75436 Paris Cedex 09 — <a href="https://acpr.banque-france.fr" target="_blank">www.acpr.banque-france.fr</a></p>
+  </div>
+  <h2>Hébergeur</h2>
+  <p><strong>Vercel Inc.</strong><br>340 S Lemon Ave #4133, Walnut, CA 91789, USA<br><a href="https://vercel.com" target="_blank">vercel.com</a></p>
+  <h2>Activité et partenaires</h2>
+  <p>Le site {{domain}} est édité par {{fullName}}, courtier en assurance, dans le cadre d'un partenariat avec la <strong>{{fdcName}}</strong> ({{fdcShort}}).</p>
+  <p>Les garanties d'assurance proposées sont souscrites auprès de :</p>
+  <ul>
+    <li><strong>MIC Insurance Company SA</strong> — 29 rue de Bassano, 75008 Paris (RCS Paris 885.241.208) pour la garantie chiens de chasse et la responsabilité civile.</li>
+    <li><strong>Allianz</strong> pour la garantie corporelle Sécurité chasse.</li>
+  </ul>
+  <h2>Propriété intellectuelle</h2>
+  <p>L'ensemble du site (textes, images, logos, charte graphique, code) est la propriété de {{fullName}} ou de ses partenaires. Toute reproduction ou utilisation non autorisée est interdite et constitue une contrefaçon sanctionnée par le Code de la propriété intellectuelle.</p>
+  <h2>Données personnelles et RGPD</h2>
+  <p>Les données collectées via ce site sont traitées conformément au RGPD. Pour plus de détails, consultez notre <a href="/rgpd-cookies.html">politique de confidentialité</a>.</p>
+  <h2>Cookies</h2>
+  <p>Ce site utilise des cookies techniques nécessaires à son fonctionnement et, sous réserve de votre consentement, des cookies analytiques. Vous pouvez gérer vos préférences via le bandeau cookies en bas de page.</p>
+  <h2>Médiation</h2>
+  <p>En cas de réclamation et si aucune solution n'a pu être trouvée avec {{fullName}}, vous pouvez saisir gratuitement le Médiateur de l'Assurance :<br>
+  <strong>La Médiation de l'Assurance</strong> — TSA 50110, 75441 Paris cedex 09 — <a href="https://www.mediation-assurance.org" target="_blank">www.mediation-assurance.org</a></p>
+  <h2>Loi applicable et juridiction</h2>
+  <p>Le présent site et les contrats souscrits via celui-ci sont régis par le droit français. Tout litige relève de la compétence exclusive des juridictions françaises.</p>
+</div>
+{{footer}}
+</body>
+</html>

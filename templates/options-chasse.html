@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Souscrire — {{siteTitle}}</title>
+<meta name="description" content="Souscrivez en ligne vos garanties complémentaires d'assurance chasse — partenaire {{fdcName}}.">
+<link rel="canonical" href="https://{{domain}}/options-chasse.html">
+<style>
+{{stylesCommon}}
+
+.hero { background: linear-gradient(135deg, #0d1b4b 0%, #162e1a 100%); padding: 40px 32px 32px; text-align: center; }
+.hero h1 { font-size: clamp(20px,3.5vw,30px); color: #e0f0e8; font-weight: normal; line-height: 1.35; margin: 0 auto 10px; }
+.hero p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #7aaa8a; max-width: 480px; margin: 0 auto; line-height: 1.65; }
+.form-wrap { max-width: 680px; margin: 0 auto; padding: 40px 32px 60px; }
+.stepper { display: flex; margin-bottom: 36px; }
+.step-item { flex: 1; text-align: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; padding: 8px 4px; border-bottom: 2px solid #d0d8c0; color: #9a9a8a; transition: all 0.2s; }
+.step-item.active { border-bottom-color: #2d6a3f; color: #2d6a3f; font-weight: 600; }
+.step-item.done { border-bottom-color: #6abf7b; color: #6abf7b; }
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a6a4e; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.req { color: #c0306a; }
+.field input, .field select, .field textarea { width: 100%; border: 1px solid #d0d8c0; border-radius: 8px; padding: 11px 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #1a2e0a; background: #fff; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: #2d6a3f; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:520px){.two-col{grid-template-columns:1fr;}}
+
+/* Doc reader (lecture obligatoire) */
+.doc-reader { border: 1px solid #d0d8c0; border-radius: 12px; margin-bottom: 16px; overflow: hidden; }
+.doc-reader-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: #f5f8f0; border-bottom: 1px solid #e0e8d0; }
+.doc-reader-header h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; color: #1a2e0a; }
+.badge-lu { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+.badge-lu.non-lu { background: #faeeda; color: #8b5e0a; }
+.badge-lu.lu { background: #eaf3de; color: #2d5016; }
+.doc-scroll-wrap { max-height: 240px; overflow-y: auto; padding: 16px 18px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12.5px; color: #3a4e3a; line-height: 1.7; background: #fff; }
+.scroll-progress { height: 3px; background: #e0e8d0; }
+.scroll-progress-bar { height: 100%; background: #2d6a3f; width: 0%; transition: width 0.1s; }
+.doc-link { display: inline-flex; align-items: center; gap: 6px; color: #2d6a3f; text-decoration: none; font-weight: 600; font-size: 12px; margin-top: 14px; padding: 8px 14px; border: 1px solid #2d6a3f; border-radius: 6px; }
+.doc-link:hover { background: #eaf3de; }
+.btn-next.btn-next-locked { background: #c0c8b8; cursor: not-allowed; }
+.btn-next.btn-next-locked:hover { background: #c0c8b8; }
+.lock-msg { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #8b5e0a; text-align: right; margin-top: 6px; display: none; }
+
+.option-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
+@media(max-width:480px){.option-cards{grid-template-columns:1fr;}}
+.opt-card { border: 1.5px solid #d0d8c0; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+.opt-card:hover { border-color: #2d6a3f; background: #f5fbf0; }
+.opt-card.selected { border-color: #2d6a3f; background: #eaf3de; }
+.opt-card h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 600; color: #1a2e0a; margin-bottom: 6px; }
+.opt-card p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a6a4e; line-height: 1.5; margin-bottom: 12px; }
+.opt-card .prix { font-size: 18px; color: #2d6a3f; font-family: Georgia,serif; }
+
+.chien-block { background: #f5f8f0; border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+.chien-block h5 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; color: #1a2e0a; margin-bottom: 12px; }
+
+.recap-box { background: #f5f8f0; border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; }
+.recap-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e0e8d0; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; }
+.recap-row:last-child { border: none; }
+.recap-label { color: #6a7a5e; }
+.recap-value { font-weight: 600; color: #1a2e0a; text-align: right; max-width: 60%; }
+.total-row { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; font-family: 'Helvetica Neue',Arial,sans-serif; }
+.total-label { font-size: 15px; font-weight: 600; color: #1a2e0a; }
+.total-prix { font-size: 28px; color: #2d6a3f; font-family: Georgia,serif; }
+
+.consent { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
+.consent input { margin-top: 3px; flex-shrink: 0; }
+.consent label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a6a4e; line-height: 1.55; }
+
+.nav-btns { display: flex; justify-content: space-between; margin-top: 24px; gap: 12px; }
+.btn-next { background: #0d1b4b; color: #e0eaf8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; padding: 12px 28px; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s; }
+.btn-next:hover:not(.btn-next-locked) { background: #162770; }
+.btn-back { background: transparent; border: 1px solid #c0c8b8; border-radius: 8px; padding: 12px 22px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #6a7a5e; cursor: pointer; }
+.btn-back:hover { background: #f0f4e8; }
+
+.stripe-info { background: #f0f4e8; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; display: flex; gap: 10px; align-items: center; }
+.stripe-info p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #4a6a3e; margin: 0; line-height: 1.5; }
+
+.success { text-align: center; padding: 40px 20px; }
+.success-icon { width: 64px; height: 64px; background: #eaf3de; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.success h2 { font-size: 24px; font-weight: normal; color: #1a2e0a; margin-bottom: 12px; }
+
+.error-msg { background: #ffeeee; border: 1px solid #c08080; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #7a1a1a; display: none; }
+.error-msg.show { display: block; }
+</style>
+</head>
+<body>
+{{nav}}
+
+<div class="hero">
+  <h1>Souscription en ligne — {{name}} ({{code}})</h1>
+  <p>Quelques minutes suffisent. Choisissez vos options, renseignez vos informations et recevez votre attestation par email après paiement.</p>
+</div>
+
+<div class="form-wrap">
+  <div class="stepper" id="stepper">
+    <div class="step-item active" id="s0">Profil</div>
+    <div class="step-item" id="s1">Options</div>
+    <div class="step-item" id="s2">Informations</div>
+    <div class="step-item" id="s3">Récapitulatif</div>
+  </div>
+
+  <!-- STEP 0 — Lecture documents obligatoire + Profil -->
+  <div class="step-panel active" id="p0">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#5a6a4e;margin-bottom:16px;line-height:1.6">
+      Avant de souscrire, merci de lire attentivement les documents contractuels ci-dessous. Le bouton "Continuer" sera débloqué une fois les deux documents parcourus jusqu'en bas.
+    </p>
+
+    <!-- DOC 1 : Notice RC chasseur -->
+    <div class="doc-reader">
+      <div class="doc-reader-header">
+        <h4>Notice RC chasseur individuel</h4>
+        <span class="badge-lu non-lu" id="badge-doc1">À lire</span>
+      </div>
+      <div class="doc-scroll-wrap" id="scroll-doc1" onscroll="checkScroll('doc1')">
+        <strong>BULLETIN D'ADHÉSION — RESPONSABILITÉ CIVILE CHASSEUR INDIVIDUEL</strong><br>
+        <em style="font-size:11px;color:#6a7a6e">MIC Insurance Company / ELKYIA by Finaxy Group — 2026</em><br><br>
+        <strong>Objet du contrat :</strong> Le présent contrat garantit la responsabilité civile du chasseur titulaire d'un permis de chasse valide, assuré auprès de la {{fdcName}} ({{fdcShort}}) pour la saison en cours.<br><br>
+        <strong>Garanties complémentaires proposées par le {{fullName}} :</strong><br><br>
+        <strong>Option 1 — Chiens de chasse (à partir de {{tarifChienPerDog}} €/chien/an) :</strong><br>
+        Cette option couvre les frais vétérinaires consécutifs à une blessure survenue pendant ou à l'occasion d'une activité de chasse autorisée, la chirurgie et l'hospitalisation vétérinaire, les blessures par arme à feu accidentelle, le choc avec un véhicule survenu lors d'une activité de chasse, et le décès accidentel de l'animal.<br><br>
+        <em>Conditions d'assurabilité :</em> Le chien doit être identifié (puce électronique ou tatouage). L'animal ne doit pas avoir dépassé l'âge de 11 ans à la date de souscription. Maximum 3 chiens par chasseur.<br><br>
+        <em>Exclusions principales :</em> Maladies, affections préexistantes, vieillesse, chiens de plus de 11 ans, dommages intentionnels, activité hors chasse autorisée.<br><br>
+        <strong>Option 2 — Sécurité chasse ({{tarifSecurite}} €/an) :</strong><br>
+        Cette option garantit une indemnisation en cas de blessure corporelle du chasseur survenue pendant une partie de chasse autorisée. Elle couvre le décès accidentel, les blessures à concurrence des frais réels, l'incapacité temporaire de travail (ITT) et l'invalidité permanente.<br><br>
+        <em>Franchise :</em> 50 € par sinistre.<br><br>
+        <em>Exclusions principales :</em> Accidents de véhicule (couverts par l'assurance automobile), pratique de la chasse sans permis valide, état d'ivresse ou sous l'emprise de stupéfiants, dommages intentionnels.<br><br>
+        <strong>Frais administratifs :</strong> {{fraisAdminPerOption}} € par option souscrite.<br><br>
+        <strong>Entrée en vigueur :</strong> La garantie prend effet à compter de la date de confirmation du paiement. Aucune garantie rétroactive n'est possible — tout sinistre survenu avant la souscription est exclu.<br><br>
+        <strong>Déclaration de sinistre :</strong> Tout sinistre doit être déclaré dans un délai de 5 jours ouvrés suivant sa survenance, par email à {{emailSinistres}} ou par voie postale à {{fullName}}, {{address}}, {{addressZip}} {{addressCity}}.<br><br>
+        <strong>Droit applicable :</strong> Le présent contrat est soumis au droit français. Tout litige relève de la compétence des juridictions françaises.<br><br>
+        <strong>Réclamations :</strong> Toute réclamation doit être adressée au {{fullName}}. En cas de désaccord persistant, vous pouvez saisir le Médiateur de l'Assurance (www.mediation-assurance.org).<br><br>
+        <a class="doc-link" href="/bulletin-adhesion-rc-individuel.pdf" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Télécharger le bulletin d'adhésion complet (PDF)
+        </a>
+        <div style="text-align:center;margin-top:12px">
+          <button id="btn-lu-doc1" onclick="marquerLu('doc1')" style="background:transparent;border:1px solid #2d6a3f;border-radius:6px;padding:7px 18px;font-size:12px;color:#2d6a3f;cursor:pointer;font-family:inherit">
+            ✓ J'ai lu ce document
+          </button>
+        </div>
+      </div>
+      <div class="scroll-progress"><div class="scroll-progress-bar" id="prog-doc1"></div></div>
+    </div>
+
+    <!-- DOC 2 : IPID -->
+    <div class="doc-reader">
+      <div class="doc-reader-header">
+        <h4>Document d'information sur le produit (IPID)</h4>
+        <span class="badge-lu non-lu" id="badge-doc2">À lire</span>
+      </div>
+      <div class="doc-scroll-wrap" id="scroll-doc2" onscroll="checkScroll('doc2')">
+        <strong>IPID — DOCUMENT D'INFORMATION SUR LE PRODUIT 2026</strong><br>
+        <em style="font-size:11px;color:#6a7a6e">RCCH — MIC Insurance / ELKYIA Poncey — CGRCCH_MIC_FX_202604</em><br><br>
+        <em>Ce document fournit un aperçu des principales garanties et exclusions. Il ne constitue pas un contrat et ne remplace pas les conditions générales complètes.</em><br><br>
+        <strong>Quel type d'assurance est-ce ?</strong><br>
+        Assurance de personnes et de biens à usage de chasse, proposée en complément de la responsabilité civile chasse souscrite auprès de votre fédération départementale.<br><br>
+        <strong>Qu'est-ce qui est assuré ?</strong><br>
+        ✓ Les frais vétérinaires de vos chiens de chasse en cas de blessure accidentelle survenue lors d'une activité de chasse<br>
+        ✓ Le choc de votre chien avec un véhicule lors d'une activité de chasse<br>
+        ✓ Votre indemnisation corporelle en cas d'accident de chasse (décès, blessures, ITT, invalidité)<br>
+        ✓ Le décès accidentel de vos chiens lors d'une activité de chasse<br><br>
+        <strong>Qu'est-ce qui n'est pas assuré ?</strong><br>
+        ✗ Les accidents survenus en dehors de toute activité de chasse autorisée<br>
+        ✗ Les maladies, affections préexistantes ou liées à la vieillesse de l'animal<br>
+        ✗ Les chiens de plus de 11 ans à la date de souscription<br>
+        ✗ Les accidents corporels du chasseur survenus lors de déplacements en véhicule<br>
+        ✗ Tout sinistre antérieur à la date de souscription (pas de rétroactivité)<br>
+        ✗ La chasse sans permis valide ou hors cadre légal<br><br>
+        <strong>Y a-t-il des restrictions à la couverture ?</strong><br>
+        La garantie est subordonnée à la détention d'un permis de chasse valide et à la souscription d'une responsabilité civile chasse auprès de la {{fdcShort}}. Les chiens doivent être identifiés (puce ou tatouage). La franchise de 50 € s'applique à chaque sinistre corporel.<br><br>
+        <strong>Où suis-je couvert ?</strong><br>
+        Sur l'ensemble du territoire français, pendant toute activité de chasse autorisée.<br><br>
+        <strong>Quelles sont mes obligations ?</strong><br>
+        Déclarer tout sinistre dans les 5 jours ouvrés. Fournir les justificatifs demandés (permis de chasse, validation {{fdcShort}}, factures vétérinaires ou certificat médical). Payer la cotisation annuelle.<br><br>
+        <strong>Quand et comment régler ?</strong><br>
+        Paiement annuel en ligne, sécurisé par Stripe. La garantie est effective dès confirmation du paiement.<br><br>
+        <strong>Comment résilier ?</strong><br>
+        Le contrat est souscrit à la saison. Il ne se renouvelle pas tacitement. Pour toute question : {{emailGeneral}} · {{phone}}.<br><br>
+        <a class="doc-link" href="/IPID_RCCH_2026_E_PONCEY.docx" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Télécharger l'IPID 2026
+        </a>
+        <div style="text-align:center;margin-top:12px">
+          <button id="btn-lu-doc2" onclick="marquerLu('doc2')" style="background:transparent;border:1px solid #2d6a3f;border-radius:6px;padding:7px 18px;font-size:12px;color:#2d6a3f;cursor:pointer;font-family:inherit">
+            ✓ J'ai lu ce document
+          </button>
+        </div>
+      </div>
+      <div class="scroll-progress"><div class="scroll-progress-bar" id="prog-doc2"></div></div>
+    </div>
+
+    <!-- PROFIL -->
+    <div class="field">
+      <label>Vous êtes titulaire d'un permis de chasse valide en {{name}} ({{code}}) ? <span class="req">*</span></label>
+      <select id="permis"><option value="">Sélectionnez…</option><option value="oui">Oui, mon permis est validé auprès de la {{fdcShort}}</option><option value="non">Non</option></select>
+    </div>
+
+    <div class="two-col">
+      <div class="field"><label>Saison de chasse <span class="req">*</span></label>
+        <select id="saison"><option value="">Sélectionnez…</option><option>2025 – 2026</option><option>2026 – 2027</option></select>
+      </div>
+      <div class="field"><label>Département</label>
+        <input type="text" value="{{name}} ({{code}})" readonly style="background:#f5f8f0;color:#5a6a4e;cursor:default"/>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <div></div>
+      <div>
+        <button class="btn-next btn-next-locked" id="btn-continuer" onclick="tenterContinuer()">Choisir mes options →</button>
+        <div class="lock-msg" id="lock-msg">Merci de lire les deux documents jusqu'en bas avant de continuer.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 1 — Options -->
+  <div class="step-panel" id="p1">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#6a7a5e;margin-bottom:16px;">Sélectionnez une ou plusieurs options. Vous pouvez les cumuler.</p>
+    <div class="option-cards">
+      <div class="opt-card" id="card-sec" onclick="toggleOpt('sec')">
+        <h4>Sécurité chasse</h4>
+        <p>Protection corporelle — décès, blessures, ITT, invalidité</p>
+        <div class="prix">{{tarifSecurite}} € / an</div>
+      </div>
+      <div class="opt-card" id="card-chi" onclick="toggleOpt('chi')">
+        <h4>Chiens de chasse</h4>
+        <p>Frais vétérinaires, chirurgie, décès — jusqu'à 3 chiens</p>
+        <div class="prix">À partir de {{tarifChienPerDog}} € / chien / an</div>
+        <div style="font-size:11px;color:#8b5e0a;margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif">⚠ Chiens de 11 ans maximum</div>
+      </div>
+    </div>
+
+    <div id="chiens-wrap" style="display:none">
+      <div class="field" style="margin-bottom:12px">
+        <label>Nombre de chiens à assurer <span class="req">*</span></label>
+        <select id="nb-chiens" onchange="renderChiens()">
+          <option value="1">1 chien</option><option value="2">2 chiens</option><option value="3">3 chiens (maximum)</option>
+        </select>
+      </div>
+      <div class="chien-block">
+        <h5>Informations sur vos chiens</h5>
+        <div id="chiens-fields"></div>
+      </div>
+    </div>
+
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goTo(0)">← Retour</button>
+      <button class="btn-next" onclick="validerChiensEtContinuer()">Mes informations →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 — Informations -->
+  <div class="step-panel" id="p2">
+    <div class="two-col">
+      <div class="field"><label>Nom <span class="req">*</span></label><input type="text" id="nom" placeholder="Dupont"/></div>
+      <div class="field"><label>Prénom <span class="req">*</span></label><input type="text" id="prenom" placeholder="Jean"/></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>Date de naissance <span class="req">*</span></label><input type="date" id="ddn"/></div>
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input type="tel" id="tel" placeholder="06 00 00 00 00"/></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="email" placeholder="jean.dupont@email.com"/></div>
+      <div class="field"><label>N° permis de chasse <span class="req">*</span></label><input type="text" id="npermis" placeholder="{{code}}123456789"/></div>
+    </div>
+    <div class="field"><label>Adresse postale <span class="req">*</span></label><input type="text" id="adresse" placeholder="12 rue de la Forêt, {{addressZip}} {{addressCity}}"/></div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goTo(1)">← Retour</button>
+      <button class="btn-next" onclick="goTo(3)">Récapitulatif →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 — Récapitulatif -->
+  <div class="step-panel" id="p3">
+    <div class="stripe-info">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2d6a3f" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      <p>Le paiement sécurisé est géré par <strong>Stripe</strong>. Vous recevrez votre attestation d'assurance par email dès confirmation du paiement.</p>
+    </div>
+    <div class="recap-box" id="recap-content"></div>
+    <div class="consent"><input type="checkbox" id="cgu"/><label for="cgu">J'ai pris connaissance de la notice et des conditions générales applicables à mon contrat et je les accepte.</label></div>
+    <div class="consent"><input type="checkbox" id="certif"/><label for="certif">Je certifie être titulaire d'un permis de chasse valide et assuré en RC chasse auprès de la {{fdcShort}} pour la saison en cours.</label></div>
+    <div class="error-msg" id="error-msg"></div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="goTo(2)">← Modifier</button>
+      <button class="btn-next" id="btn-pay" onclick="submit()">Procéder au paiement →</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS (rarement utilisé : Stripe redirige vers /confirmation.html) -->
+  <div class="step-panel" id="p4">
+    <div class="success">
+      <div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2d6a3f" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2>Redirection vers le paiement…</h2>
+      <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#5a6a4e;line-height:1.7">Vous allez être redirigé vers la page de paiement sécurisée Stripe.</p>
+    </div>
+  </div>
+</div>
+
+{{footer}}
+
+<script>
+var opts = [];
+var cur = 0;
+var chienData = [];
+
+function goTo(n) {
+  document.getElementById('p'+cur).classList.remove('active');
+  document.getElementById('s'+cur).classList.remove('active');
+  if(n > cur) document.getElementById('s'+cur).classList.add('done');
+  cur = n;
+  document.getElementById('p'+cur).classList.add('active');
+  document.getElementById('s'+cur).classList.add('active');
+  if(cur === 3) buildRecap();
+  window.scrollTo(0,0);
+}
+
+var docsLus = { doc1: false, doc2: false };
+
+function checkScroll(docId) {
+  var el = document.getElementById('scroll-' + docId);
+  var prog = document.getElementById('prog-' + docId);
+  var badge = document.getElementById('badge-' + docId);
+  if (!el) return;
+  var scrolled = el.scrollTop + el.clientHeight;
+  var total = el.scrollHeight;
+  var tolerance = 10;
+  var pct = total <= 0 ? 100 : Math.min(100, Math.round((scrolled / total) * 100));
+  if (prog) prog.style.width = pct + '%';
+  var estLu = (scrolled >= total - tolerance) || pct >= 90;
+  if (estLu && !docsLus[docId]) {
+    docsLus[docId] = true;
+    if (badge) { badge.textContent = 'Lu ✓'; badge.className = 'badge-lu lu'; }
+    checkAllDocsRead();
+  }
+}
+
+function verifierDocsVisibles() {
+  ['doc1','doc2'].forEach(function(docId) {
+    if (docsLus[docId]) return;
+    var el = document.getElementById('scroll-' + docId);
+    if (!el) return;
+    if (el.scrollHeight <= el.clientHeight + 10) {
+      docsLus[docId] = true;
+      var badge = document.getElementById('badge-' + docId);
+      if (badge) { badge.textContent = 'Lu ✓'; badge.className = 'badge-lu lu'; }
+    }
+  });
+  checkAllDocsRead();
+}
+
+function checkAllDocsRead() {
+  if (docsLus.doc1 && docsLus.doc2) {
+    var btn = document.getElementById('btn-continuer');
+    if (btn) btn.classList.remove('btn-next-locked');
+    var msg = document.getElementById('lock-msg');
+    if (msg) msg.style.display = 'none';
+  }
+}
+
+function tenterContinuer() {
+  verifierDocsVisibles();
+  if (!docsLus.doc1 || !docsLus.doc2) {
+    var msg = document.getElementById('lock-msg');
+    if (msg) msg.style.display = 'block';
+    var cible = !docsLus.doc1 ? 'scroll-doc1' : 'scroll-doc2';
+    var el = document.getElementById(cible);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  goTo(1);
+}
+
+function marquerLu(docId) {
+  docsLus[docId] = true;
+  var badge = document.getElementById('badge-' + docId);
+  if (badge) { badge.textContent = 'Lu ✓'; badge.className = 'badge-lu lu'; }
+  var prog = document.getElementById('prog-' + docId);
+  if (prog) prog.style.width = '100%';
+  var btn = document.getElementById('btn-lu-' + docId);
+  if (btn) btn.style.display = 'none';
+  checkAllDocsRead();
+}
+
+function validerChiensEtContinuer() {
+  saveChiens();
+  if(opts.includes('chi')) {
+    var tooOld = chienData.filter(function(c){ return parseInt(c.age) > 11; });
+    if(tooOld.length > 0) {
+      var noms = tooOld.map(function(c){ return c.nom || 'un chien'; }).join(', ');
+      var verbe = tooOld.length > 1 ? ' ont' : ' a';
+      alert('Attention : ' + noms + verbe + ' plus de 11 ans et ne peuvent pas etre couverts par l option Chiens de chasse. Merci de retirer ce chien ou de contacter le {{fullName}} au {{phone}}.');
+      return;
+    }
+    var missingAge = chienData.filter(function(c){ return !c.age; });
+    if(missingAge.length > 0) {
+      alert("Merci d'indiquer l'age de chaque chien pour valider votre souscription.");
+      return;
+    }
+  }
+  goTo(2);
+}
+
+function toggleOpt(o) {
+  var i = opts.indexOf(o);
+  if(i>-1) opts.splice(i,1); else opts.push(o);
+  document.getElementById('card-sec').classList.toggle('selected', opts.includes('sec'));
+  document.getElementById('card-chi').classList.toggle('selected', opts.includes('chi'));
+  document.getElementById('chiens-wrap').style.display = opts.includes('chi') ? 'block' : 'none';
+  if(opts.includes('chi')) renderChiens();
+}
+
+function renderChiens() {
+  var nb = parseInt(document.getElementById('nb-chiens').value) || 1;
+  var container = document.getElementById('chiens-fields');
+  container.innerHTML = '';
+  for(var i=0; i<nb; i++) {
+    var prev = chienData[i] || {};
+    container.innerHTML += '<div style="background:#fff;border-radius:8px;padding:12px;margin-bottom:10px">' +
+      '<div style="font-family:Helvetica Neue,Arial,sans-serif;font-size:12px;font-weight:600;color:#3a4e3a;margin-bottom:8px">Chien ' + (i+1) + '</div>' +
+      '<div class="two-col" style="margin-bottom:8px">' +
+        '<div class="field" style="margin:0"><label>Nom <span class="req">*</span></label><input type="text" id="chien-nom-'+i+'" placeholder="Ex : Rex" value="'+(prev.nom||'')+'"/></div>' +
+        '<div class="field" style="margin:0"><label>Race</label><input type="text" id="chien-race-'+i+'" placeholder="Ex : Épagneul breton" value="'+(prev.race||'')+'"/></div>' +
+      '</div>' +
+      '<div class="two-col">' +
+        '<div class="field" style="margin:0"><label>N° identification (puce/tatouage) <span class="req">*</span></label><input type="text" id="chien-id-'+i+'" placeholder="Ex : 250268710123456" value="'+(prev.identification||'')+'"/></div>' +
+        '<div class="field" style="margin:0"><label>Âge <span class="req">*</span></label><input type="number" id="chien-age-'+i+'" placeholder="Ex : 3" min="0" max="11" value="'+(prev.age||'')+'" style="text-align:center"/></div>' +
+      '</div>' +
+      '</div>';
+  }
+}
+
+function saveChiens() {
+  var el = document.getElementById('nb-chiens');
+  var nb = parseInt(el ? el.value : 1) || 1;
+  chienData = [];
+  for(var i=0; i<nb; i++) {
+    var nomEl = document.getElementById('chien-nom-'+i);
+    var raceEl = document.getElementById('chien-race-'+i);
+    var ageEl  = document.getElementById('chien-age-'+i);
+    var idEl   = document.getElementById('chien-id-'+i);
+    if(nomEl) chienData.push({ nom: nomEl.value, race: raceEl ? raceEl.value : '', age: ageEl ? ageEl.value : '', identification: idEl ? idEl.value : '' });
+  }
+}
+
+function buildRecap() {
+  saveChiens();
+  var nom = document.getElementById('nom').value || '—';
+  var prenom = document.getElementById('prenom').value || '—';
+  var email = document.getElementById('email').value || '—';
+  var npermis = document.getElementById('npermis').value || '—';
+  var saison = document.getElementById('saison').value || '—';
+  var nb = chienData.length || 1;
+  var cotisBase = (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? {{tarifChienPerDog}}*nb : 0);
+  var fraisAdmin = opts.length * {{fraisAdminPerOption}};
+  var total = cotisBase + fraisAdmin;
+  var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }).join(' + ') || 'Aucune';
+
+  var html = '<div class="recap-row"><span class="recap-label">Titulaire</span><span class="recap-value">'+prenom+' '+nom+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">'+email+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">N° permis</span><span class="recap-value">'+npermis+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">Saison</span><span class="recap-value">'+saison+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">Options</span><span class="recap-value">'+optLabel+'</span></div>';
+  if(opts.includes('chi') && chienData.length > 0) {
+    var chiensStr = chienData.map(function(c,i){ return (i+1)+'. '+c.nom+(c.race?' ('+c.race+')':'')+(c.age?' — '+c.age+' ans':'')+(c.identification?' — ID: '+c.identification:''); }).join('<br>');
+    html += '<div class="recap-row"><span class="recap-label">Chiens assurés</span><span class="recap-value">'+chiensStr+'</span></div>';
+  }
+  html += '<div style="border-top:1px solid #e0e8d0;margin-top:8px;padding-top:8px;">';
+  if(opts.includes('sec')) html += '<div class="recap-row"><span class="recap-label">Sécurité chasse</span><span class="recap-value">{{tarifSecurite}} €</span></div>';
+  if(opts.includes('chi')) html += '<div class="recap-row"><span class="recap-label">Chiens de chasse ('+nb+' chien'+(nb>1?'s':'')+')</span><span class="recap-value">'+({{tarifChienPerDog}}*nb)+' €</span></div>';
+  html += '<div class="recap-row" style="color:#7a8a7a;font-size:12px"><span class="recap-label">Frais administratifs ('+opts.length+' × {{fraisAdminPerOption}} €)</span><span class="recap-value">'+fraisAdmin+' €</span></div>';
+  html += '</div>';
+  html += '<div class="total-row"><span class="total-label">Total annuel</span><span class="total-prix">'+total+' €</span></div>';
+  document.getElementById('recap-content').innerHTML = html;
+}
+
+async function submit() {
+  if(!document.getElementById('cgu').checked || !document.getElementById('certif').checked) {
+    alert('Merci de cocher les deux cases pour confirmer votre souscription.');
+    return;
+  }
+  if(opts.length === 0) {
+    alert('Merci de sélectionner au moins une option.');
+    goTo(1);
+    return;
+  }
+
+  var btn = document.getElementById('btn-pay');
+  btn.disabled = true;
+  btn.textContent = 'Redirection en cours…';
+
+  var payload = {
+    department: '{{slug}}',
+    options: opts,
+    chiens: opts.includes('chi') ? chienData : [],
+    customer: {
+      nom: document.getElementById('nom').value,
+      prenom: document.getElementById('prenom').value,
+      email: document.getElementById('email').value,
+      tel: document.getElementById('tel').value,
+      ddn: document.getElementById('ddn').value,
+      adresse: document.getElementById('adresse').value,
+      npermis: document.getElementById('npermis').value,
+      saison: document.getElementById('saison').value
+    }
+  };
+
+  localStorage.setItem('adce_last_souscription', JSON.stringify({
+    ref: 'ADCE-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2,8).toUpperCase(),
+    email: payload.customer.email,
+    nom: payload.customer.nom,
+    prenom: payload.customer.prenom,
+    npermis: payload.customer.npermis,
+    saison: payload.customer.saison,
+    options: opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }),
+    chiens: payload.chiens,
+    montant: (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? {{tarifChienPerDog}}*(payload.chiens.length||1) : 0) + opts.length * {{fraisAdminPerOption}}
+  }));
+
+  try {
+    var response = await fetch('/api/stripe-checkout', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(payload)
+    });
+    var data = await response.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Erreur lors de la création de la session de paiement');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Procéder au paiement →';
+    var err = document.getElementById('error-msg');
+    err.textContent = 'Erreur : ' + e.message + '. Si le problème persiste, contactez-nous au {{phone}}.';
+    err.classList.add('show');
+  }
+}
+
+setTimeout(verifierDocsVisibles, 500);
+window.addEventListener('resize', verifierDocsVisibles);
+</script>
+</body>
+</html>

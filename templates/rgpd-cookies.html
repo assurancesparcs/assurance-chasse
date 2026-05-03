@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookies & RGPD — {{siteTitle}}</title>
+<style>
+{{stylesCommon}}
+.content { max-width: 760px; margin: 0 auto; padding: 48px 32px 64px; }
+.content h1 { font-size: 28px; color: #0d1b4b; font-weight: normal; margin-bottom: 36px; }
+.content h2 { font-size: 18px; color: #0d1b4b; font-weight: 600; margin-top: 28px; margin-bottom: 10px; font-family: 'Helvetica Neue',Arial,sans-serif; }
+.content p, .content li { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #3a4e3a; line-height: 1.75; margin-bottom: 12px; }
+.content strong { color: #0d1b4b; }
+.content ul { margin-left: 20px; }
+.content a { color: #2d6a3f; }
+.btn-config { display: inline-block; background: #0d1b4b; color: #e0eaf8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; padding: 12px 24px; border-radius: 8px; cursor: pointer; border: none; margin: 20px 0; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9995; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: #fff; border-radius: 14px; max-width: 520px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal-header { background: linear-gradient(135deg,#0d1b4b,#162e1a); padding: 20px 24px; border-radius: 14px 14px 0 0; display: flex; align-items: center; justify-content: space-between; }
+.modal-header h3 { font-size: 16px; font-weight: 400; color: #e0eaf8; font-family: 'Helvetica Neue',Arial,sans-serif; }
+.btn-close-modal { background: transparent; border: none; color: #9ab8d8; font-size: 20px; cursor: pointer; }
+.modal-body { padding: 24px; }
+.cookie-cat { border: 1px solid #e0e8d0; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+.cookie-cat-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #f5f8f0; }
+.cookie-cat-header h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; color: #1a2e0a; }
+.cookie-cat-header p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #7a8a7e; margin-top: 2px; }
+.cookie-cat-body { padding: 12px 16px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a6a5e; line-height: 1.6; }
+.toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-track { position: absolute; inset: 0; background: #c0c8d0; border-radius: 22px; transition: background 0.2s; cursor: pointer; }
+.toggle input:checked + .toggle-track { background: #2d6a3f; }
+.toggle-thumb { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform 0.2s; pointer-events: none; }
+.toggle input:checked ~ .toggle-thumb { transform: translateX(18px); }
+.toggle input:disabled + .toggle-track { background: #2d6a3f; cursor: not-allowed; opacity: 0.7; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid #e0e8d0; display: flex; gap: 10px; justify-content: flex-end; }
+.btn-save { background: #0d1b4b; color: #e0eaf8; border: none; border-radius: 7px; padding: 10px 24px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-refuse { background: transparent; color: #5a6a5e; border: 1px solid #c0c8b0; border-radius: 7px; padding: 10px 18px; font-size: 13px; cursor: pointer; }
+#cookie-banner { position: fixed; bottom: 0; left: 0; right: 0; background: #0d1b4b; border-top: 3px solid #2d6a3f; padding: 18px 32px; z-index: 9990; display: none; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+#cookie-banner.visible { display: flex; }
+@media(max-width:600px) { #cookie-banner { padding: 16px 20px; flex-direction: column; align-items: flex-start; } }
+.cookie-text { flex: 1; min-width: 200px; }
+.cookie-text h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; color: #e0eaf8; margin-bottom: 5px; }
+.cookie-text p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #8aaac8; line-height: 1.55; }
+.cookie-text a { color: #6abf7b; cursor: pointer; }
+.cookie-btns { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+.btn-accept { background: #2d6a3f; color: #e0f5e8; border: none; border-radius: 7px; padding: 10px 22px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+</style>
+</head>
+<body>
+{{nav}}
+<div id="cookie-banner">
+  <div class="cookie-text">
+    <h4>Ce site utilise des cookies</h4>
+    <p>Nous utilisons des cookies techniques nécessaires et, sous réserve de votre consentement, des cookies analytiques. <a onclick="openPrefs()">Personnaliser mes choix</a></p>
+  </div>
+  <div class="cookie-btns">
+    <button class="btn-refuse" onclick="refuseCookies()" style="color:#8aaac8;border-color:rgba(255,255,255,0.2)">Refuser</button>
+    <button class="btn-accept" onclick="acceptCookies()">Tout accepter</button>
+  </div>
+</div>
+<div class="modal-overlay" id="modal-prefs">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Gestion des cookies</h3><button class="btn-close-modal" onclick="closePrefs()">✕</button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#3a4e3a;line-height:1.7;margin-bottom:16px;">Choisissez les catégories de cookies que vous acceptez. Certains sont nécessaires au fonctionnement du site et ne peuvent pas être désactivés.</p>
+      <div class="cookie-cat">
+        <div class="cookie-cat-header">
+          <div><h4>Cookies essentiels</h4><p>Indispensables au fonctionnement du site</p></div>
+          <label class="toggle"><input type="checkbox" checked disabled><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="cookie-cat-body">Nécessaires pour la navigation, la souscription en ligne et la sécurité.</div>
+      </div>
+      <div class="cookie-cat">
+        <div class="cookie-cat-header">
+          <div><h4>Cookies analytiques</h4><p>Mesure d'audience anonyme</p></div>
+          <label class="toggle"><input type="checkbox" id="toggle-analytics"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="cookie-cat-body">Nous permettent de comprendre comment les visiteurs utilisent le site.</div>
+      </div>
+      <div class="cookie-cat">
+        <div class="cookie-cat-header">
+          <div><h4>Cookies fonctionnels</h4><p>Mémorisation de vos préférences</p></div>
+          <label class="toggle"><input type="checkbox" id="toggle-fonct"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        </div>
+        <div class="cookie-cat-body">Permettent de mémoriser vos choix (langue, formulaires pré-remplis).</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-refuse" onclick="refuseCookies()">Tout refuser</button>
+      <button class="btn-save" onclick="savePrefs()">Enregistrer mes choix</button>
+    </div>
+  </div>
+</div>
+<div class="content">
+  <h1>Politique de confidentialité &amp; gestion des cookies</h1>
+  <h2>Responsable du traitement</h2>
+  <p><strong>{{fullName}}</strong> — {{address}}, {{addressZip}} {{addressCity}}<br>Email : {{emailGeneral}} · Tél : {{phone}}<br>ORIAS : {{orias}}</p>
+  <h2>Données collectées</h2>
+  <p>Dans le cadre de votre souscription ou déclaration de sinistre, nous collectons :</p>
+  <ul>
+    <li>Identité : nom, prénom, date de naissance</li>
+    <li>Coordonnées : adresse, email, téléphone</li>
+    <li>Données liées au contrat : numéro de permis, options souscrites, informations sur vos chiens</li>
+    <li>Documents justificatifs : copie du permis, validation {{fdcShort}}, documents sinistre</li>
+  </ul>
+  <h2>Finalités du traitement</h2>
+  <ul>
+    <li>Gestion et exécution de votre contrat d'assurance</li>
+    <li>Traitement des déclarations de sinistre</li>
+    <li>Envoi de votre attestation d'assurance</li>
+    <li>Obligations légales et réglementaires (ACPR, ORIAS)</li>
+  </ul>
+  <h2>Base légale</h2>
+  <p>Le traitement de vos données est fondé sur l'exécution du contrat d'assurance (art. 6.1.b RGPD) et le respect de nos obligations légales (art. 6.1.c RGPD).</p>
+  <h2>Durée de conservation</h2>
+  <p>Vos données sont conservées pendant la durée de votre contrat, augmentée des délais légaux de prescription applicables en matière d'assurance (2 ans à compter de la résiliation).</p>
+  <h2>Vos droits</h2>
+  <p>Conformément au RGPD, vous disposez des droits suivants :</p>
+  <ul>
+    <li>Droit d'accès à vos données personnelles</li>
+    <li>Droit de rectification</li>
+    <li>Droit à l'effacement (sous conditions légales)</li>
+    <li>Droit à la limitation du traitement</li>
+    <li>Droit à la portabilité de vos données</li>
+    <li>Droit d'opposition au traitement</li>
+  </ul>
+  <p>Pour exercer vos droits : <strong>{{emailGeneral}}</strong> ou par courrier à {{fullName}}, {{address}}, {{addressZip}} {{addressCity}}.<br>Vous pouvez également introduire une réclamation auprès de la <strong>CNIL</strong> (cnil.fr).</p>
+  <h2>Cookies</h2>
+  <p>Ce site utilise des cookies techniques nécessaires à son fonctionnement, ainsi que des cookies analytiques et fonctionnels soumis à votre consentement.</p>
+  <button class="btn-config" onclick="openPrefs()">Gérer mes cookies</button>
+</div>
+{{footer}}
+<script>
+function getConsent() { return localStorage.getItem('adce_cookie_consent'); }
+function showBanner() { if (!getConsent()) setTimeout(function(){ document.getElementById('cookie-banner').classList.add('visible'); }, 800); }
+function acceptCookies() { localStorage.setItem('adce_cookie_consent', JSON.stringify({essential:true,analytics:true,fonctionnel:true,date:new Date().toISOString()})); hideBanner(); }
+function refuseCookies() { localStorage.setItem('adce_cookie_consent', JSON.stringify({essential:true,analytics:false,fonctionnel:false,date:new Date().toISOString()})); hideBanner(); closePrefs(); }
+function savePrefs() {
+  var a = document.getElementById('toggle-analytics').checked;
+  var f = document.getElementById('toggle-fonct').checked;
+  localStorage.setItem('adce_cookie_consent', JSON.stringify({essential:true,analytics:a,fonctionnel:f,date:new Date().toISOString()}));
+  hideBanner(); closePrefs();
+}
+function hideBanner() { document.getElementById('cookie-banner').classList.remove('visible'); }
+function openPrefs() { document.getElementById('modal-prefs').classList.add('open'); }
+function closePrefs() { document.getElementById('modal-prefs').classList.remove('open'); }
+showBanner();
+</script>
+</body>
+</html>

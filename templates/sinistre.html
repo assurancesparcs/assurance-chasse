@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Déclarer un sinistre — {{siteTitle}}</title>
+<style>
+{{stylesCommon}}
+.hero { background: linear-gradient(135deg, #1a0a2e 0%, #0d1b4b 100%); padding: 48px 32px 40px; text-align: center; }
+.hero-badge { display: inline-block; background: rgba(180,150,220,0.15); color: #b49ae0; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(180,150,220,0.3); margin-bottom: 20px; text-transform: uppercase; }
+.hero h1 { font-size: clamp(20px,3.5vw,32px); color: #e8e0f5; font-weight: normal; line-height: 1.35; max-width: 520px; margin: 0 auto 12px; }
+.hero p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #9a8ac0; line-height: 1.7; max-width: 480px; margin: 0 auto; }
+.content { max-width: 720px; margin: 0 auto; padding: 48px 32px; }
+.delai-band { background: #f0ecf8; border-left: 3px solid #6a4ab0; border-radius: 0 8px 8px 0; padding: 14px 20px; margin-bottom: 36px; }
+.delai-band p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #3a2a5e; line-height: 1.6; }
+.delai-band strong { color: #1a0a2e; }
+.etapes { display: flex; flex-direction: column; gap: 16px; margin-bottom: 40px; }
+.etape-row { display: flex; gap: 16px; align-items: flex-start; }
+.etape-num { width: 32px; height: 32px; border-radius: 50%; background: #0d1b4b; display: flex; align-items: center; justify-content: center; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 700; color: #b49ae0; flex-shrink: 0; }
+.etape-row h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; color: #1a0a2e; margin-bottom: 4px; }
+.etape-row p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #6a5a8e; line-height: 1.55; }
+.section-title { font-size: 20px; color: #1a0a2e; font-weight: normal; margin-bottom: 20px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:520px){.two-col{grid-template-columns:1fr;}}
+.field { margin-bottom: 14px; }
+.field label { display: block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #5a4a7e; margin-bottom: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.req { color: #c0306a; }
+.field input, .field select, .field textarea { width: 100%; border: 1px solid #d0c8e0; border-radius: 8px; padding: 10px 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #1a0a2e; background: #fff; outline: none; box-sizing: border-box; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: #6a4ab0; }
+.radio-group, .check-group { display: flex; flex-direction: column; gap: 6px; }
+.radio-opt, .check-opt { display: flex; align-items: center; gap: 10px; background: #f8f5ff; border-radius: 8px; padding: 10px 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #2a1a4e; cursor: pointer; border: 1px solid transparent; }
+.radio-opt:hover, .check-opt:hover { border-color: #b49ae0; }
+.upload-section { background: #f8f5ff; border-radius: 12px; padding: 24px; margin-bottom: 28px; border: 1px solid #e0d8f0; }
+.upload-section h3 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 600; color: #1a0a2e; margin-bottom: 6px; }
+.upload-section p.sub { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #7a6a9e; margin-bottom: 20px; line-height: 1.5; }
+.upload-slots { display: flex; flex-direction: column; gap: 10px; }
+.upload-slot { background: #fff; border: 1.5px dashed #c0b0e0; border-radius: 10px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; cursor: pointer; position: relative; }
+.upload-slot:hover { border-color: #6a4ab0; background: #f5f0ff; }
+.upload-slot.has-file { border-color: #2d6a3f; border-style: solid; background: #f0faf4; }
+.upload-slot input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.slot-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #eeeeff; }
+.slot-text h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; color: #1a0a2e; margin-bottom: 2px; }
+.slot-text p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #8a7aae; margin: 0; }
+.slot-badge { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: auto; white-space: nowrap; flex-shrink: 0; background: #ede8ff; color: #5a3ab0; }
+.slot-status { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; color: #2d6a3f; font-weight: 600; margin-left: auto; flex-shrink: 0; display: none; }
+.upload-slot.has-file .slot-status { display: block; }
+.upload-slot.has-file .slot-badge { display: none; }
+.btn-submit { width: 100%; background: #3a1a7a; color: #e8e0f5; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 600; padding: 16px; border: none; border-radius: 10px; cursor: pointer; margin-top: 8px; }
+.btn-submit:hover { background: #4a2a9a; }
+.envoi-band { background: #f8f5ff; border-radius: 12px; padding: 24px 28px; margin-top: 32px; }
+.envoi-band h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 600; color: #1a0a2e; margin-bottom: 16px; }
+.envoi-row { display: flex; gap: 12px; margin-bottom: 12px; }
+.envoi-row p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #5a4a7e; line-height: 1.6; }
+.envoi-row a { color: #6a4ab0; }
+.popup-overlay { position: fixed; inset: 0; background: rgba(10,5,30,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; padding: 20px; }
+.popup-overlay.visible { opacity: 1; pointer-events: all; }
+.popup-box { background: #fff; border-radius: 16px; padding: 40px 36px; max-width: 480px; width: 100%; text-align: center; transform: translateY(20px); transition: transform 0.3s; }
+.popup-overlay.visible .popup-box { transform: translateY(0); }
+.popup-icon { width: 72px; height: 72px; background: #eaf3de; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.popup-box h2 { font-size: 22px; font-weight: normal; color: #0d1b4b; margin-bottom: 10px; font-family: Georgia, serif; }
+.popup-box p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #5a6a7e; line-height: 1.7; margin-bottom: 8px; }
+.popup-num { display: inline-block; background: #f0ecf8; border: 1.5px solid #b49ae0; border-radius: 8px; padding: 10px 24px; font-family: 'Courier New', monospace; font-size: 20px; font-weight: 700; color: #3a1a7a; letter-spacing: 2px; margin: 12px 0 20px; }
+.popup-note { font-size: 12px; color: #9a9ab0; }
+.btn-close { background: #0d1b4b; color: #e0eaf8; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; padding: 12px 32px; border: none; border-radius: 8px; cursor: pointer; margin-top: 16px; width: 100%; }
+.btn-close:hover { background: #162770; }
+</style>
+</head>
+<body>
+{{nav}}
+<div class="popup-overlay" id="popup">
+  <div class="popup-box">
+    <div class="popup-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2d6a3f" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h2>Déclaration bien envoyée !</h2>
+    <p>Votre déclaration de sinistre a été transmise au {{fullName}}. Voici votre numéro de dossier :</p>
+    <div class="popup-num" id="popup-ref">—</div>
+    <p><strong>Conservez ce numéro</strong> — il vous sera demandé pour tout suivi de votre dossier.</p>
+    <p class="popup-note">Un email de confirmation a été envoyé à <span id="popup-email">votre adresse</span>.<br>Nous vous contacterons sous 48h ouvrées.</p>
+    <button class="btn-close" onclick="closePopup()">Fermer et retourner à l'accueil</button>
+  </div>
+</div>
+<div class="hero">
+  <span class="hero-badge">Déclaration de sinistre</span>
+  <h1>Déclarez votre sinistre en ligne</h1>
+  <p>Remplissez ce formulaire et joignez les pièces nécessaires. Nous traitons votre dossier dans les meilleurs délais.</p>
+</div>
+<div class="content">
+  <div class="delai-band"><p>Vous disposez de <strong>5 jours ouvrés</strong> suivant le sinistre pour effectuer votre déclaration. En cas d'urgence, appelez-nous au <strong>{{phone}}</strong> ({{phoneNote}}).</p></div>
+  <div class="etapes">
+    <div class="etape-row"><div class="etape-num">1</div><div><h4>Remplissez le formulaire</h4><p>Décrivez les circonstances et les dommages subis.</p></div></div>
+    <div class="etape-row"><div class="etape-num">2</div><div><h4>Joignez vos documents</h4><p>Permis, validation {{fdcShort}}, photos, tout document utile.</p></div></div>
+    <div class="etape-row"><div class="etape-num">3</div><div><h4>Recevez votre numéro de sinistre</h4><p>Un numéro unique est généré à l'envoi. Conservez-le pour suivre votre dossier.</p></div></div>
+  </div>
+  <h2 class="section-title">Formulaire de déclaration</h2>
+  <form id="sin-form" onsubmit="event.preventDefault(); submitForm();">
+    <div class="two-col">
+      <div class="field"><label>Nom <span class="req">*</span></label><input type="text" id="s-nom" required placeholder="Dupont"/></div>
+      <div class="field"><label>Prénom <span class="req">*</span></label><input type="text" id="s-prenom" required placeholder="Jean"/></div>
+    </div>
+    <div class="two-col">
+      <div class="field"><label>Téléphone <span class="req">*</span></label><input type="tel" id="s-tel" required placeholder="06 00 00 00 00"/></div>
+      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="s-email" required placeholder="jean@email.com"/></div>
+    </div>
+    <div class="field"><label>Adresse postale <span class="req">*</span></label><input type="text" id="s-adresse" required placeholder="12 rue de la Forêt, {{addressZip}} {{addressCity}}"/></div>
+    <div class="field"><label>Date du sinistre <span class="req">*</span></label><input type="date" id="s-date" required/></div>
+    <div class="field">
+      <label>Qui a causé le sinistre ? <span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="cause"> Vous-même</label>
+        <label class="radio-opt"><input type="radio" name="cause"> Votre chien</label>
+        <label class="radio-opt"><input type="radio" name="cause"> Un autre chasseur</label>
+        <label class="radio-opt"><input type="radio" name="cause"> Le chien d'un autre chasseur</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Type(s) de dommages <span class="req">*</span></label>
+      <div class="check-group">
+        <label class="check-opt"><input type="checkbox"> Blessure corporelle (chasseur)</label>
+        <label class="check-opt"><input type="checkbox"> Blessure d'un chien</label>
+        <label class="check-opt"><input type="checkbox"> Dommages à un véhicule</label>
+        <label class="check-opt"><input type="checkbox"> Dommages à des volailles ou animaux d'élevage</label>
+        <label class="check-opt"><input type="checkbox"> Autres dommages matériels</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>Le sinistre s'est produit <span class="req">*</span></label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="moment"> Pendant une partie de chasse</label>
+        <label class="radio-opt"><input type="radio" name="moment"> Hors d'une partie de chasse</label>
+      </div>
+    </div>
+    <div class="field"><label>Nom et coordonnées du tiers éventuel</label><input type="text" id="s-tiers" placeholder="Si un tiers est impliqué"/></div>
+    <div class="field"><label>Description des circonstances <span class="req">*</span></label><textarea id="s-desc" rows="5" required placeholder="Décrivez brièvement comment le sinistre s'est produit…" style="resize:vertical;font-family:inherit"></textarea></div>
+    <div class="upload-section">
+      <h3>Pièces justificatives</h3>
+      <p class="sub">Joignez vos documents directement ici (PDF, JPG, PNG — 10 Mo max par fichier). Vous pouvez aussi nous les envoyer après à {{emailSinistres}}.</p>
+      <div class="upload-slots">
+        <label class="upload-slot" id="slot-permis"><input type="file" id="file-permis" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected('slot-permis','file-permis')"><div class="slot-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a2ab0" stroke-width="1.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="slot-text"><h4>Copie du permis de chasse</h4><p>Recto-verso · PDF ou photo</p></div><span class="slot-badge">Facultatif</span><span class="slot-status">✓ Ajouté</span></label>
+        <label class="upload-slot" id="slot-valid"><input type="file" id="file-valid" accept=".pdf,.jpg,.jpeg,.png" onchange="fileSelected('slot-valid','file-valid')"><div class="slot-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3a2ab0" stroke-width="1.5" stroke-linecap="round"><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="slot-text"><h4>Validation {{fdcShort}} (saison en cours)</h4><p>Timbre de validation · PDF ou photo</p></div><span class="slot-badge">Facultatif</span><span class="slot-status">✓ Ajouté</span></label>
+        <label class="upload-slot" id="slot-photos"><input type="file" id="file-photos" accept=".jpg,.jpeg,.png,.heic" multiple onchange="fileSelected('slot-photos','file-photos',true)"><div class="slot-icon" style="background:#fff8ee"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8b5e0a" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div><div class="slot-text"><h4>Photos du sinistre</h4><p>Blessures, dommages, lieu · sélection multiple</p></div><span class="slot-badge">Facultatif</span><span class="slot-status">✓ Ajoutées</span></label>
+        <label class="upload-slot" id="slot-annexe"><input type="file" id="file-annexe" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple onchange="fileSelected('slot-annexe','file-annexe',true)"><div class="slot-icon" style="background:#f0f8ff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a5a7a" stroke-width="1.5" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></div><div class="slot-text"><h4>Document annexe</h4><p>Certificat médical, facture vétérinaire, rapport…</p></div><span class="slot-badge">Facultatif</span><span class="slot-status">✓ Ajouté(s)</span></label>
+      </div>
+    </div>
+    <button class="btn-submit" type="submit">Envoyer ma déclaration</button>
+  </form>
+  <div class="envoi-band">
+    <h4>Vous préférez envoyer vos documents séparément ?</h4>
+    <div class="envoi-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6a4ab0" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0;margin-top:2px"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><p>Par email : <a href="mailto:{{emailSinistres}}"><strong>{{emailSinistres}}</strong></a> — en mentionnant votre nom et votre numéro de sinistre.</p></div>
+    <div class="envoi-row"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6a4ab0" stroke-width="1.5" stroke-linecap="round" style="flex-shrink:0;margin-top:2px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><p><strong>{{fullName}} — {{address}}, {{addressZip}} {{addressCity}}</strong></p></div>
+  </div>
+</div>
+{{footer}}
+<script>
+var filesAdded = {};
+function fileSelected(slotId, inputId) {
+  var input = document.getElementById(inputId);
+  var slot = document.getElementById(slotId);
+  if (input.files && input.files.length > 0) {
+    slot.classList.add('has-file');
+    filesAdded[slotId] = Array.from(input.files).map(function(f){ return f.name; });
+  }
+}
+function generateRef() {
+  var now = new Date();
+  var yy = now.getFullYear();
+  var mm = String(now.getMonth() + 1).padStart(2, '0');
+  var dd = String(now.getDate()).padStart(2, '0');
+  var rand = Math.floor(Math.random() * 90000) + 10000;
+  return 'SIN-' + yy + mm + dd + '-' + rand;
+}
+async function submitForm() {
+  var nom = document.getElementById('s-nom').value.trim();
+  var email = document.getElementById('s-email').value.trim();
+  var desc = document.getElementById('s-desc').value.trim();
+  if (!nom || !email || !desc) { alert('Merci de remplir tous les champs obligatoires.'); return; }
+  var ref = generateRef();
+  var payload = {
+    department: '{{slug}}',
+    ref: ref,
+    nom: nom, prenom: document.getElementById('s-prenom').value.trim(),
+    tel: document.getElementById('s-tel').value.trim(), email: email,
+    adresse: document.getElementById('s-adresse').value.trim(),
+    date_sin: document.getElementById('s-date').value,
+    desc: desc,
+    tiers: document.getElementById('s-tiers').value.trim(),
+    files: filesAdded
+  };
+  try {
+    await fetch('/api/claim-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+  } catch(e) {}
+  document.getElementById('popup-ref').textContent = ref;
+  document.getElementById('popup-email').textContent = email;
+  document.getElementById('popup').classList.add('visible');
+}
+function closePopup() {
+  document.getElementById('popup').classList.remove('visible');
+  window.location.href = '/';
+}
+</script>
+</body>
+</html>

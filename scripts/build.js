@@ -17,7 +17,6 @@ const articleByName = {
   Dordogne: 'de Dordogne',
   'Lot-et-Garonne': 'du Lot-et-Garonne'
 };
-
 const localSpecialistByName = {
   Gironde: 'en Gironde',
   Calvados: 'dans le Calvados',
@@ -25,10 +24,7 @@ const localSpecialistByName = {
   'Lot-et-Garonne': 'en Lot-et-Garonne'
 };
 
-function readPartial(name) {
-  return fs.readFileSync(path.join(PARTIALS, name), 'utf8');
-}
-
+function readPartial(name) { return fs.readFileSync(path.join(PARTIALS, name), 'utf8'); }
 function applyVars(content, vars) {
   return content.replace(/\{\{(\w+)\}\}/g, (m, key) => {
     if (Object.prototype.hasOwnProperty.call(vars, key)) return vars[key];
@@ -89,9 +85,15 @@ console.log(`Building ${toBuild.length} site(s)...`);
 fs.rmSync(DIST, { recursive: true, force: true });
 toBuild.forEach(buildDept);
 console.log('Done.');
-if (argDept && process.env.VERCEL) {
+
+// FIX : si UN SEUL dept buildé via DEPT env var, on déplace à la racine de dist/
+// (comportement par défaut sur Vercel pour qu'il serve correctement le site)
+if (argDept) {
   const srcDir = path.join(DIST, argDept);
-  const files = fs.readdirSync(srcDir);
-  for (const f of files) fs.renameSync(path.join(srcDir, f), path.join(DIST, f));
-  fs.rmdirSync(srcDir);
+  if (fs.existsSync(srcDir)) {
+    const files = fs.readdirSync(srcDir);
+    for (const f of files) fs.renameSync(path.join(srcDir, f), path.join(DIST, f));
+    fs.rmdirSync(srcDir);
+    console.log(`→ contenu de ${argDept} déplacé à la racine de dist/`);
+  }
 }
