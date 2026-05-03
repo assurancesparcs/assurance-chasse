@@ -11,7 +11,7 @@
     "build:lot-et-garonne": "node scripts/build.js lot-et-garonne",
     "vercel-build": "node scripts/build.js"
   },
-  "dependencies": {
+    "dependencies": {
+    "nodemailer": "^6.9.16",
     "stripe": "^17.0.0"
   }
-}
