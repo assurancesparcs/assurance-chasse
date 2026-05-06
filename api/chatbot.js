@@ -57,10 +57,27 @@ RÈGLES DE RÉPONSE
 
 RÈGLE SINISTRE DÉJÀ SURVENU : Si le visiteur décrit un sinistre déjà survenu, préciser avec bienveillance que souscrire maintenant serait trop tard pour ce sinistre. Encourager à souscrire pour l'avenir.`;
 
+const ALLOWED_DEPTS = ['gironde', 'calvados', 'dordogne', 'lot-et-garonne'];
+const MAX_MESSAGES = 30;
+const MAX_MESSAGE_CHARS = 2000;
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const { department, messages } = req.body || {};
-  if (!Array.isArray(messages) || messages.length === 0) return res.status(400).json({ error: 'Messages manquants' });
+
+  if (!ALLOWED_DEPTS.includes(department)) {
+    return res.status(400).json({ error: 'Département invalide' });
+  }
+  if (!Array.isArray(messages) || messages.length === 0 || messages.length > MAX_MESSAGES) {
+    return res.status(400).json({ error: 'Messages invalides' });
+  }
+  for (const m of messages) {
+    if (!m || typeof m !== 'object') return res.status(400).json({ error: 'Format message invalide' });
+    if (m.role !== 'user' && m.role !== 'assistant') return res.status(400).json({ error: 'Rôle invalide' });
+    if (typeof m.content !== 'string' || m.content.length === 0 || m.content.length > MAX_MESSAGE_CHARS) {
+      return res.status(400).json({ error: 'Contenu message invalide' });
+    }
+  }
 
   const deptMap = {
     'gironde':        { name: 'Gironde',        code: '33', fdc: 'FDC33' },
@@ -68,7 +85,7 @@ module.exports = async (req, res) => {
     'dordogne':       { name: 'Dordogne',       code: '24', fdc: 'FDC24' },
     'lot-et-garonne': { name: 'Lot-et-Garonne', code: '47', fdc: 'FDC47' },
   };
-  const dept = deptMap[department] || deptMap.gironde;
+  const dept = deptMap[department];
   const systemPrompt = SYSTEM_PROMPT_TEMPLATE
     .replace(/{{NAME}}/g, dept.name)
     .replace(/{{CODE}}/g, dept.code)
@@ -86,12 +103,12 @@ module.exports = async (req, res) => {
     const data = await response.json();
     if (data.error) {
       console.error('Anthropic error:', data.error);
-      return res.status(500).json({ error: data.error.message });
+      return res.status(500).json({ error: 'Service temporairement indisponible' });
     }
     const reply = data.content && data.content[0] ? data.content[0].text : "Je n'ai pas pu traiter votre question.";
     return res.status(200).json({ reply });
   } catch (err) {
     console.error('Chatbot error:', err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: 'Service temporairement indisponible' });
   }
 };

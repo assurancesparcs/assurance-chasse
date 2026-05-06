@@ -22,6 +22,16 @@ const OPTION_LABEL = {
   chi: 'Chiens de chasse',
 };
 
+function escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function sanitizeHeader(s) {
+  return String(s == null ? '' : s).replace(/[\r\n\t\0]/g, ' ').slice(0, 200).trim();
+}
+
 module.exports.config = {
   api: { bodyParser: false },
 };
@@ -53,7 +63,7 @@ function formatChiens(chiensJson) {
       chiens
         .map(
           (c) =>
-            `<li>${c.nom || '—'} (${c.race || '—'}, ${c.age || '?'} ans, n° ${c.identification || '—'})</li>`
+            `<li>${escHtml(c.nom || '—')} (${escHtml(c.race || '—')}, ${escHtml(c.age || '?')} ans, n° ${escHtml(c.identification || '—')})</li>`
         )
         .join('') +
       '</ul>'
@@ -82,16 +92,16 @@ async function sendEmails(session, metadata) {
     from: `"Cabinet ADC&E Assurances" <${process.env.GMAIL_USER}>`,
     to: session.customer_email,
     replyTo: process.env.GMAIL_USER,
-    subject: `Confirmation de votre souscription assurance chasse — saison ${metadata.saison || ''}`,
+    subject: sanitizeHeader(`Confirmation de votre souscription assurance chasse — saison ${metadata.saison || ''}`),
     html: `
-      <p>Bonjour ${metadata.prenom || ''},</p>
-      <p>Nous confirmons votre souscription d'assurance chasse pour la saison <strong>${metadata.saison || '—'}</strong>.</p>
+      <p>Bonjour ${escHtml(metadata.prenom || '')},</p>
+      <p>Nous confirmons votre souscription d'assurance chasse pour la saison <strong>${escHtml(metadata.saison || '—')}</strong>.</p>
       <p><strong>Montant réglé :</strong> ${amount} €<br>
       <strong>Options souscrites :</strong> ${optionsLabel}<br>
-      <strong>N° de permis :</strong> ${metadata.npermis || '—'}</p>
+      <strong>N° de permis :</strong> ${escHtml(metadata.npermis || '—')}</p>
       ${chiensHtml}
       <p>Votre attestation officielle vous parviendra par email dans les minutes qui suivent.</p>
-      <p>Pour toute question, vous pouvez nous joindre à <a href="mailto:${process.env.GMAIL_USER}">${process.env.GMAIL_USER}</a>.</p>
+      <p>Pour toute question, vous pouvez nous joindre à <a href="mailto:${escHtml(process.env.GMAIL_USER)}">${escHtml(process.env.GMAIL_USER)}</a>.</p>
       <p>Cordialement,<br>Cabinet ADC&amp;E Assurances</p>
     `,
   });
@@ -100,20 +110,20 @@ async function sendEmails(session, metadata) {
   await transporter.sendMail({
     from: `"Notifications site ADC&E" <${process.env.GMAIL_USER}>`,
     to: process.env.GMAIL_USER,
-    subject: `[PAIEMENT ${fdc}] ${metadata.nom || ''} ${metadata.prenom || ''} — ${amount} €`,
+    subject: sanitizeHeader(`[PAIEMENT ${fdc}] ${metadata.nom || ''} ${metadata.prenom || ''} — ${amount} €`),
     html: `
       <h3>Nouvelle souscription confirmée</h3>
-      <p><strong>Département :</strong> ${metadata.department || '—'} ${fdc ? `(${fdc})` : ''}<br>
-      <strong>Saison :</strong> ${metadata.saison || '—'}<br>
+      <p><strong>Département :</strong> ${escHtml(metadata.department || '—')} ${fdc ? `(${fdc})` : ''}<br>
+      <strong>Saison :</strong> ${escHtml(metadata.saison || '—')}<br>
       <strong>Montant :</strong> ${amount} €<br>
       <strong>Options :</strong> ${optionsLabel}</p>
       <hr>
-      <p><strong>Client :</strong> ${metadata.prenom || ''} ${metadata.nom || ''}<br>
-      <strong>Email :</strong> ${session.customer_email}<br>
-      <strong>N° permis :</strong> ${metadata.npermis || '—'}</p>
+      <p><strong>Client :</strong> ${escHtml(metadata.prenom || '')} ${escHtml(metadata.nom || '')}<br>
+      <strong>Email :</strong> ${escHtml(session.customer_email)}<br>
+      <strong>N° permis :</strong> ${escHtml(metadata.npermis || '—')}</p>
       ${chiensHtml}
       <hr>
-      <p><strong>Stripe session :</strong> ${session.id}</p>
+      <p><strong>Stripe session :</strong> ${escHtml(session.id)}</p>
     `,
   });
 }
@@ -133,7 +143,7 @@ module.exports = async (req, res) => {
     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).json({ error: `Webhook Error: ${err.message}` });
+    return res.status(400).json({ error: 'Webhook signature invalide' });
   }
 
   switch (event.type) {
@@ -144,13 +154,8 @@ module.exports = async (req, res) => {
       console.log('✓ Paiement confirmé', {
         session_id: session.id,
         amount: session.amount_total / 100,
-        email: session.customer_email,
         department: metadata.department,
-        nom: metadata.nom,
-        prenom: metadata.prenom,
-        npermis: metadata.npermis,
         saison: metadata.saison,
-        options: metadata.options,
       });
 
       try {

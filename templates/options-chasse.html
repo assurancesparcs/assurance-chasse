@@ -131,7 +131,7 @@
         <strong>Déclaration de sinistre :</strong> Tout sinistre doit être déclaré dans un délai de 5 jours ouvrés suivant sa survenance, par email à {{emailSinistres}} ou par voie postale à {{fullName}}, {{address}}, {{addressZip}} {{addressCity}}.<br><br>
         <strong>Droit applicable :</strong> Le présent contrat est soumis au droit français. Tout litige relève de la compétence des juridictions françaises.<br><br>
         <strong>Réclamations :</strong> Toute réclamation doit être adressée au {{fullName}}. En cas de désaccord persistant, vous pouvez saisir le Médiateur de l'Assurance (www.mediation-assurance.org).<br><br>
-        <a class="doc-link" href="/bulletin-adhesion-rc-individuel.pdf" target="_blank">
+        <a class="doc-link" href="/bulletin-adhesion-rc-individuel.pdf" target="_blank" rel="noopener noreferrer">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Télécharger le bulletin d'adhésion complet (PDF)
         </a>
@@ -178,7 +178,7 @@
         Paiement annuel en ligne, sécurisé par Stripe. La garantie est effective dès confirmation du paiement.<br><br>
         <strong>Comment résilier ?</strong><br>
         Le contrat est souscrit à la saison. Il ne se renouvelle pas tacitement. Pour toute question : {{emailGeneral}} · {{phone}}.<br><br>
-        <a class="doc-link" href="/IPID_RCCH_2026_E_PONCEY.docx" target="_blank">
+        <a class="doc-link" href="/ipid-rcch.pdf" target="_blank" rel="noopener noreferrer">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           Télécharger l'IPID 2026
         </a>
@@ -300,6 +300,11 @@
 {{footer}}
 
 <script>
+function escHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
 var opts = [];
 var cur = 0;
 var chienData = [];
@@ -419,12 +424,12 @@ function renderChiens() {
     container.innerHTML += '<div style="background:#fff;border-radius:8px;padding:12px;margin-bottom:10px">' +
       '<div style="font-family:Helvetica Neue,Arial,sans-serif;font-size:12px;font-weight:600;color:#3a4e3a;margin-bottom:8px">Chien ' + (i+1) + '</div>' +
       '<div class="two-col" style="margin-bottom:8px">' +
-        '<div class="field" style="margin:0"><label>Nom <span class="req">*</span></label><input type="text" id="chien-nom-'+i+'" placeholder="Ex : Rex" value="'+(prev.nom||'')+'"/></div>' +
-        '<div class="field" style="margin:0"><label>Race</label><input type="text" id="chien-race-'+i+'" placeholder="Ex : Épagneul breton" value="'+(prev.race||'')+'"/></div>' +
+        '<div class="field" style="margin:0"><label>Nom <span class="req">*</span></label><input type="text" id="chien-nom-'+i+'" placeholder="Ex : Rex" value="'+escHtml(prev.nom||'')+'"/></div>' +
+        '<div class="field" style="margin:0"><label>Race</label><input type="text" id="chien-race-'+i+'" placeholder="Ex : Épagneul breton" value="'+escHtml(prev.race||'')+'"/></div>' +
       '</div>' +
       '<div class="two-col">' +
-        '<div class="field" style="margin:0"><label>N° identification (puce/tatouage) <span class="req">*</span></label><input type="text" id="chien-id-'+i+'" placeholder="Ex : 250268710123456" value="'+(prev.identification||'')+'"/></div>' +
-        '<div class="field" style="margin:0"><label>Âge <span class="req">*</span></label><input type="number" id="chien-age-'+i+'" placeholder="Ex : 3" min="0" max="11" value="'+(prev.age||'')+'" style="text-align:center"/></div>' +
+        '<div class="field" style="margin:0"><label>N° identification (puce/tatouage) <span class="req">*</span></label><input type="text" id="chien-id-'+i+'" placeholder="Ex : 250268710123456" value="'+escHtml(prev.identification||'')+'"/></div>' +
+        '<div class="field" style="margin:0"><label>Âge <span class="req">*</span></label><input type="number" id="chien-age-'+i+'" placeholder="Ex : 3" min="0" max="11" value="'+escHtml(prev.age||'')+'" style="text-align:center"/></div>' +
       '</div>' +
       '</div>';
   }
@@ -456,13 +461,13 @@ function buildRecap() {
   var total = cotisBase + fraisAdmin;
   var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }).join(' + ') || 'Aucune';
 
-  var html = '<div class="recap-row"><span class="recap-label">Titulaire</span><span class="recap-value">'+prenom+' '+nom+'</span></div>';
-  html += '<div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">'+email+'</span></div>';
-  html += '<div class="recap-row"><span class="recap-label">N° permis</span><span class="recap-value">'+npermis+'</span></div>';
-  html += '<div class="recap-row"><span class="recap-label">Saison</span><span class="recap-value">'+saison+'</span></div>';
-  html += '<div class="recap-row"><span class="recap-label">Options</span><span class="recap-value">'+optLabel+'</span></div>';
+  var html = '<div class="recap-row"><span class="recap-label">Titulaire</span><span class="recap-value">'+escHtml(prenom)+' '+escHtml(nom)+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">'+escHtml(email)+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">N° permis</span><span class="recap-value">'+escHtml(npermis)+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">Saison</span><span class="recap-value">'+escHtml(saison)+'</span></div>';
+  html += '<div class="recap-row"><span class="recap-label">Options</span><span class="recap-value">'+escHtml(optLabel)+'</span></div>';
   if(opts.includes('chi') && chienData.length > 0) {
-    var chiensStr = chienData.map(function(c,i){ return (i+1)+'. '+c.nom+(c.race?' ('+c.race+')':'')+(c.age?' — '+c.age+' ans':'')+(c.identification?' — ID: '+c.identification:''); }).join('<br>');
+    var chiensStr = chienData.map(function(c,i){ return escHtml((i+1)+'. '+(c.nom||''))+(c.race?' ('+escHtml(c.race)+')':'')+(c.age?' — '+escHtml(c.age)+' ans':'')+(c.identification?' — ID: '+escHtml(c.identification):''); }).join('<br>');
     html += '<div class="recap-row"><span class="recap-label">Chiens assurés</span><span class="recap-value">'+chiensStr+'</span></div>';
   }
   html += '<div style="border-top:1px solid #e0e8d0;margin-top:8px;padding-top:8px;">';
