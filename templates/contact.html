@@ -105,11 +105,14 @@ async function sendMessage() {
   };
   try {
     var res = await fetch('/api/contact-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-    if (!res.ok) throw new Error('Erreur ' + res.status);
+    if (!res.ok) {
+      var errData = await res.json().catch(function(){ return {}; });
+      throw new Error(errData.error || ('Erreur ' + res.status));
+    }
     success.classList.add('show');
     document.getElementById('contact-form').reset();
   } catch(e) {
-    error.textContent = 'Une erreur est survenue. Contactez-nous directement au {{phone}} ou à {{emailGeneral}}.';
+    error.textContent = (e && e.message ? e.message : 'Une erreur est survenue') + '. Si le problème persiste, contactez-nous au {{phone}} ou à {{emailGeneral}}.';
     error.classList.add('show');
   }
   btn.disabled = false; btn.textContent = 'Envoyer mon message';

@@ -185,8 +185,16 @@ async function submitForm() {
     files: filesAdded
   };
   try {
-    await fetch('/api/claim-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-  } catch(e) {}
+    var res = await fetch('/api/claim-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    if (!res.ok) {
+      var errData = await res.json().catch(function(){ return {}; });
+      alert('Erreur lors de l\'envoi : ' + (errData.error || 'erreur ' + res.status) + '\n\nMerci de vérifier votre saisie ou de nous contacter au {{phone}}.');
+      return;
+    }
+  } catch(e) {
+    alert('Erreur réseau lors de l\'envoi de votre déclaration. Merci de réessayer ou de nous contacter au {{phone}}.');
+    return;
+  }
   document.getElementById('popup-ref').textContent = ref;
   document.getElementById('popup-email').textContent = email;
   document.getElementById('popup').classList.add('visible');
