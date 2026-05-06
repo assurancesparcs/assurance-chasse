@@ -71,15 +71,19 @@ module.exports = async (req, res) => {
   }
 
   const line_items = [];
+  const missingEnv = [];
   if (options.includes('sec')) {
-    line_items.push({ price: process.env.STRIPE_PRICE_SECURITE, quantity: 1 });
+    if (!process.env.STRIPE_PRICE_SECURITE) missingEnv.push('STRIPE_PRICE_SECURITE');
+    else line_items.push({ price: process.env.STRIPE_PRICE_SECURITE, quantity: 1 });
   }
   if (options.includes('chi')) {
     if (nbPetit > 0) {
-      line_items.push({ price: process.env.STRIPE_PRICE_CHIENS_PETIT, quantity: nbPetit });
+      if (!process.env.STRIPE_PRICE_CHIENS_PETIT) missingEnv.push('STRIPE_PRICE_CHIENS_PETIT');
+      else line_items.push({ price: process.env.STRIPE_PRICE_CHIENS_PETIT, quantity: nbPetit });
     }
     if (nbGros > 0) {
-      line_items.push({ price: process.env.STRIPE_PRICE_CHIENS_GROS, quantity: nbGros });
+      if (!process.env.STRIPE_PRICE_CHIENS_GROS) missingEnv.push('STRIPE_PRICE_CHIENS_GROS');
+      else line_items.push({ price: process.env.STRIPE_PRICE_CHIENS_GROS, quantity: nbGros });
     }
   }
 
@@ -87,7 +91,13 @@ module.exports = async (req, res) => {
   const adminQty = (options.includes('sec') ? 1 : 0)
     + (options.includes('chi') ? (nbPetit + nbGros) : 0);
   if (adminQty > 0) {
-    line_items.push({ price: process.env.STRIPE_PRICE_ADMIN, quantity: adminQty });
+    if (!process.env.STRIPE_PRICE_ADMIN) missingEnv.push('STRIPE_PRICE_ADMIN');
+    else line_items.push({ price: process.env.STRIPE_PRICE_ADMIN, quantity: adminQty });
+  }
+
+  if (missingEnv.length > 0) {
+    console.error('Variables Stripe manquantes:', missingEnv.join(', '));
+    return res.status(500).json({ error: `Configuration serveur incomplète (${missingEnv.join(', ')})` });
   }
 
   const metadata = {
