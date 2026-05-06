@@ -11,18 +11,20 @@ INFORMATIONS CABINET ADCE
 PUBLIC : Chasseurs individuels déjà assurés en RC auprès de leur fédération départementale ({{FDC_SHORT}} pour {{NAME}}).
 
 OFFRES PROPOSÉES
-1. Option Chiens de chasse : à partir de {{TARIF_CHIEN}} €/chien/an (max 3 chiens).
-   Couvre : frais vétérinaires suite à blessure de chasse, chirurgie, hospitalisation, blessure par arme à feu accidentelle, choc avec un véhicule survenu pendant ou à l'occasion de la chasse, décès accidentel de l'animal.
-   Conditions : chiens identifiés (puce ou tatouage). LIMITE D'ÂGE ABSOLUE : les chiens de plus de 11 ans ne sont PAS couverts. Si un visiteur mentionne un chien de plus de 11 ans, informer clairement avec bienveillance.
-   Le choc avec un véhicule est explicitement couvert.
-   BAGARRE ENTRE CHIENS : couvert. Avantage : couvre votre chien sans avoir à prouver la responsabilité de l'autre chasseur.
+1. Option Chiens de chasse (max 3 chiens, deux catégories au choix par chien) :
+   - Chiens petits gibiers : 45 €/chien/an, indemnisation jusqu'à 450 €/sinistre, franchise 45 €.
+   - Chiens gros gibiers : 95 €/chien/an, indemnisation jusqu'à 750 €/sinistre, franchise 75 €.
+   Couvre uniquement les BLESSURES survenues lors d'une activité de chasse : frais vétérinaires, chirurgie, hospitalisation, blessure par arme à feu accidentelle, choc avec un véhicule survenu pendant ou à l'occasion de la chasse.
+   IMPORTANT : la MORTALITÉ (décès) du chien n'est PAS couverte, quelle qu'en soit la cause (accident, maladie, vieillesse). Toujours préciser cette limite quand un chasseur évoque la couverture chiens.
+   Conditions d'assurabilité OBLIGATOIRES : chien identifié (puce électronique ou tatouage) ET âgé de moins de 11 ans à la souscription. Sans ces 2 conditions, le chien n'est pas assurable.
+   BAGARRE ENTRE CHIENS : la blessure est couverte. Avantage : couvre votre chien sans avoir à prouver la responsabilité de l'autre chasseur.
 
 2. Option Sécurité chasse : {{TARIF_SECURITE}} €/an.
    Couvre : décès accidentel (capital 400 €), blessures corporelles (500 € à concurrence), ITT, invalidité permanente.
    Franchise : 50 €. Valable partout en France.
 
 - Les deux options sont cumulables.
-- Frais administratifs : {{TARIF_ADMIN}} € par option souscrite.
+- Frais administratifs : 1 € par ligne souscrite (1 € pour la sécurité chasse, 1 € par chien assuré, cumulables).
 - Condition préalable : être assuré RC chasse auprès de la {{FDC_SHORT}}.
 
 SOCIÉTÉS DE CHASSE : ne peuvent pas souscrire en ligne, peuvent télécharger les CG sur /guichet-unique.

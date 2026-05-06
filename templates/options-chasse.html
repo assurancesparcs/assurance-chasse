@@ -118,15 +118,19 @@
         <em style="font-size:11px;color:#6a7a6e">MIC Insurance Company / ELKYIA by Finaxy Group — 2026</em><br><br>
         <strong>Objet du contrat :</strong> Le présent contrat garantit la responsabilité civile du chasseur titulaire d'un permis de chasse valide, assuré auprès de la {{fdcName}} ({{fdcShort}}) pour la saison en cours.<br><br>
         <strong>Garanties complémentaires proposées par le {{fullName}} :</strong><br><br>
-        <strong>Option 1 — Chiens de chasse (à partir de {{tarifChienPerDog}} €/chien/an) :</strong><br>
-        Cette option couvre les frais vétérinaires consécutifs à une blessure survenue pendant ou à l'occasion d'une activité de chasse autorisée, la chirurgie et l'hospitalisation vétérinaire, les blessures par arme à feu accidentelle, le choc avec un véhicule survenu lors d'une activité de chasse, et le décès accidentel de l'animal.<br><br>
+        <strong>Option 1 — Chiens de chasse :</strong><br>
+        Cette option couvre les frais vétérinaires consécutifs à une <strong>blessure</strong> du chien survenue pendant ou à l'occasion d'une activité de chasse autorisée : chirurgie, hospitalisation vétérinaire, blessures par arme à feu accidentelle, choc avec un véhicule survenu lors d'une activité de chasse.<br><br>
+        <strong style="color:#7a1a1a">⚠ La mortalité (décès) du chien n'est PAS couverte</strong>, quelle qu'en soit la cause (accident, maladie, vieillesse).<br><br>
+        Deux catégories au choix par chien :<br>
+        • <strong>Petits gibiers — {{tarifChienPetit}} €/chien/an</strong> · indemnisation jusqu'à <strong>{{garantieChienPetit}} €</strong>/sinistre · franchise <strong>{{franchiseChienPetit}} €</strong><br>
+        • <strong>Gros gibiers — {{tarifChienGros}} €/chien/an</strong> · indemnisation jusqu'à <strong>{{garantieChienGros}} €</strong>/sinistre · franchise <strong>{{franchiseChienGros}} €</strong><br><br>
         <em>Conditions d'assurabilité :</em> Le chien doit être identifié (puce électronique ou tatouage). L'animal ne doit pas avoir dépassé l'âge de 11 ans à la date de souscription. Maximum 3 chiens par chasseur.<br><br>
-        <em>Exclusions principales :</em> Maladies, affections préexistantes, vieillesse, chiens de plus de 11 ans, dommages intentionnels, activité hors chasse autorisée.<br><br>
+        <em>Exclusions principales :</em> Décès / mortalité, maladies, affections préexistantes, vieillesse, chiens de plus de 11 ans, dommages intentionnels, activité hors chasse autorisée.<br><br>
         <strong>Option 2 — Sécurité chasse ({{tarifSecurite}} €/an) :</strong><br>
         Cette option garantit une indemnisation en cas de blessure corporelle du chasseur survenue pendant une partie de chasse autorisée. Elle couvre le décès accidentel, les blessures à concurrence des frais réels, l'incapacité temporaire de travail (ITT) et l'invalidité permanente.<br><br>
         <em>Franchise :</em> 50 € par sinistre.<br><br>
         <em>Exclusions principales :</em> Accidents de véhicule (couverts par l'assurance automobile), pratique de la chasse sans permis valide, état d'ivresse ou sous l'emprise de stupéfiants, dommages intentionnels.<br><br>
-        <strong>Frais administratifs :</strong> {{fraisAdminPerOption}} € par option souscrite.<br><br>
+        <strong>Frais administratifs :</strong> {{fraisAdminParLigne}} € par ligne souscrite ({{fraisAdminParLigne}} € pour la sécurité chasse, {{fraisAdminParLigne}} € par chien assuré).<br><br>
         <strong>Entrée en vigueur :</strong> La garantie prend effet à compter de la date de confirmation du paiement. Aucune garantie rétroactive n'est possible — tout sinistre survenu avant la souscription est exclu.<br><br>
         <strong>Déclaration de sinistre :</strong> Tout sinistre doit être déclaré dans un délai de 5 jours ouvrés suivant sa survenance, par email à {{emailSinistres}} ou par voie postale à {{fullName}}, {{address}}, {{addressZip}} {{addressCity}}.<br><br>
         <strong>Droit applicable :</strong> Le présent contrat est soumis au droit français. Tout litige relève de la compétence des juridictions françaises.<br><br>
@@ -157,19 +161,21 @@
         <strong>Quel type d'assurance est-ce ?</strong><br>
         Assurance de personnes et de biens à usage de chasse, proposée en complément de la responsabilité civile chasse souscrite auprès de votre fédération départementale.<br><br>
         <strong>Qu'est-ce qui est assuré ?</strong><br>
-        ✓ Les frais vétérinaires de vos chiens de chasse en cas de blessure accidentelle survenue lors d'une activité de chasse<br>
-        ✓ Le choc de votre chien avec un véhicule lors d'une activité de chasse<br>
+        ✓ Les frais vétérinaires de vos chiens de chasse en cas de <strong>blessure</strong> accidentelle survenue lors d'une activité de chasse<br>
+        ✓ Le choc de votre chien avec un véhicule lors d'une activité de chasse (frais vétérinaires uniquement)<br>
         ✓ Votre indemnisation corporelle en cas d'accident de chasse (décès, blessures, ITT, invalidité)<br>
-        ✓ Le décès accidentel de vos chiens lors d'une activité de chasse<br><br>
+        ✓ Indemnisation jusqu'à <strong>{{garantieChienPetit}} €/sinistre</strong> (chiens petits gibiers, franchise {{franchiseChienPetit}} €) ou <strong>{{garantieChienGros}} €/sinistre</strong> (chiens gros gibiers, franchise {{franchiseChienGros}} €)<br><br>
         <strong>Qu'est-ce qui n'est pas assuré ?</strong><br>
+        ✗ <strong>La mortalité / le décès du chien</strong>, quelle qu'en soit la cause (accident, maladie, vieillesse)<br>
         ✗ Les accidents survenus en dehors de toute activité de chasse autorisée<br>
         ✗ Les maladies, affections préexistantes ou liées à la vieillesse de l'animal<br>
         ✗ Les chiens de plus de 11 ans à la date de souscription<br>
+        ✗ Les chiens non identifiés (puce ou tatouage obligatoires)<br>
         ✗ Les accidents corporels du chasseur survenus lors de déplacements en véhicule<br>
         ✗ Tout sinistre antérieur à la date de souscription (pas de rétroactivité)<br>
         ✗ La chasse sans permis valide ou hors cadre légal<br><br>
         <strong>Y a-t-il des restrictions à la couverture ?</strong><br>
-        La garantie est subordonnée à la détention d'un permis de chasse valide et à la souscription d'une responsabilité civile chasse auprès de la {{fdcShort}}. Les chiens doivent être identifiés (puce ou tatouage). La franchise de 50 € s'applique à chaque sinistre corporel.<br><br>
+        La garantie est subordonnée à la détention d'un permis de chasse valide et à la souscription d'une responsabilité civile chasse auprès de la {{fdcShort}}. Les chiens doivent être identifiés (puce ou tatouage) et avoir moins de 11 ans. La franchise s'applique à chaque sinistre.<br><br>
         <strong>Où suis-je couvert ?</strong><br>
         Sur l'ensemble du territoire français, pendant toute activité de chasse autorisée.<br><br>
         <strong>Quelles sont mes obligations ?</strong><br>
@@ -225,13 +231,25 @@
       </div>
       <div class="opt-card" id="card-chi" onclick="toggleOpt('chi')">
         <h4>Chiens de chasse</h4>
-        <p>Frais vétérinaires, chirurgie, décès — jusqu'à 3 chiens</p>
-        <div class="prix">À partir de {{tarifChienPerDog}} € / chien / an</div>
-        <div style="font-size:11px;color:#8b5e0a;margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif">⚠ Chiens de 11 ans maximum</div>
+        <p>Garantie blessures uniquement — petits ou gros gibiers, jusqu'à 3 chiens</p>
+        <div class="prix">À partir de {{tarifChienPetit}} € / chien / an</div>
+        <div style="font-size:11px;color:#8b5e0a;margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif">⚠ Mortalité non couverte · 11 ans max · puce/tatouage obligatoires</div>
       </div>
     </div>
 
     <div id="chiens-wrap" style="display:none">
+      <div style="background:#fff5f0;border:1px solid #e8b8a8;border-left:4px solid #c0306a;border-radius:8px;padding:12px 16px;margin-bottom:14px">
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#7a1a1a;font-weight:600;margin:0 0 4px;">⚠ Important — Garantie limitée aux blessures</p>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#5a3030;line-height:1.55;margin:0;">La garantie chiens couvre uniquement les <strong>blessures</strong> survenues lors d'une activité de chasse. <strong>La mortalité (décès) du chien n'est PAS couverte</strong>, quelle qu'en soit la cause.</p>
+      </div>
+      <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:#6a7a5e;line-height:1.6;margin:0 4px 14px;">
+        <strong>Conditions d'assurabilité :</strong> tous les chiens doivent être identifiés (puce électronique ou tatouage) et être âgés de <strong>moins de 11 ans</strong> à la date de souscription.
+      </p>
+      <div style="background:#f5f8f0;border-radius:8px;padding:12px 16px;margin-bottom:14px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#3a4e3a;line-height:1.6">
+        <strong>2 catégories au choix par chien :</strong><br>
+        • <strong>Petits gibiers — {{tarifChienPetit}} €/an</strong> · indemnisation jusqu'à {{garantieChienPetit}} € · franchise {{franchiseChienPetit}} €<br>
+        • <strong>Gros gibiers — {{tarifChienGros}} €/an</strong> · indemnisation jusqu'à {{garantieChienGros}} € · franchise {{franchiseChienGros}} €
+      </div>
       <div class="field" style="margin-bottom:12px">
         <label>Nombre de chiens à assurer <span class="req">*</span></label>
         <select id="nb-chiens" onchange="renderChiens()">
@@ -402,6 +420,16 @@ function validerChiensEtContinuer() {
       alert("Merci d'indiquer l'age de chaque chien pour valider votre souscription.");
       return;
     }
+    var missingId = chienData.filter(function(c){ return !c.identification; });
+    if(missingId.length > 0) {
+      alert("Tous les chiens doivent etre identifies (puce ou tatouage). Merci de renseigner le numero d'identification.");
+      return;
+    }
+    var missingType = chienData.filter(function(c){ return c.type !== 'petit' && c.type !== 'gros'; });
+    if(missingType.length > 0) {
+      alert("Merci de selectionner la categorie (petits ou gros gibiers) pour chaque chien.");
+      return;
+    }
   }
   goTo(2);
 }
@@ -421,8 +449,15 @@ function renderChiens() {
   container.innerHTML = '';
   for(var i=0; i<nb; i++) {
     var prev = chienData[i] || {};
+    var typeSel = prev.type || '';
     container.innerHTML += '<div style="background:#fff;border-radius:8px;padding:12px;margin-bottom:10px">' +
       '<div style="font-family:Helvetica Neue,Arial,sans-serif;font-size:12px;font-weight:600;color:#3a4e3a;margin-bottom:8px">Chien ' + (i+1) + '</div>' +
+      '<div class="field" style="margin:0 0 8px"><label>Catégorie de chasse <span class="req">*</span></label>' +
+        '<select id="chien-type-'+i+'">' +
+          '<option value=""'+(typeSel===''?' selected':'')+'>Sélectionnez…</option>' +
+          '<option value="petit"'+(typeSel==='petit'?' selected':'')+'>Petits gibiers — {{tarifChienPetit}} €/an</option>' +
+          '<option value="gros"'+(typeSel==='gros'?' selected':'')+'>Gros gibiers — {{tarifChienGros}} €/an</option>' +
+        '</select></div>' +
       '<div class="two-col" style="margin-bottom:8px">' +
         '<div class="field" style="margin:0"><label>Nom <span class="req">*</span></label><input type="text" id="chien-nom-'+i+'" placeholder="Ex : Rex" value="'+escHtml(prev.nom||'')+'"/></div>' +
         '<div class="field" style="margin:0"><label>Race</label><input type="text" id="chien-race-'+i+'" placeholder="Ex : Épagneul breton" value="'+escHtml(prev.race||'')+'"/></div>' +
@@ -444,7 +479,14 @@ function saveChiens() {
     var raceEl = document.getElementById('chien-race-'+i);
     var ageEl  = document.getElementById('chien-age-'+i);
     var idEl   = document.getElementById('chien-id-'+i);
-    if(nomEl) chienData.push({ nom: nomEl.value, race: raceEl ? raceEl.value : '', age: ageEl ? ageEl.value : '', identification: idEl ? idEl.value : '' });
+    var typeEl = document.getElementById('chien-type-'+i);
+    if(nomEl) chienData.push({
+      nom: nomEl.value,
+      race: raceEl ? raceEl.value : '',
+      age: ageEl ? ageEl.value : '',
+      identification: idEl ? idEl.value : '',
+      type: typeEl ? typeEl.value : ''
+    });
   }
 }
 
@@ -455,9 +497,13 @@ function buildRecap() {
   var email = document.getElementById('email').value || '—';
   var npermis = document.getElementById('npermis').value || '—';
   var saison = document.getElementById('saison').value || '—';
-  var nb = chienData.length || 1;
-  var cotisBase = (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? {{tarifChienPerDog}}*nb : 0);
-  var fraisAdmin = opts.length * {{fraisAdminPerOption}};
+  var nbPetit = chienData.filter(function(c){ return c.type === 'petit'; }).length;
+  var nbGros = chienData.filter(function(c){ return c.type === 'gros'; }).length;
+  var nbDogs = nbPetit + nbGros;
+  var cotisChiens = nbPetit * {{tarifChienPetit}} + nbGros * {{tarifChienGros}};
+  var cotisBase = (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? cotisChiens : 0);
+  var nbLignesAdmin = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? nbDogs : 0);
+  var fraisAdmin = nbLignesAdmin * {{fraisAdminParLigne}};
   var total = cotisBase + fraisAdmin;
   var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }).join(' + ') || 'Aucune';
 
@@ -467,13 +513,21 @@ function buildRecap() {
   html += '<div class="recap-row"><span class="recap-label">Saison</span><span class="recap-value">'+escHtml(saison)+'</span></div>';
   html += '<div class="recap-row"><span class="recap-label">Options</span><span class="recap-value">'+escHtml(optLabel)+'</span></div>';
   if(opts.includes('chi') && chienData.length > 0) {
-    var chiensStr = chienData.map(function(c,i){ return escHtml((i+1)+'. '+(c.nom||''))+(c.race?' ('+escHtml(c.race)+')':'')+(c.age?' — '+escHtml(c.age)+' ans':'')+(c.identification?' — ID: '+escHtml(c.identification):''); }).join('<br>');
+    var chiensStr = chienData.map(function(c,i){
+      var typeLabel = c.type === 'petit' ? 'petit gibier' : (c.type === 'gros' ? 'gros gibier' : '');
+      return escHtml((i+1)+'. '+(c.nom||''))
+        + (c.race?' ('+escHtml(c.race)+')':'')
+        + (c.age?' — '+escHtml(c.age)+' ans':'')
+        + (typeLabel?' — '+escHtml(typeLabel):'')
+        + (c.identification?' — ID: '+escHtml(c.identification):'');
+    }).join('<br>');
     html += '<div class="recap-row"><span class="recap-label">Chiens assurés</span><span class="recap-value">'+chiensStr+'</span></div>';
   }
   html += '<div style="border-top:1px solid #e0e8d0;margin-top:8px;padding-top:8px;">';
   if(opts.includes('sec')) html += '<div class="recap-row"><span class="recap-label">Sécurité chasse</span><span class="recap-value">{{tarifSecurite}} €</span></div>';
-  if(opts.includes('chi')) html += '<div class="recap-row"><span class="recap-label">Chiens de chasse ('+nb+' chien'+(nb>1?'s':'')+')</span><span class="recap-value">'+({{tarifChienPerDog}}*nb)+' €</span></div>';
-  html += '<div class="recap-row" style="color:#7a8a7a;font-size:12px"><span class="recap-label">Frais administratifs ('+opts.length+' × {{fraisAdminPerOption}} €)</span><span class="recap-value">'+fraisAdmin+' €</span></div>';
+  if(opts.includes('chi') && nbPetit > 0) html += '<div class="recap-row"><span class="recap-label">Chiens petits gibiers ('+nbPetit+' × {{tarifChienPetit}} €)</span><span class="recap-value">'+(nbPetit*{{tarifChienPetit}})+' €</span></div>';
+  if(opts.includes('chi') && nbGros > 0) html += '<div class="recap-row"><span class="recap-label">Chiens gros gibiers ('+nbGros+' × {{tarifChienGros}} €)</span><span class="recap-value">'+(nbGros*{{tarifChienGros}})+' €</span></div>';
+  html += '<div class="recap-row" style="color:#7a8a7a;font-size:12px"><span class="recap-label">Frais administratifs ('+nbLignesAdmin+' × {{fraisAdminParLigne}} €)</span><span class="recap-value">'+fraisAdmin+' €</span></div>';
   html += '</div>';
   html += '<div class="total-row"><span class="total-label">Total annuel</span><span class="total-prix">'+total+' €</span></div>';
   document.getElementById('recap-content').innerHTML = html;
@@ -510,7 +564,13 @@ async function submit() {
     }
   };
 
-  localStorage.setItem('adce_last_souscription', JSON.stringify({
+  var nbPetitForLs = payload.chiens.filter(function(c){ return c.type === 'petit'; }).length;
+  var nbGrosForLs = payload.chiens.filter(function(c){ return c.type === 'gros'; }).length;
+  var nbLignesAdminLs = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? (nbPetitForLs + nbGrosForLs) : 0);
+  var montantLs = (opts.includes('sec') ? {{tarifSecurite}} : 0)
+    + (opts.includes('chi') ? (nbPetitForLs * {{tarifChienPetit}} + nbGrosForLs * {{tarifChienGros}}) : 0)
+    + nbLignesAdminLs * {{fraisAdminParLigne}};
+  sessionStorage.setItem('adce_last_souscription', JSON.stringify({
     ref: 'ADCE-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2,8).toUpperCase(),
     email: payload.customer.email,
     nom: payload.customer.nom,
@@ -519,7 +579,7 @@ async function submit() {
     saison: payload.customer.saison,
     options: opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }),
     chiens: payload.chiens,
-    montant: (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? {{tarifChienPerDog}}*(payload.chiens.length||1) : 0) + opts.length * {{fraisAdminPerOption}}
+    montant: montantLs
   }));
 
   try {

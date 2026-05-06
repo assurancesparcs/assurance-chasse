@@ -61,10 +61,10 @@ function formatChiens(chiensJson) {
     return (
       '<p><strong>Chiens assurés :</strong></p><ul>' +
       chiens
-        .map(
-          (c) =>
-            `<li>${escHtml(c.nom || '—')} (${escHtml(c.race || '—')}, ${escHtml(c.age || '?')} ans, n° ${escHtml(c.identification || '—')})</li>`
-        )
+        .map((c) => {
+          const typeLabel = c.type === 'petit' ? 'petit gibier' : (c.type === 'gros' ? 'gros gibier' : '—');
+          return `<li>${escHtml(c.nom || '—')} (${escHtml(c.race || '—')}, ${escHtml(c.age || '?')} ans, ${escHtml(typeLabel)}, n° ${escHtml(c.identification || '—')})</li>`;
+        })
         .join('') +
       '</ul>'
     );

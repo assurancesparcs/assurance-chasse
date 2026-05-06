@@ -17,7 +17,12 @@
   "slogan": "Avec ADCE, Chassez Heureux",
   "tarifs": {
     "securiteChasse": 25,
-    "chiensChassePerDog": 50,
-    "fraisAdminPerOption": 1
+    "chiensPetitGibier": 45,
+    "chiensGrosGibier": 95,
+    "garantieChiensPetit": 450,
+    "garantieChiensGros": 750,
+    "franchiseChiensPetit": 45,
+    "franchiseChiensGros": 75,
+    "fraisAdminParLigne": 1
   }
 }

@@ -180,8 +180,9 @@ function loadConfirmation() {
     return;
   }
 
-  var raw = localStorage.getItem('adce_last_souscription');
+  var raw = sessionStorage.getItem('adce_last_souscription') || localStorage.getItem('adce_last_souscription');
   var data = raw ? JSON.parse(raw) : null;
+  sessionStorage.removeItem('adce_last_souscription');
   localStorage.removeItem('adce_last_souscription');
 
   if (!data) {
@@ -212,10 +213,16 @@ function loadConfirmation() {
       '</div>';
   }
   if (opts.includes('Chiens de chasse')) {
-    var nbChiens = (data.chiens || []).length || 1;
+    var chiens = data.chiens || [];
+    var nbPetit = chiens.filter(function(c){ return c.type === 'petit'; }).length;
+    var nbGros = chiens.filter(function(c){ return c.type === 'gros'; }).length;
+    var totalChiens = nbPetit * {{tarifChienPetit}} + nbGros * {{tarifChienGros}};
+    var detail = [];
+    if (nbPetit > 0) detail.push(nbPetit + ' petit' + (nbPetit > 1 ? 's' : '') + ' gibier' + (nbPetit > 1 ? 's' : ''));
+    if (nbGros > 0) detail.push(nbGros + ' gros gibier' + (nbGros > 1 ? 's' : ''));
     garantiesHtml += '<div class="recap-row">' +
-      '<span class="rl">Chiens de chasse (' + nbChiens + ' chien' + (nbChiens > 1 ? 's' : '') + ')</span>' +
-      '<span class="rv green">✓ Incluse — ' + ({{tarifChienPerDog}} * nbChiens) + ' €/an</span>' +
+      '<span class="rl">Chiens de chasse (' + (detail.join(', ') || (chiens.length + ' chien(s)')) + ')</span>' +
+      '<span class="rv green">✓ Incluse — ' + totalChiens + ' €/an</span>' +
       '</div>';
   }
   if (opts.length > 0 && opts[0] !== 'Vérifiez votre email de confirmation Stripe') {

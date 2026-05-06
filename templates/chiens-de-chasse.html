@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chiens de chasse — {{siteTitle}}</title>
-<meta name="description" content="Option Chiens de chasse — frais vétérinaires, chirurgie, hospitalisation. À partir de {{tarifChienPerDog}} €/chien/an.">
+<meta name="description" content="Option Chiens de chasse — garantie blessures uniquement (mortalité non couverte). Petits gibiers {{tarifChienPetit}} €/an, gros gibiers {{tarifChienGros}} €/an.">
 <style>
 {{stylesCommon}}
 .hero { background: linear-gradient(135deg, #2a1a06 0%, #3d2a08 60%, #0d1b4b 100%); padding: 52px 32px 44px; text-align: center; }
@@ -49,30 +49,52 @@
   <p>Un chien blessé sur le terrain, c'est des frais vétérinaires imprévus et parfois une saison entière compromise. Notre option vous couvre pour que vous chassiez l'esprit tranquille.</p>
 </div>
 <div class="content">
+  <div style="background:#fff5f0;border:1px solid #e8b8a8;border-left:4px solid #c0306a;border-radius:8px;padding:16px 20px;margin-bottom:32px">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#7a1a1a;font-weight:600;margin:0 0 6px;">⚠ Garantie limitée aux blessures — la mortalité n'est pas couverte</p>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#5a3030;line-height:1.6;margin:0;">Cette option couvre exclusivement les <strong>blessures</strong> de votre chien survenues lors d'une activité de chasse. Le décès / la mortalité du chien (toutes causes) n'est <strong>pas</strong> pris en charge.</p>
+  </div>
+
   <h2 class="section-title">Ce que couvre l'option chiens de chasse</h2>
   <div class="garanties-list">
     <div class="garantie-row"><div class="g-dot"></div><div><h4>Frais vétérinaires suite à blessure</h4><p>Prise en charge des soins après une blessure survenue pendant la chasse : coupures, fractures, morsures, piqûres de sanglier.</p></div></div>
     <div class="garantie-row"><div class="g-dot"></div><div><h4>Chirurgie et hospitalisation</h4><p>Couverture des interventions chirurgicales et des nuits en clinique vétérinaire si l'état de votre chien le nécessite.</p></div></div>
     <div class="garantie-row"><div class="g-dot"></div><div><h4>Blessure par arme à feu accidentelle</h4><p>Votre chien est pris en charge même en cas de tir accidentel, un risque réel sur le terrain que peu de contrats couvrent.</p></div></div>
-    <div class="garantie-row"><div class="g-dot"></div><div><h4>Décès accidentel</h4><p>Indemnisation en cas de décès de votre chien consécutif à un accident de chasse, sur la base de la valeur vénale de l'animal.</p></div></div>
+    <div class="garantie-row"><div class="g-dot"></div><div><h4>Choc avec un véhicule</h4><p>Frais vétérinaires pris en charge en cas de collision avec un véhicule survenue lors d'une activité de chasse.</p></div></div>
   </div>
+
+  <h3 style="font-size:18px;font-weight:normal;color:#1a0e00;margin:32px 0 16px;">Deux catégories au choix par chien</h3>
   <div class="info-grid">
-    <div class="info-card"><h4>Quels chiens sont assurables ?</h4><p>Tous les chiens de chasse identifiés (tatouage ou puce électronique), quelle que soit la race ou le gibier chassé, et âgés de <strong>11 ans maximum</strong>.</p></div>
-    <div class="info-card"><h4>Combien de chiens puis-je assurer ?</h4><p>Jusqu'à 3 chiens par chasseur dans un même contrat. La cotisation s'adapte au nombre de chiens déclarés.</p></div>
+    <div class="info-card" style="border-top:3px solid #6abf7b">
+      <h4>Petits gibiers — {{tarifChienPetit}} €/an</h4>
+      <p>Indemnisation jusqu'à <strong>{{garantieChienPetit}} €</strong> par sinistre · franchise <strong>{{franchiseChienPetit}} €</strong>.<br>Adapté aux chiens d'arrêt, courants sur petit gibier (lièvre, faisan, perdrix…).</p>
+    </div>
+    <div class="info-card" style="border-top:3px solid #8b5e0a">
+      <h4>Gros gibiers — {{tarifChienGros}} €/an</h4>
+      <p>Indemnisation jusqu'à <strong>{{garantieChienGros}} €</strong> par sinistre · franchise <strong>{{franchiseChienGros}} €</strong>.<br>Adapté aux chiens de battue / créance sur sanglier, cerf, chevreuil — risque de blessure plus élevé.</p>
+    </div>
   </div>
-  <div class="warn-band"><strong>Condition d'âge :</strong> les chiens de plus de 11 ans ne peuvent pas être couverts par cette option. Cette limite s'applique à la date de souscription.</div>
+
+  <div class="info-grid">
+    <div class="info-card"><h4>Quels chiens sont assurables ?</h4><p>Tous les chiens de chasse <strong>identifiés (puce électronique ou tatouage)</strong> et âgés de <strong>moins de 11 ans</strong> à la date de souscription. Sans ces 2 conditions, le chien n'est pas assurable.</p></div>
+    <div class="info-card"><h4>Combien de chiens puis-je assurer ?</h4><p>Jusqu'à 3 chiens par chasseur, chacun avec sa propre catégorie (petits ou gros gibiers). La cotisation s'adapte au nombre et au type de chiens déclarés.</p></div>
+  </div>
+
+  <div class="warn-band"><strong>Condition d'âge & d'identification :</strong> les chiens de plus de 11 ans ou non identifiés (puce/tatouage) ne peuvent pas être couverts. Ces conditions s'apprécient à la date de souscription.</div>
+
   <div class="tarif-band">
     <p class="label">Cotisation annuelle</p>
-    <div class="prix">À partir de {{tarifChienPerDog}} €</div>
-    <p class="prix-sub">par chien · maximum 3 chiens par chasseur</p>
+    <div class="prix">{{tarifChienPetit}} € — {{tarifChienGros}} €</div>
+    <p class="prix-sub">selon catégorie · par chien · maximum 3 chiens par chasseur</p>
     <a href="/options-chasse.html" class="btn-souscrire">Souscrire en ligne</a>
     <p class="note">Attestation envoyée automatiquement après souscription</p>
   </div>
   <div class="condition"><p><strong>Condition préalable :</strong> cette option est réservée aux chasseurs titulaires d'un permis de chasse valide et assurés en responsabilité civile chasse auprès de la {{fdcShort}}.</p></div>
   <h3 style="font-size:18px;font-weight:normal;color:#1a0e00;margin-bottom:20px;">Questions fréquentes</h3>
   <div>
-    <div class="faq-item"><h4>Mon chien est-il couvert s'il se blesse à l'entraînement ?</h4><p>La garantie s'applique pendant les parties de chasse et les entraînements officiels. Renseignez-vous lors de la souscription pour les situations spécifiques.</p></div>
-    <div class="faq-item"><h4>Y a-t-il une limite d'âge pour mes chiens ?</h4><p>Oui. L'option Chiens de chasse est réservée aux chiens âgés de 11 ans maximum à la date de souscription.</p></div>
+    <div class="faq-item"><h4>Mon chien est-il couvert s'il décède ?</h4><p>Non. Cette option couvre exclusivement les blessures et leurs frais vétérinaires. La mortalité (décès, toutes causes) n'est pas garantie.</p></div>
+    <div class="faq-item"><h4>Comment choisir entre petits et gros gibiers ?</h4><p>Si votre chien chasse principalement le sanglier, le cerf ou le chevreuil (battues), prenez la catégorie "gros gibiers". Pour les chiens d'arrêt, courants sur lièvre, faisan ou perdrix, "petits gibiers" suffit. Vous pouvez avoir plusieurs chiens dans des catégories différentes.</p></div>
+    <div class="faq-item"><h4>Mon chien est-il couvert s'il se blesse à l'entraînement ?</h4><p>La garantie s'applique pendant les parties de chasse autorisées. Renseignez-vous lors de la souscription pour les situations spécifiques.</p></div>
+    <div class="faq-item"><h4>Y a-t-il une limite d'âge pour mes chiens ?</h4><p>Oui. L'option Chiens de chasse est réservée aux chiens âgés de moins de 11 ans à la date de souscription.</p></div>
     <div class="faq-item"><h4>Y a-t-il un délai de carence ?</h4><p>Non. La couverture est effective dès la confirmation de votre souscription et le paiement de votre cotisation.</p></div>
     <div class="faq-item"><h4>Comment déclarer un sinistre ?</h4><p>Contactez-nous dans les 5 jours suivant l'accident avec le compte-rendu vétérinaire, à {{emailSinistres}} ou au {{phone}}.</p></div>
   </div>
