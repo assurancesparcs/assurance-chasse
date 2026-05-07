@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Pages privées (ne pas indexer)
+Disallow: /confirmation.html
+Disallow: /dashboard.html
+Disallow: /tableau-sinistres.html
+Disallow: /api/
+
+Sitemap: https://{{domain}}/sitemap.xml

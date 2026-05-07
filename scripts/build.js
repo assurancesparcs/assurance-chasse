@@ -48,16 +48,22 @@ function buildDept(deptFile) {
     nameLowerArticle: articleByName[cfg.name] || `du ${cfg.name}`,
     nameLocalSpecialist: localSpecialistByName[cfg.name] || `dans ${cfg.name}`,
     stylesCommon: fs.readFileSync(path.join(PARTIALS, 'styles-common.css'), 'utf8'),
+    buildDate: new Date().toISOString().slice(0, 10),
   };
   vars.logoSvg = applyVars(readPartial('logo.svg'), vars);
   vars.nav = applyVars(readPartial('nav.html'), vars);
   vars.footer = applyVars(readPartial('footer.html'), vars);
+  const seoHead = applyVars(readPartial('seo-head.html'), vars);
   const outDir = path.join(DIST, cfg.slug);
   fs.mkdirSync(outDir, { recursive: true });
-  const templates = fs.readdirSync(TEMPLATES).filter(f => f.endsWith('.html'));
+  const templates = fs.readdirSync(TEMPLATES).filter(f => /\.(html|xml|txt)$/.test(f));
   for (const tpl of templates) {
     const src = fs.readFileSync(path.join(TEMPLATES, tpl), 'utf8');
-    const out = applyVars(src, vars);
+    let out = applyVars(src, vars);
+    // Injection du bloc SEO (Schema.org + OG) dans le <head> des pages HTML
+    if (tpl.endsWith('.html') && out.includes('</head>')) {
+      out = out.replace('</head>', seoHead + '\n</head>');
+    }
     fs.writeFileSync(path.join(outDir, tpl), out);
   }
   if (fs.existsSync(PUBLIC_DIR)) copyRecursive(PUBLIC_DIR, outDir);

@@ -1,0 +1,80 @@
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{siteTitle}} — Partenaire {{fdcShort}}">
+<meta property="og:description" content="Assurance complémentaire chasse {{nameLowerArticle}} : sécurité corporelle, chiens petits/gros gibiers. Cabinet ADCE, partenaire {{fdcName}}.">
+<meta property="og:url" content="https://{{domain}}/">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="{{siteTitle}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{siteTitle}}">
+<meta name="twitter:description" content="Assurance chasse {{nameLowerArticle}} — partenaire {{fdcName}}.">
+<meta name="theme-color" content="#0d1b4b">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "InsuranceAgency",
+  "name": "{{fullName}} — {{name}} ({{code}})",
+  "alternateName": "{{brand}} Assurances Chasse {{code}}",
+  "description": "Cabinet de courtage spécialisé dans l'assurance chasse complémentaire (sécurité corporelle, chiens de chasse petits et gros gibiers) {{nameLocalSpecialist}}, partenaire de la {{fdcName}}.",
+  "url": "https://{{domain}}/",
+  "telephone": "{{phone}}",
+  "email": "{{emailGeneral}}",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "{{address}}",
+    "postalCode": "{{addressZip}}",
+    "addressLocality": "{{addressCity}}",
+    "addressCountry": "FR"
+  },
+  "areaServed": {
+    "@type": "AdministrativeArea",
+    "name": "{{name}}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "FR",
+      "addressRegion": "{{name}}"
+    }
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "12:30"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "14:00",
+      "closes": "17:30"
+    }
+  ],
+  "identifier": {
+    "@type": "PropertyValue",
+    "propertyID": "ORIAS",
+    "value": "{{orias}}"
+  },
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "name": "Sécurité chasse — Garantie corporelle",
+      "price": "{{tarifSecurite}}",
+      "priceCurrency": "EUR",
+      "description": "Indemnisation en cas de blessure corporelle du chasseur (décès, blessures, ITT, invalidité). Cotisation annuelle."
+    },
+    {
+      "@type": "Offer",
+      "name": "Chiens de chasse — Petits gibiers",
+      "price": "{{tarifChienPetit}}",
+      "priceCurrency": "EUR",
+      "description": "Garantie blessures (hors mortalité) pour chiens de chasse au petit gibier. Indemnisation jusqu'à {{garantieChienPetit}} €/sinistre, franchise {{franchiseChienPetit}} €."
+    },
+    {
+      "@type": "Offer",
+      "name": "Chiens de chasse — Gros gibiers",
+      "price": "{{tarifChienGros}}",
+      "priceCurrency": "EUR",
+      "description": "Garantie blessures (hors mortalité) pour chiens de chasse au gros gibier. Indemnisation jusqu'à {{garantieChienGros}} €/sinistre, franchise {{franchiseChienGros}} €."
+    }
+  ]
+}
+</script>
