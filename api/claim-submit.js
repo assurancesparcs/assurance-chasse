@@ -7,6 +7,7 @@
  */
 
 const nodemailer = require('nodemailer');
+const { getClientIp, rateLimit, isHoneypotFilled } = require('./_security');
 
 const FDC_CODE = {
   gironde: 'FDC33',
@@ -50,6 +51,21 @@ module.exports = async (req, res) => {
   }
 
   const claim = req.body || {};
+
+  // Anti-bot honeypot : retour silencieux.
+  if (isHoneypotFilled(claim, 'website')) {
+    console.warn('Honeypot rempli sur claim-submit, requête ignorée', { ip: getClientIp(req) });
+    return res.status(200).json({ received: true, ref: 'IGNORED' });
+  }
+
+  // Rate limit : 2 sinistres max / 10 min par IP
+  const ip = getClientIp(req);
+  const rl = rateLimit('claim', ip, 10 * 60 * 1000, 2);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: `Trop de déclarations envoyées. Réessayez dans ${rl.retryAfter} secondes.` });
+  }
+
   const validationErr = validate(claim);
   if (validationErr) return res.status(400).json({ error: validationErr });
 

@@ -4,6 +4,7 @@
  */
 
 const nodemailer = require('nodemailer');
+const { getClientIp, rateLimit, isHoneypotFilled } = require('./_security');
 
 const FDC_CODE = {
   gironde: 'FDC33',
@@ -45,6 +46,21 @@ module.exports = async (req, res) => {
   }
 
   const msg = req.body || {};
+
+  // Anti-bot honeypot : on retourne 200 silencieusement pour ne pas tipper le bot.
+  if (isHoneypotFilled(msg, 'website')) {
+    console.warn('Honeypot rempli sur contact-submit, requête ignorée', { ip: getClientIp(req) });
+    return res.status(200).json({ received: true });
+  }
+
+  // Rate limit : 3 envois max / 5 min par IP
+  const ip = getClientIp(req);
+  const rl = rateLimit('contact', ip, 5 * 60 * 1000, 3);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: `Trop de messages envoyés. Réessayez dans ${rl.retryAfter} secondes.` });
+  }
+
   const validationErr = validate(msg);
   if (validationErr) return res.status(400).json({ error: validationErr });
 

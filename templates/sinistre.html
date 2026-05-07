@@ -140,6 +140,10 @@
         <label class="upload-slot" id="slot-annexe"><input type="file" id="file-annexe" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple onchange="fileSelected('slot-annexe','file-annexe',true)"><div class="slot-icon" style="background:#f0f8ff"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0a5a7a" stroke-width="1.5" stroke-linecap="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg></div><div class="slot-text"><h4>Document annexe</h4><p>Certificat médical, facture vétérinaire, rapport…</p></div><span class="slot-badge">Facultatif</span><span class="slot-status">✓ Ajouté(s)</span></label>
       </div>
     </div>
+    <div style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden" aria-hidden="true">
+      <label for="s-website">Site web (laissez vide)</label>
+      <input type="text" id="s-website" name="website" tabindex="-1" autocomplete="off"/>
+    </div>
     <button class="btn-submit" type="submit">Envoyer ma déclaration</button>
   </form>
   <div class="envoi-band">
@@ -182,7 +186,8 @@ async function submitForm() {
     date_sin: document.getElementById('s-date').value,
     desc: desc,
     tiers: document.getElementById('s-tiers').value.trim(),
-    files: filesAdded
+    files: filesAdded,
+    website: document.getElementById('s-website').value
   };
   try {
     var res = await fetch('/api/claim-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });

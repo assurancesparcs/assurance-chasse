@@ -62,9 +62,19 @@ RÈGLE SINISTRE DÉJÀ SURVENU : Si le visiteur décrit un sinistre déjà surve
 const ALLOWED_DEPTS = ['gironde', 'calvados', 'dordogne', 'lot-et-garonne'];
 const MAX_MESSAGES = 30;
 const MAX_MESSAGE_CHARS = 2000;
+const { getClientIp, rateLimit } = require('./_security');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Rate limit chatbot : 20 messages / 5 min par IP (protège le quota Anthropic)
+  const ip = getClientIp(req);
+  const rl = rateLimit('chat', ip, 5 * 60 * 1000, 20);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: `Limite atteinte. Réessayez dans ${rl.retryAfter} secondes.` });
+  }
+
   const { department, messages } = req.body || {};
 
   if (!ALLOWED_DEPTS.includes(department)) {

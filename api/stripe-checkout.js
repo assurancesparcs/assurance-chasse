@@ -1,4 +1,5 @@
 const Stripe = require('stripe');
+const { getClientIp, rateLimit } = require('./_security');
 
 const ALLOWED_DEPTS = ['gironde', 'calvados', 'dordogne', 'lot-et-garonne'];
 const ALLOWED_OPTIONS = ['sec', 'chi'];
@@ -17,6 +18,14 @@ function clean(s, max) {
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Rate limit : 5 tentatives de paiement / 10 min par IP
+  const ip = getClientIp(req);
+  const rl = rateLimit('checkout', ip, 10 * 60 * 1000, 5);
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: `Trop de tentatives. Réessayez dans ${rl.retryAfter} secondes.` });
   }
 
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);

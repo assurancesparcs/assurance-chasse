@@ -78,6 +78,10 @@
       </select>
     </div>
     <div class="field"><label>Message <span class="req">*</span></label><textarea id="ct-message" rows="5" required placeholder="Décrivez votre demande…" style="resize:vertical;font-family:inherit;font-size:14px;color:#1a2e0a;border:1px solid #d0d8c0;border-radius:8px;padding:10px 14px;width:100%;outline:none;box-sizing:border-box"></textarea></div>
+    <div style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden" aria-hidden="true">
+      <label for="ct-website">Site web (laissez vide)</label>
+      <input type="text" id="ct-website" name="website" tabindex="-1" autocomplete="off"/>
+    </div>
     <button class="btn-send" id="btn-send" type="submit">Envoyer mon message</button>
   </form>
   <div class="adresse-band">
@@ -101,7 +105,8 @@ async function sendMessage() {
     email: document.getElementById('ct-email').value,
     tel: document.getElementById('ct-tel').value,
     objet: document.getElementById('ct-objet').value,
-    message: document.getElementById('ct-message').value
+    message: document.getElementById('ct-message').value,
+    website: document.getElementById('ct-website').value
   };
   try {
     var res = await fetch('/api/contact-submit', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
