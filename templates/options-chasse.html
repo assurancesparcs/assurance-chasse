@@ -151,7 +151,7 @@
     <!-- DOC 2 : IPID -->
     <div class="doc-reader">
       <div class="doc-reader-header">
-        <h4>Document d'information sur le produit (IPID)</h4>
+        <h4>Document d'information sur le produit (IPID) et conditions générales</h4>
         <span class="badge-lu non-lu" id="badge-doc2">À lire</span>
       </div>
       <div class="doc-scroll-wrap" id="scroll-doc2" onscroll="checkScroll('doc2')">
@@ -184,10 +184,16 @@
         Paiement annuel en ligne, sécurisé par Stripe. La garantie est effective dès confirmation du paiement.<br><br>
         <strong>Comment résilier ?</strong><br>
         Le contrat est souscrit à la saison. Il ne se renouvelle pas tacitement. Pour toute question : {{emailGeneral}} · {{phone}}.<br><br>
-        <a class="doc-link" href="/ipid-rcch.pdf" target="_blank" rel="noopener noreferrer">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Télécharger l'IPID 2026
-        </a>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+          <a class="doc-link" href="/ipid-rcch.pdf" target="_blank" rel="noopener noreferrer" style="margin-top:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Télécharger l'IPID 2026
+          </a>
+          <a class="doc-link" href="/conditions-generales-chasse.pdf" target="_blank" rel="noopener noreferrer" style="margin-top:0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            CG chiens
+          </a>
+        </div>
         <div style="text-align:center;margin-top:12px">
           <button id="btn-lu-doc2" onclick="marquerLu('doc2')" style="background:transparent;border:1px solid #2d6a3f;border-radius:6px;padding:7px 18px;font-size:12px;color:#2d6a3f;cursor:pointer;font-family:inherit">
             ✓ J'ai lu ce document
