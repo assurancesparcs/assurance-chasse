@@ -57,12 +57,15 @@ function buildDept(deptFile) {
   const seoHead = applyVars(readPartial('seo-head.html'), vars);
   const outDir = path.join(DIST, cfg.slug);
   fs.mkdirSync(outDir, { recursive: true });
+  const SECURE_ONLY_TEMPLATES = new Set(['secure-login.html', 'espace-securise.html']);
   const templates = fs.readdirSync(TEMPLATES).filter(f => /\.(html|xml|txt)$/.test(f));
   for (const tpl of templates) {
+    // Pages de la zone privée : générées uniquement si showSecureArea est activé sur ce département
+    if (SECURE_ONLY_TEMPLATES.has(tpl) && !cfg.showSecureArea) continue;
     const src = fs.readFileSync(path.join(TEMPLATES, tpl), 'utf8');
     let out = applyVars(src, vars);
-    // Injection du bloc SEO (Schema.org + OG) dans le <head> des pages HTML
-    if (tpl.endsWith('.html') && out.includes('</head>')) {
+    // Injection du bloc SEO (Schema.org + OG) dans le <head> des pages HTML publiques uniquement
+    if (tpl.endsWith('.html') && out.includes('</head>') && !SECURE_ONLY_TEMPLATES.has(tpl)) {
       out = out.replace('</head>', seoHead + '\n</head>');
     }
     fs.writeFileSync(path.join(outDir, tpl), out);

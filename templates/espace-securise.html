@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Espace privé — {{fullName}}</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f5f7f5; color: #1a2e0a; min-height: 100vh; }
+.header { background: linear-gradient(135deg, #0d1b4b 0%, #162e1a 100%); padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.header h1 { color: #e0f0e8; font-family: Georgia, serif; font-size: 20px; font-weight: normal; }
+.header .user { color: #7aaa8a; font-size: 12px; }
+.btn-logout { background: rgba(255,255,255,0.1); color: #e0f0e8; border: 1px solid rgba(255,255,255,0.2); padding: 8px 18px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+.btn-logout:hover { background: rgba(255,255,255,0.18); }
+.container { max-width: 960px; margin: 0 auto; padding: 32px 24px; }
+.section { background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.section h2 { font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #5a6a4e; margin-bottom: 18px; }
+.upload-wrap { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.upload-input { flex: 1; min-width: 200px; }
+.upload-input input { width: 100%; padding: 12px; border: 2px dashed #c0d0a0; border-radius: 10px; background: #fafdf5; cursor: pointer; }
+.btn-upload { background: #2d6a3f; color: #fff; padding: 12px 26px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.btn-upload:hover:not(:disabled) { background: #3a8a52; }
+.btn-upload:disabled { background: #8aaa8a; cursor: not-allowed; }
+.file-list { display: flex; flex-direction: column; gap: 8px; }
+.file-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: #fafdf5; border-radius: 8px; border: 1px solid #e8efe0; }
+.file-icon { width: 36px; height: 36px; border-radius: 8px; background: #eaf3de; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #2d6a3f; }
+.file-info { flex: 1; min-width: 0; }
+.file-name { font-size: 14px; font-weight: 600; color: #1a2e0a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-meta { font-size: 11px; color: #6a7a5e; margin-top: 2px; }
+.file-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-action { background: transparent; border: 1px solid #c0c8b8; color: #2d6a3f; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.btn-action:hover { background: #eaf3de; }
+.btn-action.danger { color: #b03050; border-color: #d8a0a8; }
+.btn-action.danger:hover { background: #fde8ec; }
+.empty { text-align: center; padding: 40px 20px; color: #8a9a8a; font-size: 13px; }
+.error-band { display: none; background: #ffeeee; border: 1px solid #c08080; border-radius: 8px; padding: 12px 14px; margin: 12px 0; font-size: 13px; color: #7a1a1a; }
+.error-band.show { display: block; }
+.success-band { display: none; background: #eaf3de; border: 1px solid #6abf7b; border-radius: 8px; padding: 12px 14px; margin: 12px 0; font-size: 13px; color: #2d5016; }
+.success-band.show { display: block; }
+.progress { display: none; width: 100%; height: 4px; background: #e0e8d0; border-radius: 2px; overflow: hidden; margin-top: 12px; }
+.progress.show { display: block; }
+.progress-bar { height: 100%; background: #2d6a3f; width: 0%; transition: width 0.2s; }
+.rgpd-note { background: #fff8ee; border-left: 3px solid #c8860a; border-radius: 0 8px 8px 0; padding: 14px 18px; font-size: 12px; color: #7a5010; line-height: 1.6; margin-top: 20px; }
+.rgpd-note strong { color: #4a3010; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>{{fullName}} — Espace privé</h1>
+    <div class="user" id="user-email">…</div>
+  </div>
+  <button class="btn-logout" onclick="doLogout()">Se déconnecter</button>
+</div>
+
+<div class="container">
+  <div class="section">
+    <h2>Déposer un fichier</h2>
+    <div class="upload-wrap">
+      <div class="upload-input">
+        <input type="file" id="file-input" accept=".pdf,.xlsx,.xls,.csv,.docx,.doc,.txt,.zip">
+      </div>
+      <button class="btn-upload" id="btn-upload" onclick="doUpload()">Téléverser</button>
+    </div>
+    <div class="progress" id="progress"><div class="progress-bar" id="progress-bar"></div></div>
+    <div class="error-band" id="upload-error"></div>
+    <div class="success-band" id="upload-success"></div>
+    <p style="font-size:11px;color:#8a9a8a;margin-top:12px">
+      Formats acceptés : PDF, Excel, CSV, Word, TXT, ZIP — taille max 50 Mo
+    </p>
+  </div>
+
+  <div class="section">
+    <h2>Fichiers déposés</h2>
+    <div class="file-list" id="file-list"><div class="empty">Chargement…</div></div>
+  </div>
+
+  <div class="rgpd-note">
+    <strong>Conformité RGPD :</strong> Les fichiers déposés ici sont stockés de manière chiffrée chez Vercel (région Europe). Conservation maximale <strong>2 ans</strong>, suppression automatique au-delà. Toutes les connexions et actions sont journalisées. Vous pouvez supprimer un fichier à tout moment (droit à l'effacement immédiat). Consultez la <a href="/rgpd-cookies.html" style="color:#7a5010">politique RGPD</a>.
+  </div>
+</div>
+
+<script>
+async function checkAuthAndLoad() {
+  try {
+    var res = await fetch('/api/secure-list');
+    if (res.status === 401) { window.location.href = '/secure-login.html'; return; }
+    var data = await res.json();
+    if (data.email) document.getElementById('user-email').textContent = data.email;
+    renderList(data.files || []);
+  } catch(e) {
+    showError('upload-error', 'Impossible de charger la liste : ' + (e.message || 'erreur réseau'));
+  }
+}
+function fmtSize(b) {
+  if (b < 1024) return b + ' o';
+  if (b < 1024*1024) return (b/1024).toFixed(1) + ' Ko';
+  return (b/1024/1024).toFixed(2) + ' Mo';
+}
+function fmtDate(s) {
+  try { return new Date(s).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }); }
+  catch(_) { return s; }
+}
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function renderList(files) {
+  var el = document.getElementById('file-list');
+  if (files.length === 0) { el.innerHTML = '<div class="empty">Aucun fichier déposé pour le moment.</div>'; return; }
+  el.innerHTML = files.map(function(f) {
+    var key = escHtml(f.key);
+    var name = escHtml(f.displayName || f.key);
+    return '<div class="file-row">' +
+      '<div class="file-icon">' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' +
+      '</div>' +
+      '<div class="file-info">' +
+        '<div class="file-name">' + name + '</div>' +
+        '<div class="file-meta">' + fmtSize(f.size) + ' · déposé le ' + fmtDate(f.uploadedAt) + '</div>' +
+      '</div>' +
+      '<div class="file-actions">' +
+        '<a class="btn-action" href="/api/secure-download?key=' + encodeURIComponent(f.key) + '">Télécharger</a>' +
+        '<button class="btn-action danger" onclick="doDelete(\'' + key.replace(/\'/g, '\\\'') + '\')">Supprimer</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+async function doUpload() {
+  var input = document.getElementById('file-input');
+  if (!input.files || input.files.length === 0) {
+    showError('upload-error', 'Sélectionnez un fichier');
+    return;
+  }
+  var file = input.files[0];
+  if (file.size > 50 * 1024 * 1024) {
+    showError('upload-error', 'Fichier trop volumineux (max 50 Mo)');
+    return;
+  }
+  hide('upload-error'); hide('upload-success');
+  var btn = document.getElementById('btn-upload');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  document.getElementById('progress').classList.add('show');
+  document.getElementById('progress-bar').style.width = '20%';
+  try {
+    var res = await fetch('/api/secure-upload?filename=' + encodeURIComponent(file.name), {
+      method: 'POST',
+      headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      body: file
+    });
+    document.getElementById('progress-bar').style.width = '90%';
+    var data = await res.json().catch(function(){return{};});
+    if (!res.ok) throw new Error(data.error || 'Erreur ' + res.status);
+    document.getElementById('progress-bar').style.width = '100%';
+    showSuccess('upload-success', 'Fichier déposé avec succès. L\'autre utilisateur a été notifié par email.');
+    input.value = '';
+    setTimeout(function(){ document.getElementById('progress').classList.remove('show'); document.getElementById('progress-bar').style.width = '0%'; }, 1000);
+    checkAuthAndLoad();
+  } catch(e) {
+    showError('upload-error', e.message || 'Erreur téléversement');
+    document.getElementById('progress').classList.remove('show');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Téléverser';
+  }
+}
+async function doDelete(key) {
+  if (!confirm('Supprimer définitivement ce fichier ? Cette action est irréversible.')) return;
+  try {
+    var res = await fetch('/api/secure-delete', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ key: key })
+    });
+    var data = await res.json().catch(function(){return{};});
+    if (!res.ok) throw new Error(data.error || 'Erreur ' + res.status);
+    checkAuthAndLoad();
+  } catch(e) {
+    alert('Erreur suppression : ' + (e.message || 'erreur réseau'));
+  }
+}
+async function doLogout() {
+  try { await fetch('/api/secure-logout', { method: 'POST' }); } catch(_) {}
+  window.location.href = '/secure-login.html';
+}
+function showError(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+function showSuccess(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+function hide(id) { document.getElementById(id).classList.remove('show'); }
+checkAuthAndLoad();
+</script>
+</body>
+</html>

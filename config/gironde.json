@@ -6,5 +6,6 @@
   "fdcName": "Fédération Départementale des Chasseurs de la Gironde",
   "fdcShort": "FDC33",
   "siteTitle": "ADC&E Assurances Chasse 33",
-  "showVideo": true
+  "showVideo": true,
+  "showSecureArea": true
 }
