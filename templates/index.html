@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Accueil — {{siteTitle}}</title>
-<meta name="description" content="{{brand}} Assurances : courtier partenaire de la {{fdcName}}. Garanties complémentaires chiens de chasse, sécurité chasse, installations cynégétiques.">
+<title>Assurance chasse {{name}} ({{code}}) — Sécurité chasseur & chiens | ADC&E partenaire {{fdcShort}}</title>
+<meta name="description" content="Cabinet ADC&E — Assurance chasse complémentaire en {{name}} ({{code}}), partenaire de la {{fdcShort}}. Sécurité corporelle ({{tarifSecurite}}€/an), assurance chiens petits & gros gibiers, souscription 100% en ligne.">
+<meta name="keywords" content="assurance chasse {{name}}, assurance chasse {{code}}, assurance chasseur {{name}}, assurance chien chasse {{name}}, RC chasse {{code}}, sécurité chasse {{name}}, {{fdcShort}}, courtier assurance chasse">
 <link rel="canonical" href="https://{{domain}}/">
 <style>
 {{stylesCommon}}
@@ -128,6 +129,101 @@
   <div><h3>Vous êtes une société ou association de chasse ?</h3><p>Retrouvez directement vos conditions générales et documents contractuels, disponibles en téléchargement libre.</p></div>
   <a href="/guichet-unique.html" class="btn-doc">Accéder aux documents</a>
 </div>
+
+<section style="background:#fff;padding:48px 32px;border-top:1px solid #e8dfd0">
+  <div style="max-width:780px;margin:0 auto">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7a6a;margin-bottom:10px;text-align:center">Spécialiste local</p>
+    <h2 style="font-size:clamp(20px,3vw,28px);color:#1a2e0a;font-weight:normal;margin-bottom:18px;text-align:center">L'assurance chasse {{nameLowerArticle}}</h2>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify;margin-bottom:14px">
+      Vous êtes chasseur en <strong>{{name}}</strong> et titulaire d'un permis validé auprès de la <a href="{{fdcUrl}}" target="_blank" rel="noopener" style="color:#2d6a3f">{{fdcName}}</a> ? Votre fédération vous fournit la <strong>responsabilité civile chasse</strong> indispensable, qui couvre les dommages causés à un tiers. Mais ce que la RC ne couvre pas — <strong>vos propres blessures</strong>, les <strong>frais vétérinaires de vos chiens de chasse</strong>, la perte de revenus après un accident — peut représenter des sommes considérables.
+    </p>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify;margin-bottom:14px">
+      Le <strong>Cabinet ADC&amp;E Assurances</strong>, courtier référencé à l'ORIAS sous le numéro <strong>{{orias}}</strong>, propose aux chasseurs {{nameLocalSpecialist}} des garanties complémentaires adaptées à la chasse {{nameLocalSpecialist}} : <strong>chasse au {{gibierEmblematique}}</strong>. Souscription <strong>100 % en ligne</strong> en quelques minutes, attestation envoyée automatiquement, paiement sécurisé par Stripe.
+    </p>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify">
+      Trois garanties au choix selon votre pratique : <strong>Sécurité chasse</strong> ({{tarifSecurite}} €/an, indemnisation corporelle du chasseur), <strong>Chiens petits gibiers</strong> ({{tarifChienPetit}} €/an, garantie blessures jusqu'à {{garantieChienPetit}} €) et <strong>Chiens gros gibiers</strong> ({{tarifChienGros}} €/an, garantie blessures jusqu'à {{garantieChienGros}} €). Cumulables, sans engagement de durée, valables sur l'ensemble du territoire français.
+    </p>
+  </div>
+</section>
+
+<section style="background:#f5f7f5;padding:52px 32px">
+  <div style="max-width:780px;margin:0 auto">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7a6a;margin-bottom:10px;text-align:center">Questions fréquentes</p>
+    <h2 style="font-size:clamp(20px,3vw,28px);color:#1a2e0a;font-weight:normal;margin-bottom:28px;text-align:center">Vos questions sur l'assurance chasse {{nameLowerArticle}}</h2>
+    <div class="faq-list" style="display:flex;flex-direction:column;gap:14px">
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Pourquoi prendre une assurance chasse complémentaire alors que ma RC est déjà incluse dans la {{fdcShort}} ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">La RC chasse fournie par la {{fdcShort}} couvre uniquement les <strong>dommages causés à des tiers</strong> (autres chasseurs, propriétaires, etc.). Elle ne couvre <strong>pas</strong> vos propres blessures, ni les frais vétérinaires de vos chiens de chasse, ni les dommages aux installations. C'est cette zone non couverte que les garanties ADC&amp;E viennent compléter.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Combien coûte l'assurance Sécurité chasse en {{name}} ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">La garantie Sécurité chasse coûte <strong>{{tarifSecurite}} €/an</strong> par chasseur (plus {{fraisAdminParLigne}} € de frais administratifs). Elle indemnise le chasseur en cas de décès accidentel, blessures corporelles, incapacité temporaire de travail (ITT) ou invalidité permanente survenus lors d'une partie de chasse autorisée.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Mon chien de chasse est-il assuré contre les blessures ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">Oui, deux formules au choix selon le type de chasse pratiqué par votre chien : <strong>petits gibiers</strong> ({{tarifChienPetit}} €/an, indemnisation jusqu'à {{garantieChienPetit}} €) ou <strong>gros gibiers</strong> ({{tarifChienGros}} €/an, indemnisation jusqu'à {{garantieChienGros}} €). Conditions : chien identifié (puce ou tatouage), âgé de moins de 11 ans. La mortalité n'est pas couverte, uniquement les blessures.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Comment se passe la souscription en ligne ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">Tout se fait en ligne en moins de 5 minutes : sélection des options, saisie des informations, lecture des conditions générales et de l'IPID, paiement sécurisé par Stripe. Votre <strong>attestation est envoyée automatiquement par email</strong> dès confirmation du paiement. Aucun rendez-vous, aucun courrier nécessaire.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Comment déclarer un sinistre ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">La déclaration se fait <a href="/sinistre.html" style="color:#2d6a3f">en ligne sur notre formulaire dédié</a> dans un délai de <strong>5 jours ouvrés</strong> suivant la survenance du sinistre. Vous recevez immédiatement un numéro de dossier par email, et un gestionnaire vous contacte sous 48h ouvrées pour le suivi.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Pourquoi prendre une assurance chasse complémentaire alors que ma RC est déjà incluse dans la {{fdcShort}} ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La RC chasse fournie par la {{fdcShort}} couvre uniquement les dommages causés à des tiers. Elle ne couvre pas vos propres blessures, ni les frais vétérinaires de vos chiens de chasse. C'est cette zone non couverte que les garanties ADC&E viennent compléter."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Combien coûte l'assurance Sécurité chasse en {{name}} ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La garantie Sécurité chasse coûte {{tarifSecurite}} €/an par chasseur (plus {{fraisAdminParLigne}} € de frais administratifs). Elle indemnise en cas de décès accidentel, blessures, ITT ou invalidité permanente lors d'une partie de chasse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mon chien de chasse est-il assuré contre les blessures ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, deux formules : petits gibiers ({{tarifChienPetit}} €/an, indemnisation {{garantieChienPetit}} €) ou gros gibiers ({{tarifChienGros}} €/an, indemnisation {{garantieChienGros}} €). Chien identifié, moins de 11 ans. La mortalité n'est pas couverte, uniquement les blessures."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment se passe la souscription en ligne ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tout se fait en ligne en moins de 5 minutes : sélection des options, informations, lecture des conditions générales, paiement Stripe. Attestation envoyée automatiquement par email dès confirmation du paiement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment déclarer un sinistre ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La déclaration se fait en ligne sur notre formulaire dédié dans un délai de 5 jours ouvrés. Vous recevez un numéro de dossier par email, et un gestionnaire vous contacte sous 48h ouvrées."
+      }
+    }
+  ]
+}
+</script>
+
 <div class="confiance">
   <p class="label">Pourquoi nous faire confiance</p>
   <div class="confiance-items">

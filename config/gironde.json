@@ -5,6 +5,10 @@
   "domain": "www.assurancechasse33.fr",
   "fdcName": "Fédération Départementale des Chasseurs de la Gironde",
   "fdcShort": "FDC33",
+  "fdcUrl": "https://www.chasseurs33.com",
+  "regionName": "Nouvelle-Aquitaine",
+  "chefLieu": "Bordeaux",
+  "gibierEmblematique": "palombe, sanglier, chevreuil et bécasse",
   "siteTitle": "ADC&E Assurances Chasse 33",
   "showVideo": true,
   "showSecureArea": true

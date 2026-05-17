@@ -8,12 +8,16 @@
 <meta name="twitter:title" content="{{siteTitle}}">
 <meta name="twitter:description" content="Assurance chasse {{nameLowerArticle}} — partenaire {{fdcName}}.">
 <meta name="theme-color" content="#0d1b4b">
+<meta name="geo.region" content="FR-{{code}}">
+<meta name="geo.placename" content="{{name}}">
+<meta name="ICBM" content="46.227638, 2.213749">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "InsuranceAgency",
-  "name": "{{fullName}} — {{name}} ({{code}})",
-  "alternateName": "{{brand}} Assurances Chasse {{code}}",
+  "@id": "https://{{domain}}/#organization",
+  "name": "{{fullName}} — Assurance chasse {{name}} ({{code}})",
+  "alternateName": ["{{brand}} Assurances Chasse {{code}}", "Cabinet ADCE Chasse {{name}}"],
   "description": "Cabinet de courtage spécialisé dans l'assurance chasse complémentaire (sécurité corporelle, chiens de chasse petits et gros gibiers) {{nameLocalSpecialist}}, partenaire de la {{fdcName}}.",
   "url": "https://{{domain}}/",
   "telephone": "{{phone}}",
@@ -23,17 +27,20 @@
     "streetAddress": "{{address}}",
     "postalCode": "{{addressZip}}",
     "addressLocality": "{{addressCity}}",
+    "addressRegion": "{{regionName}}",
     "addressCountry": "FR"
   },
-  "areaServed": {
-    "@type": "AdministrativeArea",
-    "name": "{{name}}",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "FR",
-      "addressRegion": "{{name}}"
+  "areaServed": [
+    {
+      "@type": "AdministrativeArea",
+      "name": "{{name}}",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "FR",
+        "addressRegion": "{{name}}"
+      }
     }
-  },
+  ],
   "openingHoursSpecification": [
     {
       "@type": "OpeningHoursSpecification",
@@ -52,6 +59,20 @@
     "@type": "PropertyValue",
     "propertyID": "ORIAS",
     "value": "{{orias}}"
+  },
+  "knowsAbout": [
+    "Assurance chasse",
+    "Responsabilité civile chasseur",
+    "Assurance chien de chasse",
+    "Sécurité corporelle chasseur",
+    "Indemnisation accident de chasse",
+    "Garantie blessure chien de chasse",
+    "Chasse {{nameLocalSpecialist}}"
+  ],
+  "memberOf": {
+    "@type": "Organization",
+    "name": "{{fdcName}}",
+    "url": "{{fdcUrl}}"
   },
   "makesOffer": [
     {

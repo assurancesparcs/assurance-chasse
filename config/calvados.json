@@ -5,5 +5,9 @@
   "domain": "www.assurancechasse14.fr",
   "fdcName": "Fédération Départementale des Chasseurs du Calvados",
   "fdcShort": "FDC14",
+  "fdcUrl": "http://www.fdc14.fr",
+  "regionName": "Normandie",
+  "chefLieu": "Caen",
+  "gibierEmblematique": "chevreuil, sanglier, lapin de garenne et bécasse",
   "siteTitle": "ADC&E Assurances Chasse 14"
 }

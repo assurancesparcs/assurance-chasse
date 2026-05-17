@@ -5,5 +5,9 @@
   "domain": "www.assurancechasse24.fr",
   "fdcName": "Fédération Départementale des Chasseurs de la Dordogne",
   "fdcShort": "FDC24",
+  "fdcUrl": "https://www.chasseurs24.com",
+  "regionName": "Nouvelle-Aquitaine",
+  "chefLieu": "Périgueux",
+  "gibierEmblematique": "sanglier, cerf, palombe et bécasse",
   "siteTitle": "ADC&E Assurances Chasse 24"
 }
