@@ -202,7 +202,6 @@ async function actionUpload(req, res, session, urlObj) {
   if (body.length === 0) return res.status(400).json({ error: 'Fichier vide' });
   const blobName = `espace-securise/${Date.now()}-${filename}`;
   const blob = await put(blobName, body, {
-    access: 'public',
     addRandomSuffix: false,
     contentType: req.headers['content-type'] || 'application/octet-stream',
   });
