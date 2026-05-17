@@ -50,6 +50,9 @@ function buildDept(deptFile) {
     stylesCommon: fs.readFileSync(path.join(PARTIALS, 'styles-common.css'), 'utf8'),
     buildDate: new Date().toISOString().slice(0, 10),
   };
+  vars.secureLink = cfg.showSecureArea
+    ? ' · <a href="/secure-login.html" style="opacity:0.6">Siège</a>'
+    : '';
   vars.logoSvg = applyVars(readPartial('logo.svg'), vars);
   vars.nav = applyVars(readPartial('nav.html'), vars);
   vars.footer = applyVars(readPartial('footer.html'), vars);
