@@ -84,7 +84,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f5f7f5; co
 <script>
 async function checkAuthAndLoad() {
   try {
-    var res = await fetch('/api/secure-list');
+    var res = await fetch('/api/secure?action=list');
     if (res.status === 401) { window.location.href = '/secure-login.html'; return; }
     var data = await res.json();
     if (data.email) document.getElementById('user-email').textContent = data.email;
@@ -120,7 +120,7 @@ function renderList(files) {
         '<div class="file-meta">' + fmtSize(f.size) + ' · déposé le ' + fmtDate(f.uploadedAt) + '</div>' +
       '</div>' +
       '<div class="file-actions">' +
-        '<a class="btn-action" href="/api/secure-download?key=' + encodeURIComponent(f.key) + '">Télécharger</a>' +
+        '<a class="btn-action" href="/api/secure?action=download&key=' + encodeURIComponent(f.key) + '">Télécharger</a>' +
         '<button class="btn-action danger" onclick="doDelete(\'' + key.replace(/\'/g, '\\\'') + '\')">Supprimer</button>' +
       '</div>' +
     '</div>';
@@ -143,7 +143,7 @@ async function doUpload() {
   document.getElementById('progress').classList.add('show');
   document.getElementById('progress-bar').style.width = '20%';
   try {
-    var res = await fetch('/api/secure-upload?filename=' + encodeURIComponent(file.name), {
+    var res = await fetch('/api/secure?action=upload&filename=' + encodeURIComponent(file.name), {
       method: 'POST',
       headers: { 'Content-Type': file.type || 'application/octet-stream' },
       body: file
@@ -166,7 +166,7 @@ async function doUpload() {
 async function doDelete(key) {
   if (!confirm('Supprimer définitivement ce fichier ? Cette action est irréversible.')) return;
   try {
-    var res = await fetch('/api/secure-delete', {
+    var res = await fetch('/api/secure?action=delete', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ key: key })
@@ -179,7 +179,7 @@ async function doDelete(key) {
   }
 }
 async function doLogout() {
-  try { await fetch('/api/secure-logout', { method: 'POST' }); } catch(_) {}
+  try { await fetch('/api/secure?action=logout', { method: 'POST' }); } catch(_) {}
   window.location.href = '/secure-login.html';
 }
 function showError(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }

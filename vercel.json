@@ -27,7 +27,7 @@
   ],
   "crons": [
     {
-      "path": "/api/secure-cleanup",
+      "path": "/api/secure?action=cleanup",
       "schedule": "0 3 1 * *"
     }
   ]

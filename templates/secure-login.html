@@ -55,7 +55,7 @@ async function doLogin() {
   err.classList.remove('show');
   btn.disabled = true; btn.textContent = 'Connexion…';
   try {
-    var res = await fetch('/api/secure-login', {
+    var res = await fetch('/api/secure?action=login', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
