@@ -88,6 +88,7 @@ async function checkAuthAndLoad() {
     if (res.status === 401) { window.location.href = '/secure-login.html'; return; }
     var data = await res.json();
     if (data.email) document.getElementById('user-email').textContent = data.email;
+    if (!res.ok) { showError('upload-error', data.error || 'Erreur ' + res.status); return; }
     renderList(data.files || []);
   } catch(e) {
     showError('upload-error', 'Impossible de charger la liste : ' + (e.message || 'erreur réseau'));
@@ -128,15 +129,9 @@ function renderList(files) {
 }
 async function doUpload() {
   var input = document.getElementById('file-input');
-  if (!input.files || input.files.length === 0) {
-    showError('upload-error', 'Sélectionnez un fichier');
-    return;
-  }
+  if (!input.files || input.files.length === 0) { showError('upload-error', 'Sélectionnez un fichier'); return; }
   var file = input.files[0];
-  if (file.size > 50 * 1024 * 1024) {
-    showError('upload-error', 'Fichier trop volumineux (max 50 Mo)');
-    return;
-  }
+  if (file.size > 50 * 1024 * 1024) { showError('upload-error', 'Fichier trop volumineux (max 50 Mo)'); return; }
   hide('upload-error'); hide('upload-success');
   var btn = document.getElementById('btn-upload');
   btn.disabled = true; btn.textContent = 'Envoi…';

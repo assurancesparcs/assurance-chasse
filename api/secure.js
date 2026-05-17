@@ -1,6 +1,5 @@
 /**
- * Endpoint unifié pour l'espace privé (Gironde).
- * Toutes les opérations passent par /api/secure?action=<action>
+ * Endpoint unifié pour l'espace privé (Gironde) — stockage Vercel Blob.
  *
  * Actions :
  *   login    POST  ?action=login        body JSON {email, password}
@@ -10,7 +9,7 @@
  *   download GET   ?action=download&key=...
  *   delete   POST  ?action=delete       body JSON {key}
  *   cleanup  GET   ?action=cleanup      Header: Authorization: Bearer CRON_SECRET
- *   debug    GET   ?action=debug        (auth requise) — liste env vars sans valeurs
+ *   debug    GET   ?action=debug        (auth requise)
  */
 
 const bcrypt = require('bcryptjs');
@@ -26,6 +25,7 @@ const SESSION_DURATION_SEC = 60 * 60;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = ['.pdf', '.xlsx', '.xls', '.csv', '.docx', '.doc', '.txt', '.zip'];
 const RETENTION_DAYS = 2 * 365;
+const BLOB_PREFIX = 'espace-securise/';
 
 function getUsers() {
   const users = [];
@@ -57,7 +57,7 @@ function getRawBody(req, maxBytes) {
 }
 
 async function readJsonBody(req) {
-  const buf = await getRawBody(req, 1024 * 1024); // 1 Mo max pour JSON
+  const buf = await getRawBody(req, 1024 * 1024);
   if (!buf.length) return {};
   try { return JSON.parse(buf.toString('utf8')); } catch (_) { return {}; }
 }
@@ -74,10 +74,7 @@ function parseCookies(req) {
 function setSessionCookie(res, token) {
   res.setHeader('Set-Cookie', [
     `${COOKIE_NAME}=${encodeURIComponent(token)}`,
-    'Path=/',
-    'HttpOnly',
-    'Secure',
-    'SameSite=Strict',
+    'Path=/', 'HttpOnly', 'Secure', 'SameSite=Strict',
     `Max-Age=${SESSION_DURATION_SEC}`,
   ].join('; '));
 }
@@ -179,13 +176,13 @@ async function actionLogout(req, res) {
 }
 
 async function actionList(req, res, session) {
-  const result = await list({ prefix: 'espace-securise/' });
+  const result = await list({ prefix: BLOB_PREFIX });
   const files = (result.blobs || []).map((b) => ({
     key: b.pathname,
     url: b.url,
     size: b.size,
     uploadedAt: b.uploadedAt,
-    displayName: b.pathname.replace(/^espace-securise\//, '').replace(/^\d{13}-/, ''),
+    displayName: b.pathname.replace(new RegExp('^' + BLOB_PREFIX), '').replace(/^\d{13}-/, ''),
   })).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
   logAccess('LIST', req, { count: files.length, email: session.email });
   return res.status(200).json({ files, email: session.email });
@@ -200,7 +197,7 @@ async function actionUpload(req, res, session, urlObj) {
   }
   const body = await getRawBody(req, MAX_FILE_SIZE);
   if (body.length === 0) return res.status(400).json({ error: 'Fichier vide' });
-  const blobName = `espace-securise/${Date.now()}-${filename}`;
+  const blobName = `${BLOB_PREFIX}${Date.now()}-${filename}`;
   const blob = await put(blobName, body, {
     access: 'public',
     addRandomSuffix: false,
@@ -213,12 +210,12 @@ async function actionUpload(req, res, session, urlObj) {
 
 async function actionDownload(req, res, session, urlObj) {
   const key = urlObj.searchParams.get('key');
-  if (!key || !key.startsWith('espace-securise/')) return res.status(400).json({ error: 'Clé invalide' });
+  if (!key || !key.startsWith(BLOB_PREFIX)) return res.status(400).json({ error: 'Clé invalide' });
   const blob = await head(key);
   if (!blob) return res.status(404).json({ error: 'Fichier introuvable' });
   const upstream = await fetch(blob.url);
   if (!upstream.ok) return res.status(502).json({ error: 'Erreur récupération fichier' });
-  const filename = key.replace(/^espace-securise\/\d+-/, '');
+  const filename = key.replace(new RegExp('^' + BLOB_PREFIX + '\\d+-'), '');
   res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/octet-stream');
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -230,7 +227,7 @@ async function actionDownload(req, res, session, urlObj) {
 async function actionDelete(req, res, session) {
   const body = await readJsonBody(req);
   const { key } = body;
-  if (typeof key !== 'string' || !key.startsWith('espace-securise/')) return res.status(400).json({ error: 'Clé invalide' });
+  if (typeof key !== 'string' || !key.startsWith(BLOB_PREFIX)) return res.status(400).json({ error: 'Clé invalide' });
   const blob = await head(key);
   if (!blob) return res.status(404).json({ error: 'Fichier introuvable' });
   await del(blob.url);
@@ -247,7 +244,7 @@ async function actionCleanup(req, res) {
   const cutoff = Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
   let deleted = 0;
   const errors = [];
-  const result = await list({ prefix: 'espace-securise/' });
+  const result = await list({ prefix: BLOB_PREFIX });
   for (const blob of result.blobs || []) {
     if (new Date(blob.uploadedAt).getTime() < cutoff) {
       try { await del(blob.url); deleted += 1; }
@@ -260,8 +257,24 @@ async function actionCleanup(req, res) {
 
 async function actionDebug(req, res) {
   const all = Object.keys(process.env).sort();
+  const tokenVar = process.env.BLOB_READ_WRITE_TOKEN || '';
+  const tokenLen = tokenVar.length;
+  const tokenPrefix = tokenLen > 0 ? tokenVar.slice(0, 30) + '...' : '(absent)';
+
+  // Tente une op simple sur Blob pour capturer l'erreur exacte
+  let blobTest = { ok: false, error: null };
+  try {
+    const r = await list({ prefix: BLOB_PREFIX, limit: 1 });
+    blobTest = { ok: true, foundCount: (r.blobs || []).length, cursor: r.cursor || null };
+  } catch (e) {
+    blobTest = { ok: false, error: e.message, name: e.name, status: e.status || null };
+  }
+
   return res.status(200).json({
     blobVarsFound: all.filter((k) => k.includes('BLOB')),
+    blobTokenLength: tokenLen,
+    blobTokenPrefix: tokenPrefix,
+    blobOperation: blobTest,
     secureVarsFound: all.filter((k) => k.startsWith('SECURE_') || k === 'JWT_SECRET' || k === 'CRON_SECRET'),
     gmailVarsFound: all.filter((k) => k.startsWith('GMAIL_')),
     totalEnvVarsCount: all.length,
@@ -277,7 +290,6 @@ module.exports = async (req, res) => {
     const urlObj = new URL(req.url, `http://${req.headers.host}`);
     const action = urlObj.searchParams.get('action');
 
-    // Actions sans auth
     if (action === 'login') {
       if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
       return await actionLogin(req, res);
@@ -290,7 +302,6 @@ module.exports = async (req, res) => {
       return await actionCleanup(req, res);
     }
 
-    // Actions avec auth
     const session = requireAuth(req, res);
     if (!session) return;
 
