@@ -5,10 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Assurance chasse {{name}} ({{code}}) — Sécurité chasseur & chiens | ADC&E partenaire {{fdcShort}}</title>
 <meta name="description" content="Cabinet ADC&E — Assurance chasse complémentaire en {{name}} ({{code}}), partenaire de la {{fdcShort}}. Sécurité corporelle ({{tarifSecurite}}€/an), assurance chiens petits & gros gibiers, souscription 100% en ligne.">
-<meta name="keywords" content="assurance chasse {{name}}, assurance chasse {{code}}, assurance chasseur {{name}}, assurance chien chasse {{name}}, RC chasse {{code}}, sécurité chasse {{name}}, ACCA {{code}}, société de chasse {{name}}, installation cynégétique, {{fdcShort}}">
+<meta name="keywords" content="assurance chasse {{name}}, assurance chasse {{code}}, assurance chasseur {{name}}, assurance chien chasse {{name}}, RC chasse {{code}}, sécurité chasse {{name}}, ACCA {{code}}, société de chasse {{name}}, groupement de chasse {{name}}, installation cynégétique, {{fdcShort}}">
 <link rel="canonical" href="https://{{domain}}/">
 <style>
 {{stylesCommon}}
+
+html { scroll-behavior: smooth; }
+[id="chasseur-individuel"] { scroll-margin-top: 12px; display: block; }
+[id="societe-chasse"] { scroll-margin-top: 12px; }
 
 .hero { background: linear-gradient(135deg, #0d1b4b 0%, #0f2255 70%, #162e1a 100%); padding: 60px 32px 50px; text-align: center; }
 .hero-badge { display: inline-block; background: rgba(106,191,123,0.15); color: #6abf7b; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(106,191,123,0.3); margin-bottom: 22px; text-transform: uppercase; }
@@ -119,8 +123,8 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4970a" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
       <span class="entry-tag">Profil 2</span>
-      <h2>Société de chasse, ACCA ou grand ensemble</h2>
-      <p class="desc">Je représente une ACCA, une société de chasse privée ou un grand domaine. Je cherche des garanties collectives et des documents contractuels.</p>
+      <h2>Société de chasse, ACCA ou groupement</h2>
+      <p class="desc">Je représente une ACCA, un groupement de chasse ou une société de chasse privée. Je cherche des garanties collectives et des documents contractuels.</p>
       <ul class="entry-list">
         <li>Installation cynégétique — échelle collective</li>
         <li>Documents contractuels (CG, IPID, bulletins)</li>
@@ -133,10 +137,11 @@
   </div>
 </div>
 
+<a id="chasseur-individuel"></a>
 {{videoBlock}}
 
 <!-- Section CHASSEUR INDIVIDUEL -->
-<section class="audience-section individuel" id="chasseur-individuel">
+<section class="audience-section individuel" id="options-individuel">
   <div class="inner">
     <p class="label">Pour les chasseurs individuels</p>
     <h2 class="section-title">Trois garanties au choix, cumulables, sans engagement</h2>
@@ -173,7 +178,7 @@
 <!-- Section SOCIÉTÉ DE CHASSE -->
 <section class="audience-section societe" id="societe-chasse">
   <div class="inner">
-    <p class="label">Pour ACCA, sociétés de chasse et grands ensembles</p>
+    <p class="label">Pour ACCA, groupements et sociétés de chasse</p>
     <h2 class="section-title">Garanties collectives et documents contractuels</h2>
     <div class="options-grid deux">
       <div class="option-card amber">
@@ -210,7 +215,7 @@
       Le <strong>Cabinet ADC&amp;E Assurances</strong>, courtier référencé à l'ORIAS sous le numéro <strong>{{orias}}</strong>, propose aux chasseurs {{nameLocalSpecialist}} des garanties complémentaires adaptées à la chasse {{nameLocalSpecialist}} : <strong>chasse au {{gibierEmblematique}}</strong>. Souscription <strong>100 % en ligne</strong> en quelques minutes, attestation envoyée automatiquement, paiement sécurisé par Stripe.
     </p>
     <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify">
-      Pour les <strong>ACCA, sociétés de chasse privées et grands ensembles cynégétiques</strong> {{nameLocalSpecialist}}, le Cabinet ADC&amp;E élabore des couvertures sur mesure adaptées à la taille de votre territoire et à la nature de vos installations (postes de tir, cabanes collectives, miradors, locaux de société). Étude gratuite, devis personnalisé sous 48h ouvrées.
+      Pour les <strong>ACCA, groupements et sociétés de chasse privées</strong> {{nameLocalSpecialist}}, le Cabinet ADC&amp;E élabore des couvertures sur mesure adaptées à la taille de votre territoire et à la nature de vos installations (postes de tir, cabanes collectives, miradors, locaux de société). Étude gratuite, devis personnalisé sous 48h ouvrées.
     </p>
   </div>
 </section>
@@ -235,7 +240,7 @@
       </details>
       <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #8b5e0a">
         <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Je gère une ACCA / société de chasse, comment souscrire ?</summary>
-        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">Les structures collectives (ACCA, sociétés de chasse privées, grands ensembles) bénéficient d'un <strong>devis sur mesure</strong>. Contactez-nous via le <a href="/contact.html" style="color:#8b5e0a">formulaire dédié</a> en précisant la nature et la taille de votre structure : nous vous proposons une étude personnalisée sous 48h ouvrées.</p>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">Les structures collectives (ACCA, groupements de chasse, sociétés de chasse privées) bénéficient d'un <strong>devis sur mesure</strong>. Contactez-nous via le <a href="/contact.html" style="color:#8b5e0a">formulaire dédié</a> en précisant la nature et la taille de votre structure : nous vous proposons une étude personnalisée sous 48h ouvrées.</p>
       </details>
       <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
         <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Comment déclarer un sinistre ?</summary>
@@ -279,7 +284,7 @@
       "name": "Je gère une ACCA ou société de chasse, comment souscrire ?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Les structures collectives (ACCA, sociétés de chasse privées, grands ensembles) bénéficient d'un devis sur mesure. Contactez-nous via le formulaire dédié en précisant la nature et la taille de votre structure : étude personnalisée sous 48h ouvrées."
+        "text": "Les structures collectives (ACCA, groupements de chasse, sociétés de chasse privées) bénéficient d'un devis sur mesure. Contactez-nous via le formulaire dédié en précisant la nature et la taille de votre structure : étude personnalisée sous 48h ouvrées."
       }
     },
     {
