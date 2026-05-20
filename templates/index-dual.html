@@ -11,8 +11,7 @@
 {{stylesCommon}}
 
 html { scroll-behavior: smooth; }
-[id="chasseur-individuel"] { scroll-margin-top: 12px; display: block; }
-[id="societe-chasse"] { scroll-margin-top: 12px; }
+#chasseur-individuel, #societe-chasse { scroll-margin-top: 12px; }
 
 .hero { background: linear-gradient(135deg, #0d1b4b 0%, #0f2255 70%, #162e1a 100%); padding: 60px 32px 50px; text-align: center; }
 .hero-badge { display: inline-block; background: rgba(106,191,123,0.15); color: #6abf7b; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; padding: 5px 16px; border-radius: 20px; border: 1px solid rgba(106,191,123,0.3); margin-bottom: 22px; text-transform: uppercase; }
@@ -137,11 +136,11 @@ html { scroll-behavior: smooth; }
   </div>
 </div>
 
-<a id="chasseur-individuel"></a>
 {{videoBlock}}
 
-<!-- Section CHASSEUR INDIVIDUEL -->
-<section class="audience-section individuel" id="options-individuel">
+<!-- Section CHASSEUR INDIVIDUEL — vidéo dupliquée en haut + options -->
+<section class="audience-section individuel" id="chasseur-individuel">
+  {{videoBlock}}
   <div class="inner">
     <p class="label">Pour les chasseurs individuels</p>
     <h2 class="section-title">Trois garanties au choix, cumulables, sans engagement</h2>
