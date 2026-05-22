@@ -50,26 +50,10 @@
   var unmuteBtn = document.getElementById('pres-unmute');
   if (!video) return;
 
-  // Tentative d'autoplay avec son (peut être bloqué par le navigateur)
-  function tryUnmutedAutoplay() {
-    video.muted = false;
-    video.volume = 1.0;
-    var p = video.play();
-    if (p !== undefined) {
-      p.catch(function() {
-        // Le navigateur a bloqué l'autoplay avec son : on bascule en muet
-        video.muted = true;
-        video.play().catch(function(){ /* silent */ });
-        if (unmuteBtn) unmuteBtn.classList.remove('hidden');
-      }).then(function() {
-        // Autoplay avec son réussi : bouton inutile
-        if (!video.muted && unmuteBtn) unmuteBtn.classList.add('hidden');
-      });
-    }
-  }
-  tryUnmutedAutoplay();
+  // Autoplay en muet (garantit que ça marche dans tous les navigateurs)
+  // L'utilisateur active le son via le bouton dédié ou les controls natifs
 
-  // Bouton "Activer le son" → unmute + replay si nécessaire
+  // Bouton "Activer le son" → unmute
   if (unmuteBtn) {
     unmuteBtn.addEventListener('click', function() {
       video.muted = false;
