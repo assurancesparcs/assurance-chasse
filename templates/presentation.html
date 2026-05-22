@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Présentation Sécurité chasse — {{name}} ({{code}}) | ADC&E</title>
+<meta name="description" content="Présentation des garanties d'assurance chasse en {{name}} en vidéo. Cabinet ADC&E, partenaire {{fdcShort}}.">
+<link rel="canonical" href="https://{{domain}}/presentation.html">
+<style>
+{{stylesCommon}}
+
+.pres-wrap { background: linear-gradient(180deg, #faf9f5 0%, #f0ebe0 100%); padding: 60px 32px 70px; min-height: calc(100vh - 200px); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.pres-intro { max-width: 620px; margin: 0 auto 28px; text-align: center; }
+.pres-tag { display: inline-block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #2d6a3f; background: #eaf3de; padding: 5px 14px; border-radius: 20px; margin-bottom: 14px; }
+.pres-message { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: clamp(16px, 2.2vw, 19px); color: #1a2e0a; line-height: 1.5; font-weight: 500; }
+.pres-video-wrap { position: relative; width: min(720px, 100%); margin: 0 auto; border-radius: 18px; overflow: hidden; box-shadow: 0 20px 56px rgba(13,27,75,0.25), 0 6px 16px rgba(13,27,75,0.1); border: 1px solid rgba(232,223,208,0.8); background: #0E120E; line-height: 0; }
+.pres-video { width: 100%; height: auto; display: block; }
+.pres-skip { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #6a7a5e; text-decoration: none; padding: 8px 16px; border: 1px solid #c0c8b8; border-radius: 8px; transition: background 0.2s; }
+.pres-skip:hover { background: #fff; color: #2d6a3f; border-color: #2d6a3f; }
+</style>
+</head>
+<body>
+{{nav}}
+
+<div class="pres-wrap">
+  <div class="pres-intro">
+    <span class="pres-tag">Présentation</span>
+    <p class="pres-message">Les différentes garanties vous seront proposées à la fin de cette vidéo.</p>
+  </div>
+
+  <div class="pres-video-wrap">
+    <video class="pres-video" id="pres-video" controls preload="metadata" playsinline>
+      <source src="/securite-chasse.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas la lecture vidéo HTML5.
+      <a href="/securite-chasse.mp4">Télécharger la vidéo</a>.
+    </video>
+  </div>
+
+  <a href="/garanties.html#chasseur-individuel" class="pres-skip" id="pres-skip">
+    Passer la vidéo
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </a>
+</div>
+
+<script>
+(function() {
+  var video = document.getElementById('pres-video');
+  if (!video) return;
+  video.addEventListener('ended', function() {
+    window.location.href = '/garanties.html#chasseur-individuel';
+  });
+})();
+</script>
+
+{{footer}}
+</body>
+</html>
