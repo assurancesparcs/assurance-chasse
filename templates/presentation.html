@@ -46,7 +46,7 @@
   var params = new URLSearchParams(window.location.search);
   var profil = params.get('profil');
   var target = (profil === 'societe')
-    ? '/garanties.html#societe-chasse'
+    ? '/installations.html'
     : '/garanties.html#chasseur-individuel';
   video.addEventListener('ended', function() {
     window.location.href = target;

@@ -62,7 +62,7 @@ function buildDept(deptFile) {
   fs.mkdirSync(outDir, { recursive: true });
   const SECURE_ONLY_TEMPLATES = new Set(['secure-login.html', 'espace-securise.html']);
   const ALTERNATE_TEMPLATES = new Set(['index-dual.html']);
-  const DUAL_ONLY_TEMPLATES = new Set(['garanties.html', 'presentation.html']);
+  const DUAL_ONLY_TEMPLATES = new Set(['garanties.html', 'presentation.html', 'installations.html']);
   const templates = fs.readdirSync(TEMPLATES).filter(f => /\.(html|xml|txt)$/.test(f));
   for (const tpl of templates) {
     if (SECURE_ONLY_TEMPLATES.has(tpl) && !cfg.showSecureArea) continue;
