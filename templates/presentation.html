@@ -43,8 +43,13 @@
 (function() {
   var video = document.getElementById('pres-video');
   if (!video) return;
+  var params = new URLSearchParams(window.location.search);
+  var profil = params.get('profil');
+  var target = (profil === 'societe')
+    ? '/garanties.html#societe-chasse'
+    : '/garanties.html#chasseur-individuel';
   video.addEventListener('ended', function() {
-    window.location.href = '/garanties.html#chasseur-individuel';
+    window.location.href = target;
   });
 })();
 </script>
