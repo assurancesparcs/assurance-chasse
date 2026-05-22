@@ -16,8 +16,9 @@
 .pres-message { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: clamp(16px, 2.2vw, 19px); color: #1a2e0a; line-height: 1.5; font-weight: 500; }
 .pres-video-wrap { position: relative; width: min(720px, 100%); margin: 0 auto; border-radius: 18px; overflow: hidden; box-shadow: 0 20px 56px rgba(13,27,75,0.25), 0 6px 16px rgba(13,27,75,0.1); border: 1px solid rgba(232,223,208,0.8); background: #0E120E; line-height: 0; }
 .pres-video { width: 100%; height: auto; display: block; }
-.pres-skip { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; color: #6a7a5e; text-decoration: none; padding: 8px 16px; border: 1px solid #c0c8b8; border-radius: 8px; transition: background 0.2s; }
-.pres-skip:hover { background: #fff; color: #2d6a3f; border-color: #2d6a3f; }
+.pres-unmute { position: absolute; top: 14px; right: 14px; display: inline-flex; align-items: center; gap: 8px; background: rgba(13,27,75,0.85); color: #e0eaf8; padding: 9px 14px; border-radius: 22px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; backdrop-filter: blur(4px); transition: background 0.2s, transform 0.2s; line-height: 1; }
+.pres-unmute:hover { background: #162770; transform: scale(1.04); }
+.pres-unmute.hidden { display: none; }
 </style>
 </head>
 <body>
@@ -30,11 +31,15 @@
   </div>
 
   <div class="pres-video-wrap">
-    <video class="pres-video" id="pres-video" controls preload="metadata" playsinline>
+    <video class="pres-video" id="pres-video" autoplay muted playsinline preload="auto">
       <source src="/securite-chasse.mp4" type="video/mp4">
       Votre navigateur ne supporte pas la lecture vidéo HTML5.
       <a href="/securite-chasse.mp4">Télécharger la vidéo</a>.
     </video>
+    <button type="button" id="pres-unmute" class="pres-unmute" aria-label="Activer le son">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      Activer le son
+    </button>
   </div>
 
 </div>
@@ -42,16 +47,44 @@
 <script>
 (function() {
   var video = document.getElementById('pres-video');
+  var unmuteBtn = document.getElementById('pres-unmute');
   if (!video) return;
 
-  // S'assurer que l'audio est activé (au cas où le navigateur tenterait de couper)
-  video.muted = false;
-  video.volume = 1.0;
-  video.addEventListener('play', function() {
+  // Tentative d'autoplay avec son (peut être bloqué par le navigateur)
+  function tryUnmutedAutoplay() {
     video.muted = false;
-    if (video.volume < 0.1) video.volume = 1.0;
+    video.volume = 1.0;
+    var p = video.play();
+    if (p !== undefined) {
+      p.catch(function() {
+        // Le navigateur a bloqué l'autoplay avec son : on bascule en muet
+        video.muted = true;
+        video.play().catch(function(){ /* silent */ });
+        if (unmuteBtn) unmuteBtn.classList.remove('hidden');
+      }).then(function() {
+        // Autoplay avec son réussi : bouton inutile
+        if (!video.muted && unmuteBtn) unmuteBtn.classList.add('hidden');
+      });
+    }
+  }
+  tryUnmutedAutoplay();
+
+  // Bouton "Activer le son" → unmute + replay si nécessaire
+  if (unmuteBtn) {
+    unmuteBtn.addEventListener('click', function() {
+      video.muted = false;
+      video.volume = 1.0;
+      if (video.paused) video.play().catch(function(){});
+      unmuteBtn.classList.add('hidden');
+    });
+  }
+
+  // Si l'utilisateur unmute via les controls natifs, on cache aussi le bouton
+  video.addEventListener('volumechange', function() {
+    if (!video.muted && unmuteBtn) unmuteBtn.classList.add('hidden');
   });
 
+  // Redirection à la fin de la vidéo
   var params = new URLSearchParams(window.location.search);
   var profil = params.get('profil');
   var target = (profil === 'societe')
