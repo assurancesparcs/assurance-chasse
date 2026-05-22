@@ -43,6 +43,15 @@
 (function() {
   var video = document.getElementById('pres-video');
   if (!video) return;
+
+  // S'assurer que l'audio est activé (au cas où le navigateur tenterait de couper)
+  video.muted = false;
+  video.volume = 1.0;
+  video.addEventListener('play', function() {
+    video.muted = false;
+    if (video.volume < 0.1) video.volume = 1.0;
+  });
+
   var params = new URLSearchParams(window.location.search);
   var profil = params.get('profil');
   var target = (profil === 'societe')
