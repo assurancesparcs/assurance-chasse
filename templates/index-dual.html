@@ -47,6 +47,14 @@ html { scroll-behavior: smooth; }
 .entry-card.societe .entry-cta { background: #8b5e0a; color: #faf0d8; }
 .entry-card:hover .entry-cta { gap: 12px; }
 
+/* Question de pré-éligibilité (Gironde) */
+.permis-gate { padding: 14px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(106,191,123,0.25); border-radius: 10px; margin-bottom: 4px; }
+.permis-btn { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; font-weight: 700; padding: 7px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, transform 0.15s; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #c8dbed; }
+.permis-btn:hover { transform: translateY(-1px); }
+.permis-btn.active { background: #2d6a3f; color: #e0f5e8; border-color: #2d6a3f; }
+.permis-btn-non.active { background: #b03050; color: #fff; border-color: #b03050; }
+.entry-card.individuel.dimmed { opacity: 0.55; }
+
 /* Sections par audience */
 .audience-section { padding: 56px 32px; }
 .audience-section.individuel { background: #fafdf5; }
@@ -100,8 +108,20 @@ html { scroll-behavior: smooth; }
   <p class="lead">Le Cabinet ADC&amp;E accompagne les chasseurs et les structures collectives {{nameLocalSpecialist}}, partenaire de la {{fdcName}}. Choisissez votre profil pour découvrir les garanties adaptées.</p>
 
   <div class="dual-entry-grid">
-    <a href="#chasseur-individuel" class="entry-card individuel">
-      <div class="entry-icon individuel">
+    <div class="entry-card individuel" id="card-individuel">
+      <div class="permis-gate" id="permis-gate">
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#b8d0e8;line-height:1.5;margin-bottom:10px">
+          J'ai validé mon permis de chasseur auprès de la <strong style="color:#e0f0ff">{{fdcShort}}</strong> ?
+        </p>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button type="button" onclick="permisChoice('non')" class="permis-btn permis-btn-non" id="btn-permis-non">Non</button>
+          <button type="button" onclick="permisChoice('oui')" class="permis-btn permis-btn-oui" id="btn-permis-oui">Oui</button>
+        </div>
+        <p id="permis-msg-non" style="display:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;color:#ffb0c0;line-height:1.55;margin-top:10px;padding:10px 14px;background:rgba(200,40,80,0.15);border-radius:6px;border-left:3px solid #c83050">
+          Nous ne pouvons pas vous faire bénéficier des contrats de ce site. La RC chasse de la {{fdcShort}} est requise au préalable.
+        </p>
+      </div>
+      <div class="entry-icon individuel" style="margin-top:18px">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6abf7b" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a8 8 0 0 1 16 0v2"/></svg>
       </div>
       <span class="entry-tag">Profil 1</span>
@@ -112,10 +132,10 @@ html { scroll-behavior: smooth; }
         <li>Frais vétérinaires chiens de chasse</li>
         <li>Installation cynégétique personnelle</li>
       </ul>
-      <span class="entry-cta">Découvrir mes options
+      <a href="#chasseur-individuel" class="entry-cta" id="cta-individuel" style="display:none;text-decoration:none">Découvrir mes options
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </span>
-    </a>
+      </a>
+    </div>
 
     <a href="#societe-chasse" class="entry-card societe">
       <div class="entry-icon societe">
@@ -305,6 +325,26 @@ html { scroll-behavior: smooth; }
   </div>
 </div>
 
+<script>
+function permisChoice(answer) {
+  var msgNon = document.getElementById('permis-msg-non');
+  var cta = document.getElementById('cta-individuel');
+  var card = document.getElementById('card-individuel');
+  var btnNon = document.getElementById('btn-permis-non');
+  var btnOui = document.getElementById('btn-permis-oui');
+  btnNon.classList.toggle('active', answer === 'non');
+  btnOui.classList.toggle('active', answer === 'oui');
+  if (answer === 'non') {
+    msgNon.style.display = 'block';
+    cta.style.display = 'none';
+    card.classList.add('dimmed');
+  } else {
+    msgNon.style.display = 'none';
+    cta.style.display = 'inline-flex';
+    card.classList.remove('dimmed');
+  }
+}
+</script>
 {{footer}}
 </body>
 </html>
