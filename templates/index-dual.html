@@ -50,7 +50,6 @@
 .permis-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.16); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .permis-btn.active { background: #2d6a3f; color: #e0f5e8; border-color: #2d6a3f; }
 .permis-btn-non.active { background: #b03050; color: #fff; border-color: #b03050; }
-.entry-card.individuel.dimmed { opacity: 0.55; }
 </style>
 </head>
 <body>
@@ -112,13 +111,14 @@ function permisChoice(answer) {
     window.location.href = '/presentation.html?profil=chasseur';
     return;
   }
-  // answer === 'non' : afficher message bloquant, ne pas naviguer
+  // answer === 'non' : afficher message bloquant
+  // L'utilisateur peut toujours cliquer sur Oui pour continuer s'il change d'avis.
   var msgNon = document.getElementById('permis-msg-non');
-  var card = document.getElementById('card-individuel');
   var btnNon = document.getElementById('btn-permis-non');
+  var btnOui = document.getElementById('btn-permis-oui');
   btnNon.classList.add('active');
+  btnOui.classList.remove('active');
   msgNon.style.display = 'block';
-  card.classList.add('dimmed');
 }
 </script>
 {{footer}}
