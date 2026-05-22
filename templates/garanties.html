@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nos garanties — Assurance chasse {{name}} ({{code}}) | ADC&E</title>
+<meta name="description" content="Toutes les garanties d'assurance chasse en {{name}} : sécurité corporelle, chiens de chasse (petits & gros gibiers), installation cynégétique, solutions ACCA, groupements et sociétés de chasse.">
+<meta name="keywords" content="garanties assurance chasse {{name}}, sécurité chasse {{code}}, assurance chien chasse {{name}}, ACCA {{code}}, société de chasse {{name}}, groupement de chasse {{name}}, installation cynégétique">
+<link rel="canonical" href="https://{{domain}}/garanties.html">
+<style>
+{{stylesCommon}}
+
+html { scroll-behavior: smooth; }
+#chasseur-individuel, #societe-chasse { scroll-margin-top: 12px; }
+
+.page-intro { background: linear-gradient(135deg, #0d1b4b 0%, #162e1a 100%); padding: 38px 32px 30px; text-align: center; }
+.page-intro h1 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: clamp(22px,3.5vw,30px); color: #e8f0f8; font-weight: normal; line-height: 1.3; max-width: 680px; margin: 0 auto 8px; }
+.page-intro p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; color: #8aaac8; line-height: 1.6; max-width: 540px; margin: 0 auto; }
+.back-link { display: inline-block; margin-bottom: 14px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #6abf7b; text-decoration: none; }
+.back-link:hover { color: #8edc9d; }
+
+/* Sections par audience */
+.audience-section { padding: 56px 32px; }
+.audience-section.individuel { background: #fafdf5; }
+.audience-section.societe { background: linear-gradient(180deg, #faf6ee 0%, #f0ebd8 100%); }
+.audience-section .inner { max-width: 960px; margin: 0 auto; }
+.audience-section .label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; text-align: center; }
+.audience-section.individuel .label { color: #2d6a3f; }
+.audience-section.societe .label { color: #8b5e0a; }
+.audience-section h2.section-title { font-size: clamp(20px,3vw,28px); color: #1a2e0a; font-weight: normal; margin-bottom: 32px; text-align: center; }
+.options-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; margin-bottom: 32px; }
+@media(max-width:680px){ .options-grid { grid-template-columns: 1fr; } }
+.options-grid.deux { grid-template-columns: 1fr 1fr; }
+@media(max-width:680px){ .options-grid.deux { grid-template-columns: 1fr; } }
+.option-card { background: #fff; border-radius: 12px; padding: 22px 22px 24px; border-top: 3px solid #2d6a3f; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
+.option-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+.audience-section.societe .option-card { border-top-color: #8b5e0a; }
+.option-card.amber { border-top-color: #8b5e0a; }
+.option-card .opt-tag { display: inline-block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; background: #eaf3de; color: #2d5016; text-transform: uppercase; letter-spacing: 0.06em; }
+.option-card.amber .opt-tag { background: #faeeda; color: #633806; }
+.option-card h4 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; font-weight: 700; color: #1a2e0a; margin-bottom: 8px; }
+.option-card p { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12.5px; color: #5a6a4e; line-height: 1.6; margin-bottom: 14px; }
+.option-card .price { font-family: Georgia, serif; font-size: 18px; color: #2d6a3f; margin-bottom: 12px; }
+.option-card.amber .price { color: #8b5e0a; }
+.option-card a.opt-cta { display: inline-block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; font-weight: 600; color: #2d6a3f; text-decoration: none; padding: 6px 0; border-bottom: 1px solid currentColor; }
+.option-card.amber a.opt-cta { color: #8b5e0a; }
+.audience-cta-row { text-align: center; }
+.btn-large { display: inline-block; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 700; transition: background 0.2s, transform 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.btn-large.green { background: #2d6a3f; color: #e0f5e8; }
+.btn-large.green:hover { background: #3a8a52; transform: translateY(-1px); }
+.btn-large.amber { background: #8b5e0a; color: #faf0d8; }
+.btn-large.amber:hover { background: #a8720c; transform: translateY(-1px); }
+.btn-secondary { display: inline-block; padding: 14px 26px; border-radius: 10px; text-decoration: none; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 14px; font-weight: 600; margin-left: 8px; background: transparent; color: #5a6a4e; border: 1px solid #c0c8b8; }
+.btn-secondary:hover { background: #fff; }
+
+/* Confiance */
+.confiance { background: linear-gradient(135deg, #0d1b4b, #162e1a); padding: 48px 32px; text-align: center; }
+.confiance .label { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #5a9a6a; margin-bottom: 28px; }
+.confiance-items { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 580px; margin: 0 auto; }
+@media(max-width:480px){.confiance-items{grid-template-columns:1fr;}}
+.confiance-item strong { display: block; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 18px; font-weight: 700; color: #e0f0e8; margin-bottom: 4px; }
+.confiance-item span { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; color: #7aaa8a; line-height: 1.4; }
+</style>
+</head>
+<body>
+{{nav}}
+
+<div class="page-intro">
+  <a href="/" class="back-link">← Retour à l'accueil</a>
+  <h1>Toutes nos garanties d'assurance chasse {{nameLowerArticle}}</h1>
+  <p>Solutions pour chasseurs individuels et structures collectives, partenaire de la {{fdcName}}.</p>
+</div>
+
+<!-- Section CHASSEUR INDIVIDUEL — vidéo en haut + options -->
+<section class="audience-section individuel" id="chasseur-individuel">
+  {{videoBlock}}
+  <div class="inner">
+    <p class="label">Pour les chasseurs individuels</p>
+    <h2 class="section-title">Trois garanties au choix, cumulables, sans engagement</h2>
+    <div class="options-grid">
+      <div class="option-card">
+        <span class="opt-tag">Option 1</span>
+        <h4>Sécurité chasse</h4>
+        <p>Garantie corporelle du chasseur : décès, blessures, ITT, invalidité lors d'une partie de chasse autorisée.</p>
+        <div class="price">{{tarifSecurite}} € / an</div>
+        <a href="/securite-chasse.html" class="opt-cta">En savoir plus →</a>
+      </div>
+      <div class="option-card">
+        <span class="opt-tag">Option 2</span>
+        <h4>Chiens de chasse</h4>
+        <p>Garantie blessures (hors mortalité) pour vos chiens : 2 catégories selon le gibier — petits ({{tarifChienPetit}} €) ou gros ({{tarifChienGros}} €).</p>
+        <div class="price">À partir de {{tarifChienPetit}} € / chien / an</div>
+        <a href="/chiens-de-chasse.html" class="opt-cta">En savoir plus →</a>
+      </div>
+      <div class="option-card amber">
+        <span class="opt-tag">Option 3</span>
+        <h4>Installation cynégétique</h4>
+        <p>Cabane de chasse, palombière, tonne, mirador… Protégez votre installation contre dommages et vandalisme.</p>
+        <div class="price">Devis personnalisé</div>
+        <a href="/contact.html" class="opt-cta">Nous contacter →</a>
+      </div>
+    </div>
+    <div class="audience-cta-row">
+      <a href="/options-chasse.html" class="btn-large green">Souscrire en ligne →</a>
+      <a href="/guichet-unique.html" class="btn-secondary">Voir les documents</a>
+    </div>
+  </div>
+</section>
+
+<!-- Section SOCIÉTÉ DE CHASSE -->
+<section class="audience-section societe" id="societe-chasse">
+  <div class="inner">
+    <p class="label">Pour ACCA, groupements et sociétés de chasse</p>
+    <h2 class="section-title">Garanties collectives et documents contractuels</h2>
+    <div class="options-grid deux">
+      <div class="option-card amber">
+        <span class="opt-tag">Solution 1</span>
+        <h4>Installation cynégétique collective</h4>
+        <p>Pour les structures gérant plusieurs installations (postes de tir, cabanes, miradors collectifs, locaux de société) : couverture adaptée à l'échelle de votre territoire.</p>
+        <div class="price">Devis sur mesure</div>
+        <a href="/contact.html" class="opt-cta">Demander une étude →</a>
+      </div>
+      <div class="option-card amber">
+        <span class="opt-tag">Solution 2</span>
+        <h4>Documents contractuels</h4>
+        <p>Téléchargez librement les conditions générales, IPID, bulletins d'adhésion et tout document utile à la gestion de votre société de chasse.</p>
+        <div class="price">Téléchargement libre</div>
+        <a href="/guichet-unique.html" class="opt-cta">Accéder aux documents →</a>
+      </div>
+    </div>
+    <div class="audience-cta-row">
+      <a href="/contact.html" class="btn-large amber">Demander un devis sur mesure →</a>
+      <a href="/guichet-unique.html" class="btn-secondary">Tous les documents</a>
+    </div>
+  </div>
+</section>
+
+<!-- Contenu local SEO -->
+<section style="background:#fff;padding:48px 32px;border-top:1px solid #e8dfd0">
+  <div style="max-width:780px;margin:0 auto">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7a6a;margin-bottom:10px;text-align:center">Spécialiste local</p>
+    <h2 style="font-size:clamp(20px,3vw,28px);color:#1a2e0a;font-weight:normal;margin-bottom:18px;text-align:center">L'assurance chasse {{nameLowerArticle}}</h2>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify;margin-bottom:14px">
+      Vous êtes chasseur en <strong>{{name}}</strong> et titulaire d'un permis validé auprès de la <a href="{{fdcUrl}}" target="_blank" rel="noopener" style="color:#2d6a3f">{{fdcName}}</a> ? Votre fédération vous fournit la <strong>responsabilité civile chasse</strong> indispensable, qui couvre les dommages causés à un tiers. Mais ce que la RC ne couvre pas — <strong>vos propres blessures</strong>, les <strong>frais vétérinaires de vos chiens de chasse</strong>, la perte de revenus après un accident — peut représenter des sommes considérables.
+    </p>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify;margin-bottom:14px">
+      Le <strong>Cabinet ADC&amp;E Assurances</strong>, courtier référencé à l'ORIAS sous le numéro <strong>{{orias}}</strong>, propose aux chasseurs {{nameLocalSpecialist}} des garanties complémentaires adaptées à la chasse {{nameLocalSpecialist}} : <strong>chasse au {{gibierEmblematique}}</strong>. Souscription <strong>100 % en ligne</strong> en quelques minutes, attestation envoyée automatiquement, paiement sécurisé par Stripe.
+    </p>
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.75;text-align:justify">
+      Pour les <strong>ACCA, groupements et sociétés de chasse privées</strong> {{nameLocalSpecialist}}, le Cabinet ADC&amp;E élabore des couvertures sur mesure adaptées à la taille de votre territoire et à la nature de vos installations (postes de tir, cabanes collectives, miradors, locaux de société). Étude gratuite, devis personnalisé sous 48h ouvrées.
+    </p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#f5f7f5;padding:52px 32px">
+  <div style="max-width:780px;margin:0 auto">
+    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#8a7a6a;margin-bottom:10px;text-align:center">Questions fréquentes</p>
+    <h2 style="font-size:clamp(20px,3vw,28px);color:#1a2e0a;font-weight:normal;margin-bottom:28px;text-align:center">Vos questions sur l'assurance chasse {{nameLowerArticle}}</h2>
+    <div class="faq-list" style="display:flex;flex-direction:column;gap:14px">
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Pourquoi prendre une assurance chasse complémentaire alors que ma RC est déjà incluse dans la {{fdcShort}} ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">La RC chasse fournie par la {{fdcShort}} couvre uniquement les <strong>dommages causés à des tiers</strong> (autres chasseurs, propriétaires, etc.). Elle ne couvre <strong>pas</strong> vos propres blessures, ni les frais vétérinaires de vos chiens de chasse, ni les dommages aux installations. C'est cette zone non couverte que les garanties ADC&amp;E viennent compléter.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Combien coûte l'assurance Sécurité chasse en {{name}} ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">La garantie Sécurité chasse coûte <strong>{{tarifSecurite}} €/an</strong> par chasseur (plus {{fraisAdminParLigne}} € de frais administratifs). Elle indemnise le chasseur en cas de décès accidentel, blessures corporelles, incapacité temporaire de travail (ITT) ou invalidité permanente survenus lors d'une partie de chasse autorisée.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Mon chien de chasse est-il assuré contre les blessures ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">Oui, deux formules au choix selon le type de chasse pratiqué par votre chien : <strong>petits gibiers</strong> ({{tarifChienPetit}} €/an, indemnisation jusqu'à {{garantieChienPetit}} €) ou <strong>gros gibiers</strong> ({{tarifChienGros}} €/an, indemnisation jusqu'à {{garantieChienGros}} €). Conditions : chien identifié (puce ou tatouage), âgé de moins de 11 ans. La mortalité n'est pas couverte, uniquement les blessures.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #8b5e0a">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Je gère une ACCA / société de chasse, comment souscrire ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">Les structures collectives (ACCA, groupements de chasse, sociétés de chasse privées) bénéficient d'un <strong>devis sur mesure</strong>. Contactez-nous via le <a href="/contact.html" style="color:#8b5e0a">formulaire dédié</a> en précisant la nature et la taille de votre structure : nous vous proposons une étude personnalisée sous 48h ouvrées.</p>
+      </details>
+      <details style="background:#fff;border-radius:10px;padding:16px 22px;border-left:3px solid #2d6a3f">
+        <summary style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;color:#1a2e0a;cursor:pointer;list-style:none">Comment déclarer un sinistre ?</summary>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#3a4e3a;line-height:1.7;margin-top:12px">La déclaration se fait <a href="/sinistre.html" style="color:#2d6a3f">en ligne sur notre formulaire dédié</a> dans un délai de <strong>5 jours ouvrés</strong> suivant la survenance du sinistre. Vous recevez immédiatement un numéro de dossier par email, et un gestionnaire vous contacte sous 48h ouvrées pour le suivi.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Pourquoi prendre une assurance chasse complémentaire alors que ma RC est déjà incluse dans la {{fdcShort}} ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La RC chasse fournie par la {{fdcShort}} couvre uniquement les dommages causés à des tiers. Elle ne couvre pas vos propres blessures, ni les frais vétérinaires de vos chiens de chasse. C'est cette zone non couverte que les garanties ADC&E viennent compléter."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Combien coûte l'assurance Sécurité chasse en {{name}} ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La garantie Sécurité chasse coûte {{tarifSecurite}} €/an par chasseur (plus {{fraisAdminParLigne}} € de frais administratifs). Elle indemnise en cas de décès accidentel, blessures, ITT ou invalidité permanente lors d'une partie de chasse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mon chien de chasse est-il assuré contre les blessures ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Oui, deux formules : petits gibiers ({{tarifChienPetit}} €/an, indemnisation {{garantieChienPetit}} €) ou gros gibiers ({{tarifChienGros}} €/an, indemnisation {{garantieChienGros}} €). Chien identifié, moins de 11 ans. La mortalité n'est pas couverte, uniquement les blessures."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je gère une ACCA ou société de chasse, comment souscrire ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Les structures collectives (ACCA, groupements de chasse, sociétés de chasse privées) bénéficient d'un devis sur mesure. Contactez-nous via le formulaire dédié en précisant la nature et la taille de votre structure : étude personnalisée sous 48h ouvrées."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Comment déclarer un sinistre ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La déclaration se fait en ligne sur notre formulaire dédié dans un délai de 5 jours ouvrés. Vous recevez un numéro de dossier par email, et un gestionnaire vous contacte sous 48h ouvrées."
+      }
+    }
+  ]
+}
+</script>
+
+<div class="confiance">
+  <p class="label">Pourquoi nous faire confiance</p>
+  <div class="confiance-items">
+    <div class="confiance-item"><strong>Local</strong><span>Spécialisé chasse {{nameLocalSpecialist}}</span></div>
+    <div class="confiance-item"><strong>Simple</strong><span>Souscription 100&nbsp;% en ligne</span></div>
+    <div class="confiance-item"><strong>Rapide</strong><span>Documents envoyés automatiquement</span></div>
+  </div>
+</div>
+
+{{footer}}
+</body>
+</html>
