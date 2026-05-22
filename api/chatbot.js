@@ -11,7 +11,7 @@ INFORMATIONS CABINET ADCE
 PUBLIC : Chasseurs individuels déjà assurés en RC auprès de leur fédération départementale ({{FDC_SHORT}} pour {{NAME}}).
 
 OFFRES PROPOSÉES
-1. Option Chiens de chasse (max 3 chiens, deux catégories au choix par chien) :
+1. Option Assurance blessure des chiens de chasse (max 3 chiens, deux catégories au choix par chien) :
    - Chiens petits gibiers : 45 €/chien/an, indemnisation jusqu'à 450 €/sinistre, franchise 45 €.
    - Chiens gros gibiers : 95 €/chien/an, indemnisation jusqu'à 750 €/sinistre, franchise 75 €.
    Couvre uniquement les BLESSURES survenues lors d'une activité de chasse : frais vétérinaires, chirurgie, hospitalisation, blessure par arme à feu accidentelle, choc avec un véhicule survenu pendant ou à l'occasion de la chasse.

@@ -19,7 +19,7 @@ const FDC_CODE = {
 
 const OPTION_LABEL = {
   sec: 'Sécurité chasse (assurance corporelle)',
-  chi: 'Chiens de chasse',
+  chi: 'Assurance blessure des chiens de chasse',
 };
 
 function escHtml(s) {

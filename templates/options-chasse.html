@@ -119,7 +119,7 @@
         <em style="font-size:11px;color:#6a7a6e">MIC Insurance Company / ELKYIA by Finaxy Group — 2026</em><br><br>
         <strong>Objet du contrat :</strong> Le présent contrat garantit la responsabilité civile du chasseur titulaire d'un permis de chasse valide, assuré auprès de la {{fdcName}} ({{fdcShort}}) pour la saison en cours.<br><br>
         <strong>Garanties complémentaires proposées par le {{fullName}} :</strong><br><br>
-        <strong>Option 1 — Chiens de chasse :</strong><br>
+        <strong>Option 1 — Assurance blessure des chiens de chasse :</strong><br>
         Cette option couvre les frais vétérinaires consécutifs à une <strong>blessure</strong> du chien survenue pendant ou à l'occasion d'une activité de chasse autorisée : chirurgie, hospitalisation vétérinaire, blessures par arme à feu accidentelle, choc avec un véhicule survenu lors d'une activité de chasse.<br><br>
         <strong style="color:#7a1a1a">⚠ La mortalité (décès) du chien n'est PAS couverte</strong>, quelle qu'en soit la cause (accident, maladie, vieillesse).<br><br>
         Deux catégories au choix par chien :<br>
@@ -237,7 +237,7 @@
         <div class="prix">{{tarifSecurite}} € / an</div>
       </div>
       <div class="opt-card" id="card-chi" onclick="toggleOpt('chi')">
-        <h4>Chiens de chasse</h4>
+        <h4>Assurance blessure des chiens de chasse</h4>
         <p>Garantie blessures uniquement — petits ou gros gibiers, jusqu'à 3 chiens</p>
         <div class="prix">À partir de {{tarifChienPetit}} € / chien / an</div>
         <div style="font-size:11px;color:#8b5e0a;margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif">⚠ Mortalité non couverte · 11 ans max · puce/tatouage obligatoires</div>
@@ -419,7 +419,7 @@ function validerChiensEtContinuer() {
     if(tooOld.length > 0) {
       var noms = tooOld.map(function(c){ return c.nom || 'un chien'; }).join(', ');
       var verbe = tooOld.length > 1 ? ' ont' : ' a';
-      alert('Attention : ' + noms + verbe + ' plus de 11 ans et ne peuvent pas etre couverts par l option Chiens de chasse. Merci de retirer ce chien ou de contacter le {{fullName}} au {{phone}}.');
+      alert('Attention : ' + noms + verbe + ' plus de 11 ans et ne peuvent pas etre couverts par l option Assurance blessure des chiens de chasse. Merci de retirer ce chien ou de contacter le {{fullName}} au {{phone}}.');
       return;
     }
     var missingAge = chienData.filter(function(c){ return !c.age; });
@@ -512,7 +512,7 @@ function buildRecap() {
   var nbLignesAdmin = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? nbDogs : 0);
   var fraisAdmin = nbLignesAdmin * {{fraisAdminParLigne}};
   var total = cotisBase + fraisAdmin;
-  var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }).join(' + ') || 'Aucune';
+  var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Assurance blessure des chiens de chasse':'Installation cynégétique'; }).join(' + ') || 'Aucune';
 
   var html = '<div class="recap-row"><span class="recap-label">Titulaire</span><span class="recap-value">'+escHtml(prenom)+' '+escHtml(nom)+'</span></div>';
   html += '<div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">'+escHtml(email)+'</span></div>';
@@ -584,7 +584,7 @@ async function submit() {
     prenom: payload.customer.prenom,
     npermis: payload.customer.npermis,
     saison: payload.customer.saison,
-    options: opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Chiens de chasse':'Installation cynégétique'; }),
+    options: opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Assurance blessure des chiens de chasse':'Installation cynégétique'; }),
     chiens: payload.chiens,
     montant: montantLs
   }));

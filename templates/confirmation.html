@@ -212,7 +212,7 @@ function loadConfirmation() {
       '<span class="rv green">✓ Incluse — {{tarifSecurite}} €/an</span>' +
       '</div>';
   }
-  if (opts.includes('Chiens de chasse')) {
+  if (opts.includes('Assurance blessure des chiens de chasse')) {
     var chiens = data.chiens || [];
     var nbPetit = chiens.filter(function(c){ return c.type === 'petit'; }).length;
     var nbGros = chiens.filter(function(c){ return c.type === 'gros'; }).length;
@@ -221,7 +221,7 @@ function loadConfirmation() {
     if (nbPetit > 0) detail.push(nbPetit + ' petit' + (nbPetit > 1 ? 's' : '') + ' gibier' + (nbPetit > 1 ? 's' : ''));
     if (nbGros > 0) detail.push(nbGros + ' gros gibier' + (nbGros > 1 ? 's' : ''));
     garantiesHtml += '<div class="recap-row">' +
-      '<span class="rl">Chiens de chasse (' + (detail.join(', ') || (chiens.length + ' chien(s)')) + ')</span>' +
+      '<span class="rl">Assurance blessure des chiens de chasse (' + (detail.join(', ') || (chiens.length + ' chien(s)')) + ')</span>' +
       '<span class="rv green">✓ Incluse — ' + totalChiens + ' €/an</span>' +
       '</div>';
   }
@@ -234,7 +234,7 @@ function loadConfirmation() {
   document.getElementById('recap-garanties').innerHTML = garantiesHtml;
 
   var chiens = data.chiens || [];
-  if (chiens.length > 0 && opts.includes('Chiens de chasse')) {
+  if (chiens.length > 0 && opts.includes('Assurance blessure des chiens de chasse')) {
     document.getElementById('card-chiens').style.display = 'block';
     document.getElementById('recap-chiens').innerHTML = chiens.map(function(c, i) {
       return '<div class="chien-item">' +
