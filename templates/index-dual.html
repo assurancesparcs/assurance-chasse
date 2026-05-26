@@ -46,9 +46,12 @@
 /* Question de pré-éligibilité (Gironde) */
 .permis-gate { padding: 18px 20px; background: rgba(106,191,123,0.12); border: 2px solid rgba(106,191,123,0.6); border-radius: 12px; margin-bottom: 6px; box-shadow: 0 0 0 4px rgba(106,191,123,0.08), 0 4px 16px rgba(0,0,0,0.2); animation: permisPulse 2.5s ease-in-out infinite; }
 @keyframes permisPulse { 0%, 100% { box-shadow: 0 0 0 4px rgba(106,191,123,0.08), 0 4px 16px rgba(0,0,0,0.2); } 50% { box-shadow: 0 0 0 8px rgba(106,191,123,0.14), 0 4px 20px rgba(0,0,0,0.25); } }
+.permis-gate.societe-gate { background: rgba(212,151,10,0.12); border-color: rgba(212,151,10,0.6); box-shadow: 0 0 0 4px rgba(212,151,10,0.08), 0 4px 16px rgba(0,0,0,0.2); animation: permisPulseAmber 2.5s ease-in-out infinite; }
+@keyframes permisPulseAmber { 0%, 100% { box-shadow: 0 0 0 4px rgba(212,151,10,0.08), 0 4px 16px rgba(0,0,0,0.2); } 50% { box-shadow: 0 0 0 8px rgba(212,151,10,0.14), 0 4px 20px rgba(0,0,0,0.25); } }
 .permis-btn { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; font-weight: 700; padding: 7px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #c8dbed; }
 .permis-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.16); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .permis-btn.active { background: #2d6a3f; color: #e0f5e8; border-color: #2d6a3f; }
+.permis-btn.active.amber { background: #8b5e0a; color: #faf0d8; border-color: #8b5e0a; }
 .permis-btn-non.active { background: #b03050; color: #fff; border-color: #b03050; }
 </style>
 </head>
@@ -86,7 +89,7 @@
       </div>
     </div>
 
-    <a href="/presentation.html?profil=societe" class="entry-card societe">
+    <div class="entry-card societe" id="card-societe">
       <div class="entry-icon societe">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4970a" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
@@ -98,10 +101,19 @@
         <li>Documents contractuels (CG, IPID, bulletins)</li>
         <li>Étude personnalisée &amp; devis sur mesure</li>
       </ul>
-      <span class="entry-cta">Découvrir nos solutions
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </span>
-    </a>
+      <div class="permis-gate societe-gate" id="adherent-gate" style="margin-top:18px;margin-bottom:0">
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#d4970a;line-height:1.5;margin-bottom:10px">
+          Je suis adhérent au contrat organisation de chasse proposé par la <strong style="color:#f0c860">{{fdcShort}}</strong> ?
+        </p>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button type="button" onclick="adherentChoice('non')" class="permis-btn permis-btn-non" id="btn-adherent-non">Non</button>
+          <button type="button" onclick="adherentChoice('oui')" class="permis-btn permis-btn-oui amber" id="btn-adherent-oui">Oui</button>
+        </div>
+        <p id="adherent-msg-non" style="display:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#fff;line-height:1.55;margin-top:10px;padding:12px 14px;background:#b03050;border-radius:6px;border-left:3px solid #ff5070;font-weight:700">
+          Nous ne pouvons pas vous faire bénéficier des contrats de ce site.
+        </p>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -116,6 +128,20 @@ function permisChoice(answer) {
   var msgNon = document.getElementById('permis-msg-non');
   var btnNon = document.getElementById('btn-permis-non');
   var btnOui = document.getElementById('btn-permis-oui');
+  btnNon.classList.add('active');
+  btnOui.classList.remove('active');
+  msgNon.style.display = 'block';
+}
+
+function adherentChoice(answer) {
+  if (answer === 'oui') {
+    window.location.href = '/installations.html';
+    return;
+  }
+  // answer === 'non' : afficher message bloquant
+  var msgNon = document.getElementById('adherent-msg-non');
+  var btnNon = document.getElementById('btn-adherent-non');
+  var btnOui = document.getElementById('btn-adherent-oui');
   btnNon.classList.add('active');
   btnOui.classList.remove('active');
   msgNon.style.display = 'block';
