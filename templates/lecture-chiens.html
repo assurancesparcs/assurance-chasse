@@ -128,7 +128,7 @@ function toggleBtn() {
 function proceedSouscrire(e) {
   var checked = document.getElementById('consent-cg').checked;
   if (!checked) { e.preventDefault(); return false; }
-  window.location.href = '/options-chasse.html';
+  window.open('/options-chasse.html?opt=chi', '_blank', 'noopener');
   e.preventDefault();
 }
 </script>

@@ -120,7 +120,7 @@ function toggleBtn() {
 function proceedDevis(e) {
   var checked = document.getElementById('consent-cg').checked;
   if (!checked) { e.preventDefault(); return false; }
-  window.location.href = '/contact.html';
+  window.open('/contact.html?objet=installation-cynegetique', '_blank', 'noopener');
   e.preventDefault();
 }
 </script>

@@ -612,6 +612,31 @@ async function submit() {
 
 setTimeout(verifierDocsVisibles, 500);
 window.addEventListener('resize', verifierDocsVisibles);
+
+// Pré-sélection d'option via paramètre URL (?opt=sec ou ?opt=chi)
+// Provient des pages /lecture-securite.html ou /lecture-chiens.html après acceptation des CG.
+// Marque automatiquement les 2 documents comme lus (l'utilisateur vient de consulter les CG)
+// et pré-sélectionne l'option correspondante.
+(function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var preOpt = params.get('opt');
+    if (preOpt === 'sec' || preOpt === 'chi') {
+      // Marque les 2 documents comme lus (CG déjà consultées sur la page lecture)
+      docsLus.doc1 = true;
+      docsLus.doc2 = true;
+      ['doc1','doc2'].forEach(function(docId) {
+        var badge = document.getElementById('badge-' + docId);
+        if (badge) { badge.textContent = 'Lu ✓'; badge.className = 'badge-lu lu'; }
+        var prog = document.getElementById('prog-' + docId);
+        if (prog) prog.style.width = '100%';
+      });
+      checkAllDocsRead();
+      // Pré-sélectionne l'option choisie
+      toggleOpt(preOpt);
+    }
+  } catch(_) {}
+})();
 </script>
 </body>
 </html>
