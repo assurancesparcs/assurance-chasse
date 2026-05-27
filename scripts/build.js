@@ -57,6 +57,7 @@ function buildDept(deptFile) {
   vars.nav = applyVars(readPartial('nav.html'), vars);
   vars.footer = applyVars(readPartial('footer.html'), vars);
   vars.videoBlock = cfg.showVideo ? applyVars(readPartial('video-section.html'), vars) : '';
+  vars.allianzDocsBlock = cfg.dualEntryHomepage ? applyVars(readPartial('allianz-docs.html'), vars) : '';
   const seoHead = applyVars(readPartial('seo-head.html'), vars);
   const outDir = path.join(DIST, cfg.slug);
   fs.mkdirSync(outDir, { recursive: true });
