@@ -88,27 +88,38 @@
     <p>Le présent contrat est soumis au droit français. Tout litige relève de la compétence exclusive des juridictions françaises.</p>
 
     <div class="lecture-pdf">
-      <strong>Documents officiels Allianz :</strong> Pour le texte intégral et juridiquement opposable de la garantie Sécurité chasse, consultez les documents Allianz ci-dessous.
+      <strong>Documents officiels Allianz :</strong> Pour le texte intégral et juridiquement opposable de la garantie Sécurité chasse, consultez les documents Allianz ci-dessous. <em style="font-size:12.5px;color:#5a6a4e">Vous devez ouvrir chaque document puis cocher la case correspondante pour pouvoir procéder à la souscription.</em>
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
-        <a href="/dg-securite-chasse-allianz.pdf" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a3f;color:#e0f5e8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
+        <a href="/dg-securite-chasse-allianz.pdf" target="_blank" rel="noopener" id="pdf-cg" onclick="markOpened('cg')" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a3f;color:#e0f5e8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Conditions générales (Allianz)
+          <span>Conditions générales (Allianz)</span>
+          <span id="badge-cg" style="display:inline-block;background:rgba(255,255,255,0.2);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px">à ouvrir</span>
         </a>
-        <a href="/din-securite-chasse-allianz.pdf" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a3f;color:#e0f5e8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
+        <a href="/din-securite-chasse-allianz.pdf" target="_blank" rel="noopener" id="pdf-din" onclick="markOpened('din')" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a3f;color:#e0f5e8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Document d'Information Normalisé (DIN)
+          <span>Document d'Information Normalisé (DIN)</span>
+          <span id="badge-din" style="display:inline-block;background:rgba(255,255,255,0.2);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px">à ouvrir</span>
         </a>
-        <a href="/notice-securite-chasse-allianz.pdf" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a3f;color:#e0f5e8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
+        <a href="/notice-securite-chasse-allianz.pdf" target="_blank" rel="noopener" id="pdf-notice" onclick="markOpened('notice')" style="display:inline-flex;align-items:center;gap:8px;background:#2d6a3f;color:#e0f5e8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Notice Sécurité chasse
+          <span>Notice Sécurité chasse</span>
+          <span id="badge-notice" style="display:inline-block;background:rgba(255,255,255,0.2);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px">à ouvrir</span>
         </a>
       </div>
     </div>
 
     <div class="lecture-end">
-      <div class="consent-row">
-        <input type="checkbox" id="consent-cg" onchange="toggleBtn()">
-        <label for="consent-cg">Je confirme avoir pris connaissance des conditions générales</label>
+      <div class="consent-row" id="row-cg" style="opacity:0.5">
+        <input type="checkbox" id="consent-cg" disabled onchange="toggleBtn()">
+        <label for="consent-cg">Je confirme avoir pris connaissance des conditions générales.</label>
+      </div>
+      <div class="consent-row" id="row-din" style="opacity:0.5">
+        <input type="checkbox" id="consent-din" disabled onchange="toggleBtn()">
+        <label for="consent-din">Je confirme avoir pris connaissance du document d'information normalisé.</label>
+      </div>
+      <div class="consent-row" id="row-notice" style="opacity:0.5">
+        <input type="checkbox" id="consent-notice" disabled onchange="toggleBtn()">
+        <label for="consent-notice">Je confirme avoir pris connaissance de la notice.</label>
       </div>
       <a href="#" id="btn-souscrire" class="btn-souscrire" onclick="proceedSouscrire(event)">Procéder à la souscription →</a>
     </div>
@@ -116,16 +127,36 @@
 </div>
 
 <script>
+var docsOpened = { cg: false, din: false, notice: false };
+
+function markOpened(docId) {
+  docsOpened[docId] = true;
+  var badge = document.getElementById('badge-' + docId);
+  if (badge) {
+    badge.textContent = '✓ ouvert';
+    badge.style.background = 'rgba(255,255,255,0.4)';
+  }
+  var input = document.getElementById('consent-' + docId);
+  var row = document.getElementById('row-' + docId);
+  if (input) input.disabled = false;
+  if (row) row.style.opacity = '1';
+}
+
 function toggleBtn() {
   var btn = document.getElementById('btn-souscrire');
-  var checked = document.getElementById('consent-cg').checked;
-  btn.classList.toggle('active', checked);
+  var allChecked = document.getElementById('consent-cg').checked
+    && document.getElementById('consent-din').checked
+    && document.getElementById('consent-notice').checked;
+  btn.classList.toggle('active', allChecked);
 }
+
 function proceedSouscrire(e) {
-  var checked = document.getElementById('consent-cg').checked;
-  if (!checked) { e.preventDefault(); return false; }
-  window.open('/options-chasse.html?opt=sec', '_blank', 'noopener');
   e.preventDefault();
+  var allChecked = document.getElementById('consent-cg').checked
+    && document.getElementById('consent-din').checked
+    && document.getElementById('consent-notice').checked;
+  if (!allChecked) return false;
+  window.open('/options-chasse.html?opt=sec', '_blank', 'noopener');
 }
 </script>
 
