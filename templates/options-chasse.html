@@ -104,12 +104,12 @@
 
   <!-- STEP 0 — Lecture documents obligatoire + Profil -->
   <div class="step-panel active" id="p0">
-    <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;color:#5a6a4e;margin-bottom:20px;line-height:1.6;font-weight:500">
+    <p id="intro-lecture" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;color:#5a6a4e;margin-bottom:20px;line-height:1.6;font-weight:500">
       Avant de souscrire, merci de lire attentivement les documents contractuels ci-dessous. Le bouton "Continuer" sera débloqué une fois les deux documents parcourus jusqu'en bas.
     </p>
 
     <!-- DOC 1 : Notice RC chasseur -->
-    <div class="doc-reader">
+    <div class="doc-reader" id="doc-reader-1">
       <div class="doc-reader-header">
         <h4>Notice RC chasseur individuel</h4>
         <span class="badge-lu non-lu" id="badge-doc1">À lire</span>
@@ -150,7 +150,7 @@
     </div>
 
     <!-- DOC 2 : IPID -->
-    <div class="doc-reader">
+    <div class="doc-reader" id="doc-reader-2">
       <div class="doc-reader-header">
         <h4>Document d'information sur le produit (IPID) et conditions générales</h4>
         <span class="badge-lu non-lu" id="badge-doc2">À lire</span>
@@ -625,13 +625,14 @@ window.addEventListener('resize', verifierDocsVisibles);
       // Marque les 2 documents comme lus (CG déjà consultées sur la page lecture)
       docsLus.doc1 = true;
       docsLus.doc2 = true;
-      ['doc1','doc2'].forEach(function(docId) {
-        var badge = document.getElementById('badge-' + docId);
-        if (badge) { badge.textContent = 'Lu ✓'; badge.className = 'badge-lu lu'; }
-        var prog = document.getElementById('prog-' + docId);
-        if (prog) prog.style.width = '100%';
-      });
       checkAllDocsRead();
+      // Masque l'intro et les 2 lecteurs de documents (déjà consultés sur la page précédente)
+      var intro = document.getElementById('intro-lecture');
+      if (intro) intro.style.display = 'none';
+      var dr1 = document.getElementById('doc-reader-1');
+      if (dr1) dr1.style.display = 'none';
+      var dr2 = document.getElementById('doc-reader-2');
+      if (dr2) dr2.style.display = 'none';
       // Pré-sélectionne l'option choisie
       toggleOpt(preOpt);
     }
