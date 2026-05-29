@@ -126,7 +126,7 @@ function buildAttestationPayload(session, metadata) {
   };
 }
 
-async function sendEmails(session, metadata) {
+async function sendEmails(session, metadata, payload, attestationBuffer) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -139,19 +139,8 @@ async function sendEmails(session, metadata) {
   const fdc = FDC_CODE[metadata.department] || '';
   const optionsLabel = formatOptions(metadata.options);
   const chiensHtml = formatChiens(metadata.chiens_data);
-
-  // Génération de l'attestation PDF
-  let attestationBuffer = null;
-  let attestationFilename = 'attestation-assurance-chasse.pdf';
-  let policyNumber = '';
-  try {
-    const payload = buildAttestationPayload(session, metadata);
-    policyNumber = payload.policyNumber;
-    attestationBuffer = await generateAttestation(payload);
-    attestationFilename = `attestation-${payload.policyNumber}.pdf`;
-  } catch (err) {
-    console.error('Erreur génération attestation PDF', err);
-  }
+  const policyNumber = payload ? payload.policyNumber : '';
+  const attestationFilename = policyNumber ? `attestation-${policyNumber}.pdf` : 'attestation-assurance-chasse.pdf';
 
   const attachments = attestationBuffer
     ? [{ filename: attestationFilename, content: attestationBuffer, contentType: 'application/pdf' }]
@@ -201,6 +190,50 @@ async function sendEmails(session, metadata) {
   });
 }
 
+async function logToGoogleSheets(session, metadata, payload, attestationBuffer) {
+  const url = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  const secret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
+  if (!url) return; // pas configuré → on saute silencieusement
+
+  const opts = (metadata.options || '').split(',').map((s) => s.trim()).filter(Boolean);
+  const optionsLabel = opts.map((o) => OPTION_LABEL[o] || o).join(' + ');
+  const fdc = FDC_CODE[metadata.department] || '';
+  const amount = session.amount_total / 100;
+
+  const body = {
+    secret: secret || '',
+    timestamp: new Date().toISOString(),
+    policyNumber: payload ? payload.policyNumber : '',
+    sessionId: session.id,
+    department: metadata.department || '',
+    fdc,
+    saison: metadata.saison || '',
+    nom: metadata.nom || '',
+    prenom: metadata.prenom || '',
+    email: session.customer_email || '',
+    tel: metadata.tel || '',
+    npermis: metadata.npermis || '',
+    options: optionsLabel,
+    nbChiensPetit: parseInt(metadata.nb_chiens_petit || '0', 10) || 0,
+    nbChiensGros: parseInt(metadata.nb_chiens_gros || '0', 10) || 0,
+    chiensDetail: metadata.chiens_data || '',
+    montantTotal: amount,
+    pdfBase64: attestationBuffer ? attestationBuffer.toString('base64') : '',
+    pdfFilename: payload ? `attestation-${payload.policyNumber}.pdf` : '',
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+    redirect: 'follow',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Google Sheets webhook returned ${response.status}`);
+  }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -231,14 +264,25 @@ module.exports = async (req, res) => {
         saison: metadata.saison,
       });
 
+      // Génération unique du PDF + payload (partagés par emails et Google Sheets)
+      let payload = null;
+      let attestationBuffer = null;
       try {
-        await sendEmails(session, metadata);
-        console.log('✉ Emails de confirmation envoyés');
+        payload = buildAttestationPayload(session, metadata);
+        attestationBuffer = await generateAttestation(payload);
       } catch (err) {
-        console.error('Erreur envoi emails confirmation paiement', err);
+        console.error('Erreur génération attestation PDF', err);
       }
 
-      // TODO Firebase (à activer quand Firebase sera configuré)
+      const tasks = await Promise.allSettled([
+        sendEmails(session, metadata, payload, attestationBuffer),
+        logToGoogleSheets(session, metadata, payload, attestationBuffer),
+      ]);
+      tasks.forEach((t, i) => {
+        const label = i === 0 ? '✉ Emails' : '📊 Google Sheets';
+        if (t.status === 'fulfilled') console.log(label + ' OK');
+        else console.error(label + ' KO', t.reason);
+      });
       break;
     }
     case 'checkout.session.expired':
