@@ -9,6 +9,14 @@
  */
 const Stripe = require('stripe');
 const nodemailer = require('nodemailer');
+const { generateAttestation, generatePolicyNumber } = require('./_attestation');
+
+const TARIFS = {
+  securite: 25,
+  chiensPetit: 45,
+  chiensGros: 95,
+  admin: 1,
+};
 
 const FDC_CODE = {
   gironde: 'FDC33',
@@ -73,6 +81,51 @@ function formatChiens(chiensJson) {
   }
 }
 
+function parseEndOfSaison(saison) {
+  // ex: "2026 – 2027" -> 30 juin 2027 ; sinon -> 30 juin (année courante + 1)
+  const years = (saison || '').match(/\d{4}/g);
+  const endYear = years && years.length >= 2 ? parseInt(years[1], 10)
+                : years && years.length === 1 ? parseInt(years[0], 10) + 1
+                : new Date().getFullYear() + 1;
+  return new Date(endYear, 5, 30); // mois index 5 = juin
+}
+
+function buildAttestationPayload(session, metadata) {
+  const now = new Date();
+  const nbPetit = parseInt(metadata.nb_chiens_petit || '0', 10) || 0;
+  const nbGros = parseInt(metadata.nb_chiens_gros || '0', 10) || 0;
+  const opts = (metadata.options || '').split(',').map((s) => s.trim()).filter(Boolean);
+
+  let chiens = [];
+  try { chiens = metadata.chiens_data ? JSON.parse(metadata.chiens_data) : []; } catch (_) {}
+
+  const montants = {
+    securite: opts.includes('sec') ? TARIFS.securite : 0,
+    chiensPetit: nbPetit * TARIFS.chiensPetit,
+    chiensGros: nbGros * TARIFS.chiensGros,
+    admin: ((opts.includes('sec') ? 1 : 0) + nbPetit + nbGros) * TARIFS.admin,
+    total: session.amount_total / 100,
+  };
+
+  return {
+    policyNumber: generatePolicyNumber(session.id),
+    issueDate: now,
+    validFrom: now,
+    validUntil: parseEndOfSaison(metadata.saison),
+    customer: {
+      nom: metadata.nom || '',
+      prenom: metadata.prenom || '',
+      email: session.customer_email || '',
+      npermis: metadata.npermis || '',
+    },
+    department: metadata.department || '',
+    saison: metadata.saison || '',
+    options: opts,
+    chiens,
+    montants,
+  };
+}
+
 async function sendEmails(session, metadata) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -87,6 +140,23 @@ async function sendEmails(session, metadata) {
   const optionsLabel = formatOptions(metadata.options);
   const chiensHtml = formatChiens(metadata.chiens_data);
 
+  // Génération de l'attestation PDF
+  let attestationBuffer = null;
+  let attestationFilename = 'attestation-assurance-chasse.pdf';
+  let policyNumber = '';
+  try {
+    const payload = buildAttestationPayload(session, metadata);
+    policyNumber = payload.policyNumber;
+    attestationBuffer = await generateAttestation(payload);
+    attestationFilename = `attestation-${payload.policyNumber}.pdf`;
+  } catch (err) {
+    console.error('Erreur génération attestation PDF', err);
+  }
+
+  const attachments = attestationBuffer
+    ? [{ filename: attestationFilename, content: attestationBuffer, contentType: 'application/pdf' }]
+    : [];
+
   // Email client
   await transporter.sendMail({
     from: `"Cabinet ADC&E Assurances" <${process.env.GMAIL_USER}>`,
@@ -98,12 +168,13 @@ async function sendEmails(session, metadata) {
       <p>Nous confirmons votre souscription d'assurance chasse pour la saison <strong>${escHtml(metadata.saison || '—')}</strong>.</p>
       <p><strong>Montant réglé :</strong> ${amount} €<br>
       <strong>Options souscrites :</strong> ${optionsLabel}<br>
-      <strong>N° de permis :</strong> ${escHtml(metadata.npermis || '—')}</p>
+      <strong>N° de permis :</strong> ${escHtml(metadata.npermis || '—')}${policyNumber ? `<br><strong>N° de police :</strong> ${escHtml(policyNumber)}` : ''}</p>
       ${chiensHtml}
-      <p>Votre attestation officielle vous parviendra par email dans les minutes qui suivent.</p>
+      <p><strong>Votre attestation d'assurance est jointe à ce mail au format PDF.</strong> Conservez-la précieusement et présentez-la en cas de contrôle.</p>
       <p>Pour toute question, vous pouvez nous joindre à <a href="mailto:${escHtml(process.env.GMAIL_USER)}">${escHtml(process.env.GMAIL_USER)}</a>.</p>
       <p>Cordialement,<br>Cabinet ADC&amp;E Assurances</p>
     `,
+    attachments,
   });
 
   // Email interne
@@ -116,7 +187,7 @@ async function sendEmails(session, metadata) {
       <p><strong>Département :</strong> ${escHtml(metadata.department || '—')} ${fdc ? `(${fdc})` : ''}<br>
       <strong>Saison :</strong> ${escHtml(metadata.saison || '—')}<br>
       <strong>Montant :</strong> ${amount} €<br>
-      <strong>Options :</strong> ${optionsLabel}</p>
+      <strong>Options :</strong> ${optionsLabel}${policyNumber ? `<br><strong>N° de police émis :</strong> ${escHtml(policyNumber)}` : ''}</p>
       <hr>
       <p><strong>Client :</strong> ${escHtml(metadata.prenom || '')} ${escHtml(metadata.nom || '')}<br>
       <strong>Email :</strong> ${escHtml(session.customer_email)}<br>
@@ -124,7 +195,9 @@ async function sendEmails(session, metadata) {
       ${chiensHtml}
       <hr>
       <p><strong>Stripe session :</strong> ${escHtml(session.id)}</p>
+      <p><em>L'attestation PDF générée est jointe à ce mail.</em></p>
     `,
+    attachments,
   });
 }
 
