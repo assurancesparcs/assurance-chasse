@@ -9,5 +9,7 @@
   "regionName": "Nouvelle-Aquitaine",
   "chefLieu": "Agen",
   "gibierEmblematique": "faisan, lièvre, sanglier et palombe",
-  "siteTitle": "ADC&E Assurances Chasse 47"
+  "siteTitle": "ADC&E Assurances Chasse 47",
+  "showVideo": true,
+  "dualEntryHomepage": true
 }

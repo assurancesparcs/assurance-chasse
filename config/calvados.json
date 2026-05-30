@@ -9,5 +9,7 @@
   "regionName": "Normandie",
   "chefLieu": "Caen",
   "gibierEmblematique": "chevreuil, sanglier, lapin de garenne et bécasse",
-  "siteTitle": "ADC&E Assurances Chasse 14"
+  "siteTitle": "ADC&E Assurances Chasse 14",
+  "showVideo": true,
+  "dualEntryHomepage": true
 }

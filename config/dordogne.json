@@ -9,5 +9,7 @@
   "regionName": "Nouvelle-Aquitaine",
   "chefLieu": "Périgueux",
   "gibierEmblematique": "sanglier, cerf, palombe et bécasse",
-  "siteTitle": "ADC&E Assurances Chasse 24"
+  "siteTitle": "ADC&E Assurances Chasse 24",
+  "showVideo": true,
+  "dualEntryHomepage": true
 }
