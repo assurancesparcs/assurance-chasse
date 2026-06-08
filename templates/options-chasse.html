@@ -318,10 +318,10 @@
       <div class="field">
         <label>Adresse / lieu-dit d'implantation <span class="req">*</span></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <input type="text" id="ins-adresse" placeholder="Ex : Lieu-dit La Forêt, Saint-Symphorien (33)" style="flex:1;min-width:220px"/>
+          <input type="text" id="ins-adresse" placeholder="Ex : Lieu-dit La Forêt, Saint-Symphorien (33)" style="flex:1;min-width:220px" oninput="onAddressTyped()"/>
           <button type="button" onclick="searchAddress(event)" style="background:#8b5e0a;color:#faf0d8;border:none;border-radius:8px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Localiser</button>
         </div>
-        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#6a7a5e;margin-top:6px">Saisissez l'adresse et cliquez sur « Localiser », ou cliquez directement sur la carte pour placer un marqueur précis.</p>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#6a7a5e;margin-top:6px">Saisissez l'adresse et cliquez sur « Localiser », ou cliquez directement sur la carte pour placer un marqueur précis. L'adresse exacte sera complétée automatiquement d'après le point retenu.</p>
       </div>
 
       <div class="field">
@@ -331,10 +331,26 @@
         </div>
         <div id="map" style="height:320px;border-radius:10px;border:1px solid #c0c8b8;z-index:1"></div>
         <div id="coord-display" style="margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#5a6a4e">
-          <em>Aucune position définie</em>
+          <em>Aucune position définie — saisissez une adresse, utilisez votre position ou cliquez sur la carte.</em>
         </div>
         <input type="hidden" id="ins-lat"/>
         <input type="hidden" id="ins-lng"/>
+
+        <!-- Panneau de confirmation (apparaît dès qu'un point est posé, avant confirmation) -->
+        <div id="ins-confirm-panel" style="display:none;margin-top:12px;background:#fff8ec;border:1px solid #e8c890;border-left:4px solid #8b5e0a;border-radius:10px;padding:14px 18px">
+          <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#1a2e0a;margin:0 0 4px;font-weight:600">Lieu à assurer sélectionné</p>
+          <p id="ins-confirm-address" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#4a3a2a;line-height:1.5;margin:0 0 4px"></p>
+          <p id="ins-confirm-coords" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:#7a6a4a;margin:0 0 12px"></p>
+          <button type="button" id="btn-confirm-lieu" onclick="confirmLieu()" style="background:#8b5e0a;color:#faf0d8;border:none;border-radius:8px;padding:11px 20px;font-family:inherit;font-size:13.5px;font-weight:700;cursor:pointer">✓ Confirmer ce lieu comme lieu d'assurance</button>
+        </div>
+
+        <!-- Badge vert (apparaît une fois confirmé) -->
+        <div id="ins-confirmed-badge" style="display:none;margin-top:12px;background:#eaf7ee;border:1px solid #9ed4ad;border-left:4px solid #2d6a3f;border-radius:10px;padding:14px 18px">
+          <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;color:#1a4e2a;margin:0 0 4px;font-weight:700">✓ Lieu d'assurance enregistré</p>
+          <p id="ins-confirmed-address" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#2d5a3a;line-height:1.5;margin:0 0 3px"></p>
+          <p id="ins-confirmed-coords" style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11.5px;color:#4a7a5a;margin:0"></p>
+          <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#6a8a72;margin:8px 0 0;font-style:italic">Pour modifier ce lieu, déplacez le marqueur sur la carte ou relancez une recherche.</p>
+        </div>
       </div>
     </div>
 
@@ -515,6 +531,12 @@ function validerEtContinuer() {
     if(!installationData.materiau) { alert("Merci d'indiquer le materiau principal de construction."); return; }
     if(!installationData.adresse) { alert("Merci de saisir l'adresse ou le lieu-dit d'implantation."); return; }
     if(!installationData.lat || !installationData.lng) { alert("Merci de placer un marqueur sur la carte pour preciser la position GPS de l'installation."); return; }
+    if(!installationConfirmed) {
+      alert("Merci de confirmer le lieu a assurer en cliquant sur le bouton « Confirmer ce lieu comme lieu d'assurance » sous la carte.");
+      var panel = document.getElementById('ins-confirm-panel');
+      if(panel) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
   }
   goTo(2);
 }
@@ -544,6 +566,7 @@ function saveInstallation() {
 var mapInstance = null;
 var mapMarker = null;
 var leafletIconReady = false;
+var installationConfirmed = false;
 function configureLeafletIcons() {
   if(leafletIconReady || typeof L === 'undefined') return;
   delete L.Icon.Default.prototype._getIconUrl;
@@ -586,6 +609,51 @@ function updateCoords(lat, lng) {
   document.getElementById('ins-lat').value = lat.toFixed(6);
   document.getElementById('ins-lng').value = lng.toFixed(6);
   document.getElementById('coord-display').innerHTML = '<strong>Position :</strong> ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + ' &nbsp; <a href="https://www.google.com/maps?q=' + lat + ',' + lng + '" target="_blank" rel="noopener" style="color:#2d6a3f">voir sur Google Maps ↗</a>';
+
+  // Tout nouveau point invalide la confirmation précédente
+  installationConfirmed = false;
+  document.getElementById('ins-confirmed-badge').style.display = 'none';
+
+  // Affiche le panneau de confirmation (non encore confirmé)
+  var panel = document.getElementById('ins-confirm-panel');
+  panel.style.display = 'block';
+  document.getElementById('ins-confirm-coords').innerHTML = 'GPS : ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + ' · <a href="https://www.google.com/maps?q=' + lat + ',' + lng + '" target="_blank" rel="noopener" style="color:#8b5e0a">voir sur Google Maps ↗</a>';
+  var addrEl = document.getElementById('ins-confirm-address');
+  addrEl.textContent = 'Recherche de l\'adresse exacte…';
+
+  // Reverse-geocoding : coords → adresse réelle
+  fetch('/api/geocode?lat=' + lat.toFixed(6) + '&lng=' + lng.toFixed(6))
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if(data && data.found && data.label) {
+        addrEl.textContent = data.label;
+        // On pré-remplit le champ adresse (sans déclencher onAddressTyped, car affectation programmatique)
+        document.getElementById('ins-adresse').value = data.label;
+      } else {
+        addrEl.textContent = 'Point GPS retenu (adresse non reconnue automatiquement — vérifiez la saisie ci-dessus).';
+      }
+    })
+    .catch(function() {
+      addrEl.textContent = 'Point GPS retenu (adresse exacte indisponible — vérifiez la saisie ci-dessus).';
+    });
+}
+function confirmLieu() {
+  var lat = document.getElementById('ins-lat').value;
+  var lng = document.getElementById('ins-lng').value;
+  if(!lat || !lng) { alert('Veuillez d\'abord placer un point sur la carte.'); return; }
+  installationConfirmed = true;
+  document.getElementById('ins-confirm-panel').style.display = 'none';
+  var badge = document.getElementById('ins-confirmed-badge');
+  badge.style.display = 'block';
+  document.getElementById('ins-confirmed-address').textContent = document.getElementById('ins-confirm-address').textContent;
+  document.getElementById('ins-confirmed-coords').innerHTML = 'GPS : ' + lat + ', ' + lng + ' · <a href="https://www.google.com/maps?q=' + lat + ',' + lng + '" target="_blank" rel="noopener" style="color:#2d6a3f">voir sur Google Maps ↗</a>';
+  badge.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function onAddressTyped() {
+  // L'utilisateur modifie l'adresse à la main → la confirmation et le point ne sont plus valides
+  installationConfirmed = false;
+  document.getElementById('ins-confirmed-badge').style.display = 'none';
+  document.getElementById('ins-confirm-panel').style.display = 'none';
 }
 function useMyLocation() {
   if(!navigator.geolocation) { alert('La géolocalisation n\'est pas disponible sur cet appareil.'); return; }
