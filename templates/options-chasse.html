@@ -7,6 +7,8 @@
 <meta name="description" content="Souscrivez votre assurance chasse complémentaire en {{name}} en quelques minutes : sécurité corporelle ({{tarifSecurite}}€/an), chiens de chasse (à partir de {{tarifChienPetit}}€). Attestation immédiate.">
 <meta name="keywords" content="souscrire assurance chasse {{name}}, souscription assurance chasseur {{code}}, devis assurance chasse en ligne, assurance chien chasse {{code}}, garantie chasseur {{name}}">
 <link rel="canonical" href="https://{{domain}}/options-chasse.html">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>
 {{stylesCommon}}
 
@@ -230,7 +232,7 @@
   <!-- STEP 1 — Options -->
   <div class="step-panel" id="p1">
     <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#6a7a5e;margin-bottom:16px;">Sélectionnez une ou plusieurs options. Vous pouvez les cumuler.</p>
-    <div class="option-cards">
+    <div class="option-cards" style="grid-template-columns:1fr 1fr 1fr">
       <div class="opt-card" id="card-sec" onclick="toggleOpt('sec')">
         <h4>Sécurité chasse</h4>
         <p>Protection corporelle — décès, blessures, ITT, invalidité</p>
@@ -241,6 +243,12 @@
         <p>Garantie blessures uniquement — petits ou gros gibiers, jusqu'à 3 chiens</p>
         <div class="prix">À partir de {{tarifChienPetit}} € / chien / an</div>
         <div style="font-size:11px;color:#8b5e0a;margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif">⚠ Mortalité non couverte · 11 ans max · puce/tatouage obligatoires</div>
+      </div>
+      <div class="opt-card" id="card-ins" onclick="toggleOpt('ins')">
+        <h4>Installation cynégétique</h4>
+        <p>Cabane, palombière, tonne, mirador, gabion… contre dommages et vandalisme</p>
+        <div class="prix">160 € / an</div>
+        <div style="font-size:11px;color:#8b5e0a;margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif">Géolocalisation GPS requise</div>
       </div>
     </div>
 
@@ -269,9 +277,70 @@
       </div>
     </div>
 
+    <div id="installation-wrap" style="display:none">
+      <div style="background:#faf6ee;border:1px solid #d0c8a0;border-left:4px solid #8b5e0a;border-radius:10px;padding:18px 22px;margin-bottom:16px;font-family:'Helvetica Neue',Arial,sans-serif;color:#1a2e0a;line-height:1.65">
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;color:#8b5e0a">Tarif unique — 160 € / an</div>
+        <div style="font-size:13px;color:#4a3a2a">Couverture des dommages accidentels, vandalisme, catastrophes naturelles. Garantie MIC Insurance gérée par ELKYIA.</div>
+      </div>
+
+      <div class="two-col">
+        <div class="field">
+          <label>Type d'installation <span class="req">*</span></label>
+          <select id="ins-type">
+            <option value="">Sélectionnez…</option>
+            <option value="cabane">Cabane de chasse</option>
+            <option value="palombiere">Palombière</option>
+            <option value="tonne">Tonne</option>
+            <option value="mirador">Mirador</option>
+            <option value="gabion">Gabion</option>
+            <option value="hutte">Hutte</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Surface au sol (m²) <span class="req">*</span></label>
+          <input type="number" id="ins-surface" min="1" max="500" step="1" placeholder="Ex : 12"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Matériau principal de construction <span class="req">*</span></label>
+        <select id="ins-materiau">
+          <option value="">Sélectionnez…</option>
+          <option value="bois">Bois</option>
+          <option value="metal">Métal</option>
+          <option value="mixte">Mixte (bois + métal)</option>
+          <option value="beton">Béton / parpaing</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Adresse / lieu-dit d'implantation <span class="req">*</span></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input type="text" id="ins-adresse" placeholder="Ex : Lieu-dit La Forêt, Saint-Symphorien (33)" style="flex:1;min-width:220px"/>
+          <button type="button" onclick="searchAddress()" style="background:#8b5e0a;color:#faf0d8;border:none;border-radius:8px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Localiser</button>
+        </div>
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#6a7a5e;margin-top:6px">Saisissez l'adresse et cliquez sur « Localiser », ou cliquez directement sur la carte pour placer un marqueur précis.</p>
+      </div>
+
+      <div class="field">
+        <label>Position GPS sur la carte <span class="req">*</span></label>
+        <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+          <button type="button" onclick="useMyLocation()" style="background:#fff;border:1px solid #c0c8b8;border-radius:8px;padding:9px 14px;font-family:inherit;font-size:12.5px;color:#2d6a3f;font-weight:600;cursor:pointer">📍 Utiliser ma position actuelle</button>
+        </div>
+        <div id="map" style="height:320px;border-radius:10px;border:1px solid #c0c8b8;z-index:1"></div>
+        <div id="coord-display" style="margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:#5a6a4e">
+          <em>Aucune position définie</em>
+        </div>
+        <input type="hidden" id="ins-lat"/>
+        <input type="hidden" id="ins-lng"/>
+      </div>
+    </div>
+
     <div class="nav-btns">
       <button class="btn-back" onclick="goTo(0)">← Retour</button>
-      <button class="btn-next" onclick="validerChiensEtContinuer()">Mes informations →</button>
+      <button class="btn-next" onclick="validerEtContinuer()">Mes informations →</button>
     </div>
   </div>
 
@@ -412,7 +481,7 @@ function marquerLu(docId) {
   checkAllDocsRead();
 }
 
-function validerChiensEtContinuer() {
+function validerEtContinuer() {
   saveChiens();
   if(opts.includes('chi')) {
     var tooOld = chienData.filter(function(c){ return parseInt(c.age) > 11; });
@@ -438,6 +507,14 @@ function validerChiensEtContinuer() {
       return;
     }
   }
+  if(opts.includes('ins')) {
+    saveInstallation();
+    if(!installationData.type) { alert("Merci d'indiquer le type d'installation."); return; }
+    if(!installationData.surface) { alert("Merci d'indiquer la surface au sol."); return; }
+    if(!installationData.materiau) { alert("Merci d'indiquer le materiau principal de construction."); return; }
+    if(!installationData.adresse) { alert("Merci de saisir l'adresse ou le lieu-dit d'implantation."); return; }
+    if(!installationData.lat || !installationData.lng) { alert("Merci de placer un marqueur sur la carte pour preciser la position GPS de l'installation."); return; }
+  }
   goTo(2);
 }
 
@@ -446,8 +523,77 @@ function toggleOpt(o) {
   if(i>-1) opts.splice(i,1); else opts.push(o);
   document.getElementById('card-sec').classList.toggle('selected', opts.includes('sec'));
   document.getElementById('card-chi').classList.toggle('selected', opts.includes('chi'));
+  document.getElementById('card-ins').classList.toggle('selected', opts.includes('ins'));
   document.getElementById('chiens-wrap').style.display = opts.includes('chi') ? 'block' : 'none';
+  document.getElementById('installation-wrap').style.display = opts.includes('ins') ? 'block' : 'none';
   if(opts.includes('chi')) renderChiens();
+  if(opts.includes('ins')) initMapIfNeeded();
+}
+
+var installationData = { type: '', surface: '', materiau: '', adresse: '', lat: '', lng: '' };
+function saveInstallation() {
+  installationData.type = document.getElementById('ins-type').value;
+  installationData.surface = document.getElementById('ins-surface').value;
+  installationData.materiau = document.getElementById('ins-materiau').value;
+  installationData.adresse = document.getElementById('ins-adresse').value;
+  installationData.lat = document.getElementById('ins-lat').value;
+  installationData.lng = document.getElementById('ins-lng').value;
+}
+
+var mapInstance = null;
+var mapMarker = null;
+function initMapIfNeeded() {
+  if(mapInstance) { setTimeout(function(){ mapInstance.invalidateSize(); }, 100); return; }
+  if(typeof L === 'undefined') { console.error('Leaflet not loaded'); return; }
+  setTimeout(function() {
+    var defaultCenter = { gironde:[44.84,-0.58], calvados:[49.18,-0.37], dordogne:[45.18,0.72], 'lot-et-garonne':[44.20,0.62] };
+    var center = defaultCenter['{{slug}}'] || [46.5, 2.5];
+    mapInstance = L.map('map').setView(center, 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap', maxZoom: 19
+    }).addTo(mapInstance);
+    mapInstance.on('click', function(e) { placeMarker(e.latlng.lat, e.latlng.lng); });
+    setTimeout(function(){ mapInstance.invalidateSize(); }, 200);
+  }, 50);
+}
+function placeMarker(lat, lng) {
+  if(!mapInstance) return;
+  if(mapMarker) {
+    mapMarker.setLatLng([lat, lng]);
+  } else {
+    mapMarker = L.marker([lat, lng], { draggable: true }).addTo(mapInstance);
+    mapMarker.on('dragend', function(e) {
+      var p = e.target.getLatLng();
+      updateCoords(p.lat, p.lng);
+    });
+  }
+  updateCoords(lat, lng);
+}
+function updateCoords(lat, lng) {
+  document.getElementById('ins-lat').value = lat.toFixed(6);
+  document.getElementById('ins-lng').value = lng.toFixed(6);
+  document.getElementById('coord-display').innerHTML = '<strong>Position :</strong> ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + ' &nbsp; <a href="https://www.google.com/maps?q=' + lat + ',' + lng + '" target="_blank" rel="noopener" style="color:#2d6a3f">voir sur Google Maps ↗</a>';
+}
+function useMyLocation() {
+  if(!navigator.geolocation) { alert('La géolocalisation n\'est pas disponible sur cet appareil.'); return; }
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var lat = pos.coords.latitude, lng = pos.coords.longitude;
+    if(mapInstance) { mapInstance.setView([lat, lng], 17); placeMarker(lat, lng); }
+  }, function(err) {
+    alert('Impossible d\'obtenir votre position : ' + err.message + '. Vous pouvez saisir l\'adresse ou cliquer directement sur la carte.');
+  }, { enableHighAccuracy: true, timeout: 10000 });
+}
+function searchAddress() {
+  var q = document.getElementById('ins-adresse').value;
+  if(!q || q.length < 3) { alert('Saisissez une adresse plus précise.'); return; }
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q) + '&countrycodes=fr&limit=1', { headers: { 'Accept-Language': 'fr' } })
+    .then(function(r){ return r.json(); })
+    .then(function(data) {
+      if(!data || !data.length) { alert('Adresse introuvable. Vous pouvez cliquer directement sur la carte.'); return; }
+      var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+      if(mapInstance) { mapInstance.setView([lat, lng], 16); placeMarker(lat, lng); }
+    })
+    .catch(function(){ alert('Erreur lors de la recherche. Vous pouvez cliquer directement sur la carte.'); });
 }
 
 function renderChiens() {
@@ -499,6 +645,7 @@ function saveChiens() {
 
 function buildRecap() {
   saveChiens();
+  saveInstallation();
   var nom = document.getElementById('nom').value || '—';
   var prenom = document.getElementById('prenom').value || '—';
   var email = document.getElementById('email').value || '—';
@@ -508,11 +655,12 @@ function buildRecap() {
   var nbGros = chienData.filter(function(c){ return c.type === 'gros'; }).length;
   var nbDogs = nbPetit + nbGros;
   var cotisChiens = nbPetit * {{tarifChienPetit}} + nbGros * {{tarifChienGros}};
-  var cotisBase = (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? cotisChiens : 0);
-  var nbLignesAdmin = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? nbDogs : 0);
+  var cotisInstallation = opts.includes('ins') ? 160 : 0;
+  var cotisBase = (opts.includes('sec') ? {{tarifSecurite}} : 0) + (opts.includes('chi') ? cotisChiens : 0) + cotisInstallation;
+  var nbLignesAdmin = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? nbDogs : 0) + (opts.includes('ins') ? 1 : 0);
   var fraisAdmin = nbLignesAdmin * {{fraisAdminParLigne}};
   var total = cotisBase + fraisAdmin;
-  var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Assurance blessure des chiens de chasse':'Installation cynégétique'; }).join(' + ') || 'Aucune';
+  var optLabel = opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Assurance blessure des chiens de chasse':o==='ins'?'Installation cynégétique':o; }).join(' + ') || 'Aucune';
 
   var html = '<div class="recap-row"><span class="recap-label">Titulaire</span><span class="recap-value">'+escHtml(prenom)+' '+escHtml(nom)+'</span></div>';
   html += '<div class="recap-row"><span class="recap-label">Email</span><span class="recap-value">'+escHtml(email)+'</span></div>';
@@ -530,10 +678,17 @@ function buildRecap() {
     }).join('<br>');
     html += '<div class="recap-row"><span class="recap-label">Chiens assurés</span><span class="recap-value">'+chiensStr+'</span></div>';
   }
+  if(opts.includes('ins') && installationData.type) {
+    var typeLbl = { cabane:'Cabane de chasse', palombiere:'Palombière', tonne:'Tonne', mirador:'Mirador', gabion:'Gabion', hutte:'Hutte', autre:'Autre' }[installationData.type] || installationData.type;
+    var matLbl = { bois:'Bois', metal:'Métal', mixte:'Mixte', beton:'Béton/parpaing', autre:'Autre' }[installationData.materiau] || installationData.materiau;
+    var insStr = escHtml(typeLbl) + ' — ' + escHtml(installationData.surface) + ' m² — ' + escHtml(matLbl) + '<br>' + escHtml(installationData.adresse) + '<br><em>GPS : ' + escHtml(installationData.lat) + ', ' + escHtml(installationData.lng) + '</em>';
+    html += '<div class="recap-row"><span class="recap-label">Installation cynégétique</span><span class="recap-value">'+insStr+'</span></div>';
+  }
   html += '<div style="border-top:1px solid #e0e8d0;margin-top:8px;padding-top:8px;">';
   if(opts.includes('sec')) html += '<div class="recap-row"><span class="recap-label">Sécurité chasse</span><span class="recap-value">{{tarifSecurite}} €</span></div>';
   if(opts.includes('chi') && nbPetit > 0) html += '<div class="recap-row"><span class="recap-label">Chiens petits gibiers ('+nbPetit+' × {{tarifChienPetit}} €)</span><span class="recap-value">'+(nbPetit*{{tarifChienPetit}})+' €</span></div>';
   if(opts.includes('chi') && nbGros > 0) html += '<div class="recap-row"><span class="recap-label">Chiens gros gibiers ('+nbGros+' × {{tarifChienGros}} €)</span><span class="recap-value">'+(nbGros*{{tarifChienGros}})+' €</span></div>';
+  if(opts.includes('ins')) html += '<div class="recap-row"><span class="recap-label">Installation cynégétique</span><span class="recap-value">160 €</span></div>';
   html += '<div class="recap-row" style="color:#7a8a7a;font-size:12px"><span class="recap-label">Frais administratifs ('+nbLignesAdmin+' × {{fraisAdminParLigne}} €)</span><span class="recap-value">'+fraisAdmin+' €</span></div>';
   html += '</div>';
   html += '<div class="total-row"><span class="total-label">Total annuel</span><span class="total-prix">'+total+' €</span></div>';
@@ -555,10 +710,12 @@ async function submit() {
   btn.disabled = true;
   btn.textContent = 'Redirection en cours…';
 
+  saveInstallation();
   var payload = {
     department: '{{slug}}',
     options: opts,
     chiens: opts.includes('chi') ? chienData : [],
+    installation: opts.includes('ins') ? installationData : null,
     customer: {
       nom: document.getElementById('nom').value,
       prenom: document.getElementById('prenom').value,
@@ -573,9 +730,10 @@ async function submit() {
 
   var nbPetitForLs = payload.chiens.filter(function(c){ return c.type === 'petit'; }).length;
   var nbGrosForLs = payload.chiens.filter(function(c){ return c.type === 'gros'; }).length;
-  var nbLignesAdminLs = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? (nbPetitForLs + nbGrosForLs) : 0);
+  var nbLignesAdminLs = (opts.includes('sec') ? 1 : 0) + (opts.includes('chi') ? (nbPetitForLs + nbGrosForLs) : 0) + (opts.includes('ins') ? 1 : 0);
   var montantLs = (opts.includes('sec') ? {{tarifSecurite}} : 0)
     + (opts.includes('chi') ? (nbPetitForLs * {{tarifChienPetit}} + nbGrosForLs * {{tarifChienGros}}) : 0)
+    + (opts.includes('ins') ? 160 : 0)
     + nbLignesAdminLs * {{fraisAdminParLigne}};
   sessionStorage.setItem('adce_last_souscription', JSON.stringify({
     ref: 'ADCE-' + new Date().getFullYear() + '-' + Math.random().toString(36).slice(2,8).toUpperCase(),
@@ -584,8 +742,9 @@ async function submit() {
     prenom: payload.customer.prenom,
     npermis: payload.customer.npermis,
     saison: payload.customer.saison,
-    options: opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Assurance blessure des chiens de chasse':'Installation cynégétique'; }),
+    options: opts.map(function(o){ return o==='sec'?'Sécurité chasse':o==='chi'?'Assurance blessure des chiens de chasse':o==='ins'?'Installation cynégétique':o; }),
     chiens: payload.chiens,
+    installation: payload.installation,
     montant: montantLs
   }));
 
@@ -621,7 +780,7 @@ window.addEventListener('resize', verifierDocsVisibles);
   try {
     var params = new URLSearchParams(window.location.search);
     var preOpt = params.get('opt');
-    if (preOpt === 'sec' || preOpt === 'chi') {
+    if (preOpt === 'sec' || preOpt === 'chi' || preOpt === 'ins') {
       // Marque les 2 documents comme lus (CG déjà consultées sur la page lecture)
       docsLus.doc1 = true;
       docsLus.doc2 = true;

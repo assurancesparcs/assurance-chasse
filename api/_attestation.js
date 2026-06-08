@@ -195,6 +195,26 @@ function generateAttestation(data) {
         y += cardH + 10;
       }
 
+      if (opts.includes('ins') && data.installation) {
+        const ins = data.installation;
+        const typeLbl = { cabane:'Cabane de chasse', palombiere:'Palombière', tonne:'Tonne', mirador:'Mirador', gabion:'Gabion', hutte:'Hutte', autre:'Autre' }[ins.type] || ins.type || '—';
+        const matLbl = { bois:'Bois', metal:'Métal', mixte:'Mixte (bois+métal)', beton:'Béton/parpaing', autre:'Autre' }[ins.materiau] || ins.materiau || '—';
+        const cardH = 100;
+        doc.roundedRect(MARGIN_X, y, W - 2 * MARGIN_X, cardH, 6)
+           .fillAndStroke('#faf6ee', '#d0c8a0');
+        doc.fillColor(COLORS.ambre).font('Helvetica-Bold').fontSize(11)
+           .text('Option 3 — Installation cynégétique', MARGIN_X + 14, y + 10);
+        doc.fillColor(COLORS.noir).font('Helvetica').fontSize(9)
+           .text(`${typeLbl} — ${ins.surface || '?'} m² — ${matLbl}`, MARGIN_X + 14, y + 28, { width: W - 2 * MARGIN_X - 28 });
+        doc.fillColor(COLORS.noir).font('Helvetica').fontSize(9)
+           .text(`Localisation : ${ins.adresse || '—'}`, MARGIN_X + 14, y + 44, { width: W - 2 * MARGIN_X - 28 });
+        doc.fillColor(COLORS.noir).font('Helvetica').fontSize(9)
+           .text(`Coordonnées GPS : ${ins.lat || '—'}, ${ins.lng || '—'}`, MARGIN_X + 14, y + 60);
+        doc.fillColor(COLORS.gris).font('Helvetica-Oblique').fontSize(8)
+           .text('Assureur : MIC Insurance Company — distribué par ELKYIA / Finaxy Group', MARGIN_X + 14, y + 80);
+        y += cardH + 10;
+      }
+
       // ===== COTISATION =====
       doc.fillColor(COLORS.vert).font('Helvetica-Bold').fontSize(10)
          .text('COTISATION', MARGIN_X, y);
@@ -211,6 +231,7 @@ function generateAttestation(data) {
       if (m.securite) drawRow('Sécurité chasse', fmtMoney(m.securite));
       if (m.chiensPetit) drawRow('Chiens petits gibiers', fmtMoney(m.chiensPetit));
       if (m.chiensGros) drawRow('Chiens gros gibiers', fmtMoney(m.chiensGros));
+      if (m.installation) drawRow('Installation cynégétique', fmtMoney(m.installation));
       if (m.admin) drawRow('Frais administratifs', fmtMoney(m.admin));
       doc.moveTo(MARGIN_X, y + 2).lineTo(W - MARGIN_X, y + 2).lineWidth(0.5).stroke('#c0c8b8');
       y += 8;

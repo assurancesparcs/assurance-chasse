@@ -15,6 +15,7 @@ const TARIFS = {
   securite: 25,
   chiensPetit: 45,
   chiensGros: 95,
+  installation: 160,
   admin: 1,
 };
 
@@ -28,6 +29,7 @@ const FDC_CODE = {
 const OPTION_LABEL = {
   sec: 'Sécurité chasse (assurance corporelle)',
   chi: 'Assurance blessure des chiens de chasse',
+  ins: 'Installation cynégétique',
 };
 
 function escHtml(s) {
@@ -99,11 +101,21 @@ function buildAttestationPayload(session, metadata) {
   let chiens = [];
   try { chiens = metadata.chiens_data ? JSON.parse(metadata.chiens_data) : []; } catch (_) {}
 
+  const installation = opts.includes('ins') ? {
+    type: metadata.ins_type || '',
+    surface: metadata.ins_surface || '',
+    materiau: metadata.ins_materiau || '',
+    adresse: metadata.ins_adresse || '',
+    lat: metadata.ins_lat || '',
+    lng: metadata.ins_lng || '',
+  } : null;
+
   const montants = {
     securite: opts.includes('sec') ? TARIFS.securite : 0,
     chiensPetit: nbPetit * TARIFS.chiensPetit,
     chiensGros: nbGros * TARIFS.chiensGros,
-    admin: ((opts.includes('sec') ? 1 : 0) + nbPetit + nbGros) * TARIFS.admin,
+    installation: opts.includes('ins') ? TARIFS.installation : 0,
+    admin: ((opts.includes('sec') ? 1 : 0) + nbPetit + nbGros + (opts.includes('ins') ? 1 : 0)) * TARIFS.admin,
     total: session.amount_total / 100,
   };
 
@@ -122,6 +134,7 @@ function buildAttestationPayload(session, metadata) {
     saison: metadata.saison || '',
     options: opts,
     chiens,
+    installation,
     montants,
   };
 }
@@ -217,6 +230,13 @@ async function logToGoogleSheets(session, metadata, payload, attestationBuffer) 
     nbChiensPetit: parseInt(metadata.nb_chiens_petit || '0', 10) || 0,
     nbChiensGros: parseInt(metadata.nb_chiens_gros || '0', 10) || 0,
     chiensDetail: metadata.chiens_data || '',
+    installationType: metadata.ins_type || '',
+    installationSurface: metadata.ins_surface || '',
+    installationMateriau: metadata.ins_materiau || '',
+    installationAdresse: metadata.ins_adresse || '',
+    installationLat: metadata.ins_lat || '',
+    installationLng: metadata.ins_lng || '',
+    installationGoogleMaps: (metadata.ins_lat && metadata.ins_lng) ? `https://www.google.com/maps?q=${metadata.ins_lat},${metadata.ins_lng}` : '',
     montantTotal: amount,
     pdfBase64: attestationBuffer ? attestationBuffer.toString('base64') : '',
     pdfFilename: payload ? `attestation-${payload.policyNumber}.pdf` : '',

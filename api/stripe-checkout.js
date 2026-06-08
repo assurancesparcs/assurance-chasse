@@ -2,8 +2,10 @@ const Stripe = require('stripe');
 const { getClientIp, rateLimit } = require('./_security');
 
 const ALLOWED_DEPTS = ['gironde', 'calvados', 'dordogne', 'lot-et-garonne'];
-const ALLOWED_OPTIONS = ['sec', 'chi'];
+const ALLOWED_OPTIONS = ['sec', 'chi', 'ins'];
 const ALLOWED_DOG_TYPES = ['petit', 'gros'];
+const ALLOWED_INS_TYPES = ['cabane', 'palombiere', 'tonne', 'mirador', 'gabion', 'hutte', 'autre'];
+const ALLOWED_MATERIAUX = ['bois', 'metal', 'mixte', 'beton', 'autre'];
 
 function isValidEmail(s) {
   return typeof s === 'string'
@@ -29,7 +31,7 @@ module.exports = async (req, res) => {
   }
 
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-  const { department, options, chiens, customer } = req.body || {};
+  const { department, options, chiens, installation, customer } = req.body || {};
 
   if (!ALLOWED_DEPTS.includes(department)) {
     return res.status(400).json({ error: 'Département invalide' });
@@ -79,6 +81,31 @@ module.exports = async (req, res) => {
     }
   }
 
+  // Validation installation cynégétique
+  if (options.includes('ins')) {
+    if (!installation || typeof installation !== 'object') {
+      return res.status(400).json({ error: 'Données installation manquantes' });
+    }
+    if (!ALLOWED_INS_TYPES.includes(installation.type)) {
+      return res.status(400).json({ error: 'Type d\'installation invalide' });
+    }
+    if (!ALLOWED_MATERIAUX.includes(installation.materiau)) {
+      return res.status(400).json({ error: 'Matériau invalide' });
+    }
+    const surface = parseFloat(installation.surface);
+    if (!Number.isFinite(surface) || surface < 1 || surface > 500) {
+      return res.status(400).json({ error: 'Surface invalide (1 à 500 m²)' });
+    }
+    if (typeof installation.adresse !== 'string' || installation.adresse.length < 3 || installation.adresse.length > 200) {
+      return res.status(400).json({ error: 'Adresse d\'installation invalide' });
+    }
+    const lat = parseFloat(installation.lat);
+    const lng = parseFloat(installation.lng);
+    if (!Number.isFinite(lat) || lat < 41 || lat > 52 || !Number.isFinite(lng) || lng < -6 || lng > 10) {
+      return res.status(400).json({ error: 'Coordonnées GPS invalides (la position doit être en France métropolitaine)' });
+    }
+  }
+
   const line_items = [];
   const missingEnv = [];
   if (options.includes('sec')) {
@@ -95,10 +122,15 @@ module.exports = async (req, res) => {
       else line_items.push({ price: process.env.STRIPE_PRICE_CHIENS_GROS, quantity: nbGros });
     }
   }
+  if (options.includes('ins')) {
+    if (!process.env.STRIPE_PRICE_INSTALLATION) missingEnv.push('STRIPE_PRICE_INSTALLATION');
+    else line_items.push({ price: process.env.STRIPE_PRICE_INSTALLATION, quantity: 1 });
+  }
 
-  // Frais admin : 1€ par ligne (1× pour la sécurité, 1× par chien)
+  // Frais admin : 1€ par ligne (1× pour la sécurité, 1× par chien, 1× pour l'installation)
   const adminQty = (options.includes('sec') ? 1 : 0)
-    + (options.includes('chi') ? (nbPetit + nbGros) : 0);
+    + (options.includes('chi') ? (nbPetit + nbGros) : 0)
+    + (options.includes('ins') ? 1 : 0);
   if (adminQty > 0) {
     if (!process.env.STRIPE_PRICE_ADMIN) missingEnv.push('STRIPE_PRICE_ADMIN');
     else line_items.push({ price: process.env.STRIPE_PRICE_ADMIN, quantity: adminQty });
@@ -120,6 +152,14 @@ module.exports = async (req, res) => {
     saison: clean(customer.saison || '', 30),
     chiens_data: chiens ? JSON.stringify(chiens).slice(0, 450) : '',
   };
+  if (options.includes('ins') && installation) {
+    metadata.ins_type = clean(installation.type, 30);
+    metadata.ins_surface = clean(String(installation.surface), 10);
+    metadata.ins_materiau = clean(installation.materiau, 20);
+    metadata.ins_adresse = clean(installation.adresse, 200);
+    metadata.ins_lat = clean(String(installation.lat), 20);
+    metadata.ins_lng = clean(String(installation.lng), 20);
+  }
 
   const host = req.headers.host;
   const proto = host && host.includes('localhost') ? 'http' : 'https';
