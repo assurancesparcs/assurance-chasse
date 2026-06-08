@@ -7,8 +7,8 @@
 <meta name="description" content="Souscrivez votre assurance chasse complémentaire en {{name}} en quelques minutes : sécurité corporelle ({{tarifSecurite}}€/an), chiens de chasse (à partir de {{tarifChienPetit}}€). Attestation immédiate.">
 <meta name="keywords" content="souscrire assurance chasse {{name}}, souscription assurance chasseur {{code}}, devis assurance chasse en ligne, assurance chien chasse {{code}}, garantie chasseur {{name}}">
 <link rel="canonical" href="https://{{domain}}/options-chasse.html">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css"/>
+<script src="/vendor/leaflet/leaflet.js"></script>
 <style>
 {{stylesCommon}}
 
@@ -319,7 +319,7 @@
         <label>Adresse / lieu-dit d'implantation <span class="req">*</span></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <input type="text" id="ins-adresse" placeholder="Ex : Lieu-dit La Forêt, Saint-Symphorien (33)" style="flex:1;min-width:220px"/>
-          <button type="button" onclick="searchAddress()" style="background:#8b5e0a;color:#faf0d8;border:none;border-radius:8px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Localiser</button>
+          <button type="button" onclick="searchAddress(event)" style="background:#8b5e0a;color:#faf0d8;border:none;border-radius:8px;padding:11px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">🔍 Localiser</button>
         </div>
         <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:11px;color:#6a7a5e;margin-top:6px">Saisissez l'adresse et cliquez sur « Localiser », ou cliquez directement sur la carte pour placer un marqueur précis.</p>
       </div>
@@ -410,6 +410,7 @@ function goTo(n) {
   cur = n;
   document.getElementById('p'+cur).classList.add('active');
   document.getElementById('s'+cur).classList.add('active');
+  if(cur === 1 && mapInstance) { setTimeout(function(){ mapInstance.invalidateSize(); }, 200); }
   if(cur === 3) buildRecap();
   window.scrollTo(0,0);
 }
@@ -542,9 +543,21 @@ function saveInstallation() {
 
 var mapInstance = null;
 var mapMarker = null;
+var leafletIconReady = false;
+function configureLeafletIcons() {
+  if(leafletIconReady || typeof L === 'undefined') return;
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: '/vendor/leaflet/images/marker-icon-2x.png',
+    iconUrl: '/vendor/leaflet/images/marker-icon.png',
+    shadowUrl: '/vendor/leaflet/images/marker-shadow.png'
+  });
+  leafletIconReady = true;
+}
 function initMapIfNeeded() {
-  if(mapInstance) { setTimeout(function(){ mapInstance.invalidateSize(); }, 100); return; }
-  if(typeof L === 'undefined') { console.error('Leaflet not loaded'); return; }
+  if(mapInstance) { setTimeout(function(){ mapInstance.invalidateSize(); }, 150); return; }
+  if(typeof L === 'undefined') { console.error('Leaflet non chargé'); return; }
+  configureLeafletIcons();
   setTimeout(function() {
     var defaultCenter = { gironde:[44.84,-0.58], calvados:[49.18,-0.37], dordogne:[45.18,0.72], 'lot-et-garonne':[44.20,0.62] };
     var center = defaultCenter['{{slug}}'] || [46.5, 2.5];
@@ -553,8 +566,8 @@ function initMapIfNeeded() {
       attribution: '© OpenStreetMap', maxZoom: 19
     }).addTo(mapInstance);
     mapInstance.on('click', function(e) { placeMarker(e.latlng.lat, e.latlng.lng); });
-    setTimeout(function(){ mapInstance.invalidateSize(); }, 200);
-  }, 50);
+    setTimeout(function(){ mapInstance.invalidateSize(); }, 250);
+  }, 60);
 }
 function placeMarker(lat, lng) {
   if(!mapInstance) return;
@@ -583,17 +596,23 @@ function useMyLocation() {
     alert('Impossible d\'obtenir votre position : ' + err.message + '. Vous pouvez saisir l\'adresse ou cliquer directement sur la carte.');
   }, { enableHighAccuracy: true, timeout: 10000 });
 }
-function searchAddress() {
+function searchAddress(ev) {
   var q = document.getElementById('ins-adresse').value;
   if(!q || q.length < 3) { alert('Saisissez une adresse plus précise.'); return; }
-  fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(q) + '&countrycodes=fr&limit=1', { headers: { 'Accept-Language': 'fr' } })
+  var btn = ev && ev.target ? ev.target : null;
+  var oldLabel = btn ? btn.textContent : '';
+  if(btn) { btn.disabled = true; btn.textContent = '⏳ Recherche…'; }
+  fetch('/api/geocode?q=' + encodeURIComponent(q))
     .then(function(r){ return r.json(); })
     .then(function(data) {
-      if(!data || !data.length) { alert('Adresse introuvable. Vous pouvez cliquer directement sur la carte.'); return; }
-      var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
-      if(mapInstance) { mapInstance.setView([lat, lng], 16); placeMarker(lat, lng); }
+      if(btn) { btn.disabled = false; btn.textContent = oldLabel; }
+      if(!data || !data.found) { alert('Adresse introuvable. Précisez la commune (ex : "Saint-Symphorien 33113") ou cliquez directement sur la carte pour placer le marqueur.'); return; }
+      if(mapInstance) { mapInstance.setView([data.lat, data.lng], 16); placeMarker(data.lat, data.lng); }
     })
-    .catch(function(){ alert('Erreur lors de la recherche. Vous pouvez cliquer directement sur la carte.'); });
+    .catch(function(){
+      if(btn) { btn.disabled = false; btn.textContent = oldLabel; }
+      alert('Erreur lors de la recherche. Vous pouvez cliquer directement sur la carte pour placer le marqueur.');
+    });
 }
 
 function renderChiens() {
