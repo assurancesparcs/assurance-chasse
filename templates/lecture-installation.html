@@ -40,13 +40,13 @@
 <div class="lecture-hero">
   <a href="/garanties.html" class="back">← Retour aux garanties</a>
   <h1>Conditions générales — Option 3 Installation cynégétique</h1>
-  <p class="sub">Protection de votre installation de chasse — devis personnalisé</p>
+  <p class="sub">Protection de votre installation de chasse — garantie MIC Insurance gérée par ELKYIA</p>
 </div>
 
 <div class="lecture-wrap">
   <div class="lecture-content">
     <h2>Article 1 — Objet du contrat</h2>
-    <p>Le présent contrat a pour objet de garantir le chasseur contre les dommages susceptibles d'affecter son installation cynégétique : cabane de chasse, palombière, tonne, mirador, hutte, et tout aménagement fixe ou semi-fixe destiné à la pratique de la chasse.</p>
+    <p>Le présent contrat a pour objet de garantir le chasseur contre les dommages susceptibles d'affecter son installation cynégétique : cabane de chasse, palombière, tonne, mirador, gabion, hutte, et tout aménagement fixe ou semi-fixe destiné à la pratique de la chasse.</p>
 
     <h2>Article 2 — Garanties</h2>
     <ul>
@@ -57,16 +57,13 @@
     </ul>
     <p>Les montants d'indemnisation et franchises sont fixés au cas par cas selon la nature et la valeur de l'installation.</p>
 
-    <h2>Article 3 — Devis personnalisé</h2>
-    <p>L'Option 3 ne fait pas l'objet d'un tarif forfaitaire. La cotisation est calculée individuellement selon :</p>
+    <h2>Article 3 — Cotisation</h2>
     <ul>
-      <li>La nature et le type de l'installation (matériaux, dimensions)</li>
-      <li>La valeur déclarée à neuf</li>
-      <li>La localisation géographique</li>
-      <li>L'usage (individuel ou collectif)</li>
-      <li>Les éventuels équipements complémentaires</li>
+      <li>Cotisation annuelle adaptée à la nature de votre installation et à la valeur déclarée</li>
+      <li>Frais administratifs : <strong>{{fraisAdminParLigne}} €</strong> par installation souscrite</li>
+      <li>Paiement annuel d'avance, par carte bancaire via Stripe</li>
+      <li>Pas de prélèvement automatique. Pas de renouvellement tacite.</li>
     </ul>
-    <p>Devis gratuit sous 48h ouvrées après réception de votre demande.</p>
 
     <h2>Article 4 — Conditions d'assurabilité</h2>
     <ul>
@@ -98,30 +95,65 @@
     <p>Droit français. Juridictions françaises compétentes.</p>
 
     <div class="lecture-pdf">
-      <strong>Document officiel :</strong> Les conditions définitives sont précisées au devis personnalisé. <a href="/conditions-generales-chasse.pdf" target="_blank" rel="noopener">Télécharger les CG génériques</a>.
+      <strong>Documents officiels MIC Insurance :</strong> Pour le texte intégral et juridiquement opposable de la garantie Installation cynégétique, consultez les documents ci-dessous.
+      <p style="margin-top:14px;font-size:16px;font-weight:700;color:#c0306a;text-decoration:underline;line-height:1.5">⚠️ Vous devez ouvrir chaque document puis cocher la case correspondante pour pouvoir procéder à la souscription.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+        <a href="/cg-installations-cynegetiques-mic.pdf" target="_blank" rel="noopener" id="pdf-cg" onclick="markOpened('cg')" style="display:inline-flex;align-items:center;gap:8px;background:#8b5e0a;color:#faf0d8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Conditions générales (MIC Insurance)</span>
+          <span id="badge-cg" style="display:inline-block;background:rgba(255,255,255,0.2);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px">à ouvrir</span>
+        </a>
+        <a href="/ipid-installations-cynegetiques-mic.pdf" target="_blank" rel="noopener" id="pdf-ipid" onclick="markOpened('ipid')" style="display:inline-flex;align-items:center;gap:8px;background:#8b5e0a;color:#faf0d8;font-family:'Helvetica Neue',Arial,sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:8px;text-decoration:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>IPID — Document d'information sur le produit</span>
+          <span id="badge-ipid" style="display:inline-block;background:rgba(255,255,255,0.2);color:#fff;font-size:10px;padding:2px 7px;border-radius:10px;margin-left:4px">à ouvrir</span>
+        </a>
+      </div>
     </div>
 
     <div class="lecture-end">
-      <div class="consent-row">
-        <input type="checkbox" id="consent-cg" onchange="toggleBtn()">
-        <label for="consent-cg">Je confirme avoir pris connaissance des conditions générales</label>
+      <div class="consent-row" id="row-cg" style="opacity:0.5">
+        <input type="checkbox" id="consent-cg" disabled onchange="toggleBtn()">
+        <label for="consent-cg">Je confirme avoir pris connaissance des conditions générales.</label>
       </div>
-      <a href="#" id="btn-souscrire" class="btn-souscrire" onclick="proceedDevis(event)">Demander un devis →</a>
+      <div class="consent-row" id="row-ipid" style="opacity:0.5">
+        <input type="checkbox" id="consent-ipid" disabled onchange="toggleBtn()">
+        <label for="consent-ipid">Je confirme avoir pris connaissance du document d'information (IPID).</label>
+      </div>
+      <a href="#" id="btn-souscrire" class="btn-souscrire" onclick="proceedSouscrire(event)">Procéder à la souscription →</a>
     </div>
   </div>
 </div>
 
 <script>
+var docsOpened = { cg: false, ipid: false };
+
+function markOpened(docId) {
+  docsOpened[docId] = true;
+  var badge = document.getElementById('badge-' + docId);
+  if (badge) {
+    badge.textContent = '✓ ouvert';
+    badge.style.background = 'rgba(255,255,255,0.4)';
+  }
+  var input = document.getElementById('consent-' + docId);
+  var row = document.getElementById('row-' + docId);
+  if (input) input.disabled = false;
+  if (row) row.style.opacity = '1';
+}
+
 function toggleBtn() {
   var btn = document.getElementById('btn-souscrire');
-  var checked = document.getElementById('consent-cg').checked;
-  btn.classList.toggle('active', checked);
+  var allChecked = document.getElementById('consent-cg').checked
+    && document.getElementById('consent-ipid').checked;
+  btn.classList.toggle('active', allChecked);
 }
-function proceedDevis(e) {
-  var checked = document.getElementById('consent-cg').checked;
-  if (!checked) { e.preventDefault(); return false; }
-  window.open('/contact.html?objet=installation-cynegetique', '_blank', 'noopener');
+
+function proceedSouscrire(e) {
   e.preventDefault();
+  var allChecked = document.getElementById('consent-cg').checked
+    && document.getElementById('consent-ipid').checked;
+  if (!allChecked) return false;
+  window.open('/options-chasse.html?opt=ins', '_blank', 'noopener');
 }
 </script>
 
