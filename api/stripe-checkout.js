@@ -150,6 +150,9 @@ module.exports = async (req, res) => {
     prenom: clean(customer.prenom, 100),
     npermis: clean(customer.npermis || '', 50),
     saison: clean(customer.saison || '', 30),
+    tel: clean(customer.tel || '', 30),
+    ddn: clean(customer.ddn || '', 20),
+    adresse_postale: clean(customer.adresse || '', 200),
     chiens_data: chiens ? JSON.stringify(chiens).slice(0, 450) : '',
   };
   if (options.includes('ins') && installation) {

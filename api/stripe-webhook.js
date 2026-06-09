@@ -129,6 +129,9 @@ function buildAttestationPayload(session, metadata) {
       prenom: metadata.prenom || '',
       email: session.customer_email || '',
       npermis: metadata.npermis || '',
+      ddn: metadata.ddn || '',
+      tel: metadata.tel || '',
+      adresse: metadata.adresse_postale || '',
     },
     department: metadata.department || '',
     saison: metadata.saison || '',
@@ -152,6 +155,14 @@ async function sendEmails(session, metadata, payload, attestationBuffer) {
   const fdc = FDC_CODE[metadata.department] || '';
   const optionsLabel = formatOptions(metadata.options);
   const chiensHtml = formatChiens(metadata.chiens_data);
+  const installationHtml = metadata.ins_type
+    ? `<p><strong>Installation cynégétique :</strong><br>`
+      + `Type : ${escHtml(metadata.ins_type)} · Surface : ${escHtml(metadata.ins_surface || '—')} m² · Matériau : ${escHtml(metadata.ins_materiau || '—')}<br>`
+      + `Lieu : ${escHtml(metadata.ins_adresse || '—')}<br>`
+      + `GPS : ${escHtml(metadata.ins_lat || '—')}, ${escHtml(metadata.ins_lng || '—')}`
+      + ((metadata.ins_lat && metadata.ins_lng) ? ` · <a href="https://www.google.com/maps?q=${escHtml(metadata.ins_lat)},${escHtml(metadata.ins_lng)}">Google Maps</a>` : '')
+      + `</p>`
+    : '';
   const policyNumber = payload ? payload.policyNumber : '';
   const attestationFilename = policyNumber ? `attestation-${policyNumber}.pdf` : 'attestation-assurance-chasse.pdf';
 
@@ -193,7 +204,11 @@ async function sendEmails(session, metadata, payload, attestationBuffer) {
       <hr>
       <p><strong>Client :</strong> ${escHtml(metadata.prenom || '')} ${escHtml(metadata.nom || '')}<br>
       <strong>Email :</strong> ${escHtml(session.customer_email)}<br>
+      <strong>Téléphone :</strong> ${escHtml(metadata.tel || '—')}<br>
+      <strong>Date de naissance :</strong> ${escHtml(metadata.ddn || '—')}<br>
+      <strong>Adresse postale :</strong> ${escHtml(metadata.adresse_postale || '—')}<br>
       <strong>N° permis :</strong> ${escHtml(metadata.npermis || '—')}</p>
+      ${installationHtml}
       ${chiensHtml}
       <hr>
       <p><strong>Stripe session :</strong> ${escHtml(session.id)}</p>
@@ -225,6 +240,8 @@ async function logToGoogleSheets(session, metadata, payload, attestationBuffer) 
     prenom: metadata.prenom || '',
     email: session.customer_email || '',
     tel: metadata.tel || '',
+    ddn: metadata.ddn || '',
+    adressePostale: metadata.adresse_postale || '',
     npermis: metadata.npermis || '',
     options: optionsLabel,
     nbChiensPetit: parseInt(metadata.nb_chiens_petit || '0', 10) || 0,
@@ -250,7 +267,27 @@ async function logToGoogleSheets(session, metadata, payload, attestationBuffer) 
   });
 
   if (!response.ok) {
-    throw new Error(`Google Sheets webhook returned ${response.status}`);
+    throw new Error(`Google Sheets webhook a renvoyé HTTP ${response.status}`);
+  }
+
+  // Apps Script renvoie TOUJOURS 200, même en cas d'echec (secret invalide,
+  // deploiement en acces restreint -> page de login HTML, etc.).
+  // On verifie donc explicitement le corps de la reponse.
+  const text = await response.text();
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch (_) {
+    // Reponse non-JSON = quasi-certainement une page HTML de login Google
+    // => le deploiement Apps Script n'est pas en acces "Tout le monde"
+    throw new Error(
+      'Google Sheets : reponse non-JSON (probable deploiement en acces restreint — '
+      + 'verifier que la Web App est deployee avec "Qui a acces : Tout le monde"). '
+      + 'Debut reponse : ' + text.slice(0, 120)
+    );
+  }
+  if (!parsed || parsed.ok !== true) {
+    throw new Error('Google Sheets a refuse l\'enregistrement : ' + JSON.stringify(parsed).slice(0, 200));
   }
 }
 
