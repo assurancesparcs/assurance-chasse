@@ -214,14 +214,16 @@ function generateAttestation(data) {
            .text('Assureur : MIC Insurance Company — distribué par ELKYIA / Finaxy Group', MARGIN_X + 14, y + 80);
         y += cardH + 10;
 
-        // Encart conseil prévention (uniquement pour Option 3)
-        const adviceH = 28;
+        // Encart obligation de prévention (uniquement pour Option 3)
+        const adviceH = 42;
         doc.roundedRect(MARGIN_X, y, W - 2 * MARGIN_X, adviceH, 6)
            .fillAndStroke('#fff5f0', '#e8b8a8');
         doc.fillColor('#7a1a1a').font('Helvetica-Bold').fontSize(9)
-           .text('🛡  Conseil de prévention :', MARGIN_X + 14, y + 9, { continued: true })
-           .fillColor('#5a3030').font('Helvetica').fontSize(9)
-           .text(" pensez à vous munir d'un extincteur pour protéger votre installation.");
+           .text(
+             "Obligation de prévention : pensez à vous munir d'un extincteur pour protéger votre installation.",
+             MARGIN_X + 14, y + 12,
+             { width: W - 2 * MARGIN_X - 28, lineGap: 2 }
+           );
         y += adviceH + 10;
       }
 
