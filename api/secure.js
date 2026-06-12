@@ -18,6 +18,29 @@ const { put, list, del, head } = require('@vercel/blob');
 const nodemailer = require('nodemailer');
 const { getClientIp, rateLimit } = require('./_security');
 
+/**
+ * Construit les options d'authentification Blob.
+ *
+ * Vercel propose 2 modes :
+ *  - Classique : variable BLOB_READ_WRITE_TOKEN injectée → le SDK utilise ça en auto
+ *  - OIDC (nouveau, depuis 2025) : Vercel injecte VERCEL_OIDC_TOKEN + un store ID
+ *    (nommé BLOB_STORE_ID ou variante BLOB_READ_WRITE_TOKEN_STORE_ID selon le moment
+ *    de la connexion). Dans ce cas il faut passer { token: oidcToken, storeId } explicite.
+ *
+ * Cette fonction renvoie {} si l'env classique est en place (le SDK gère seul) ou
+ * { token: ..., storeId: ... } pour le mode OIDC.
+ */
+function blobOpts() {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return {};
+  const storeId = process.env.BLOB_STORE_ID
+    || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID
+    || process.env.NEXT_PUBLIC_BLOB_STORE_ID
+    || '';
+  const oidcToken = process.env.VERCEL_OIDC_TOKEN || '';
+  if (oidcToken && storeId) return { token: oidcToken, storeId };
+  return {};
+}
+
 module.exports.config = { api: { bodyParser: false } };
 
 const COOKIE_NAME = 'adce_secure_session';
@@ -176,7 +199,7 @@ async function actionLogout(req, res) {
 }
 
 async function actionList(req, res, session) {
-  const result = await list({ prefix: BLOB_PREFIX });
+  const result = await list({ prefix: BLOB_PREFIX, ...blobOpts() });
   const files = (result.blobs || []).map((b) => ({
     key: b.pathname,
     url: b.url,
@@ -202,6 +225,7 @@ async function actionUpload(req, res, session, urlObj) {
     access: 'public',
     addRandomSuffix: false,
     contentType: req.headers['content-type'] || 'application/octet-stream',
+    ...blobOpts(),
   });
   logAccess('UPLOAD', req, { email: session.email, filename, size: body.length });
   notifyOtherUsers(session.email, filename, body.length).catch((err) => console.error('Notification email échouée', err));
@@ -211,7 +235,7 @@ async function actionUpload(req, res, session, urlObj) {
 async function actionDownload(req, res, session, urlObj) {
   const key = urlObj.searchParams.get('key');
   if (!key || !key.startsWith(BLOB_PREFIX)) return res.status(400).json({ error: 'Clé invalide' });
-  const blob = await head(key);
+  const blob = await head(key, blobOpts());
   if (!blob) return res.status(404).json({ error: 'Fichier introuvable' });
   const upstream = await fetch(blob.url);
   if (!upstream.ok) return res.status(502).json({ error: 'Erreur récupération fichier' });
@@ -228,9 +252,9 @@ async function actionDelete(req, res, session) {
   const body = await readJsonBody(req);
   const { key } = body;
   if (typeof key !== 'string' || !key.startsWith(BLOB_PREFIX)) return res.status(400).json({ error: 'Clé invalide' });
-  const blob = await head(key);
+  const blob = await head(key, blobOpts());
   if (!blob) return res.status(404).json({ error: 'Fichier introuvable' });
-  await del(blob.url);
+  await del(blob.url, blobOpts());
   logAccess('DELETE', req, { email: session.email, key });
   return res.status(200).json({ ok: true });
 }
@@ -244,10 +268,10 @@ async function actionCleanup(req, res) {
   const cutoff = Date.now() - RETENTION_DAYS * 24 * 60 * 60 * 1000;
   let deleted = 0;
   const errors = [];
-  const result = await list({ prefix: BLOB_PREFIX });
+  const result = await list({ prefix: BLOB_PREFIX, ...blobOpts() });
   for (const blob of result.blobs || []) {
     if (new Date(blob.uploadedAt).getTime() < cutoff) {
-      try { await del(blob.url); deleted += 1; }
+      try { await del(blob.url, blobOpts()); deleted += 1; }
       catch (e) { errors.push({ key: blob.pathname, error: e.message }); }
     }
   }
@@ -264,7 +288,7 @@ async function actionDebug(req, res) {
   // Tente une op simple sur Blob pour capturer l'erreur exacte
   let blobTest = { ok: false, error: null };
   try {
-    const r = await list({ prefix: BLOB_PREFIX, limit: 1 });
+    const r = await list({ prefix: BLOB_PREFIX, limit: 1, ...blobOpts() });
     blobTest = { ok: true, foundCount: (r.blobs || []).length, cursor: r.cursor || null };
   } catch (e) {
     blobTest = { ok: false, error: e.message, name: e.name, status: e.status || null };
