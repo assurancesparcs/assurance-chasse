@@ -19,26 +19,36 @@ const nodemailer = require('nodemailer');
 const { getClientIp, rateLimit } = require('./_security');
 
 /**
- * Construit les options d'authentification Blob.
+ * Normalisation de l'identifiant de store pour le SDK @vercel/blob.
  *
- * Vercel propose 2 modes :
- *  - Classique : variable BLOB_READ_WRITE_TOKEN injectée → le SDK utilise ça en auto
- *  - OIDC (nouveau, depuis 2025) : Vercel injecte VERCEL_OIDC_TOKEN + un store ID
- *    (nommé BLOB_STORE_ID ou variante BLOB_READ_WRITE_TOKEN_STORE_ID selon le moment
- *    de la connexion). Dans ce cas il faut passer { token: oidcToken, storeId } explicite.
+ * Vercel a 2 modes de connexion d'un Blob store à un projet :
+ *  - CLASSIQUE : injecte la variable BLOB_READ_WRITE_TOKEN. Le SDK l'utilise seul.
+ *  - OIDC (2025+) : injecte au RUNTIME VERCEL_OIDC_TOKEN (un JWT court, NON visible
+ *    dans la liste des Environment Variables de l'UI) + l'ID du store sous le nom
+ *    BLOB_READ_WRITE_TOKEN_STORE_ID. Le SDK, lui, cherche l'ID sous BLOB_STORE_ID.
  *
- * Cette fonction renvoie {} si l'env classique est en place (le SDK gère seul) ou
- * { token: ..., storeId: ... } pour le mode OIDC.
+ * On aliase donc BLOB_STORE_ID dès le chargement du module : ainsi le SDK détecte
+ * le store et lit automatiquement VERCEL_OIDC_TOKEN pour s'authentifier en OIDC.
+ */
+if (!process.env.BLOB_STORE_ID && process.env.BLOB_READ_WRITE_TOKEN_STORE_ID) {
+  process.env.BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN_STORE_ID;
+}
+
+/**
+ * Options d'auth Blob passées explicitement à chaque appel SDK.
+ *  - Mode classique (token présent) → {} : le SDK gère seul.
+ *  - Mode OIDC → { storeId, oidcToken } EXPLICITES (oidcToken, PAS token : le JWT OIDC
+ *    ne doit jamais être passé sous "token" qui attend un vercel_blob_rw_...).
  */
 function blobOpts() {
   if (process.env.BLOB_READ_WRITE_TOKEN) return {};
+  const opts = {};
   const storeId = process.env.BLOB_STORE_ID
     || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID
-    || process.env.NEXT_PUBLIC_BLOB_STORE_ID
     || '';
-  const oidcToken = process.env.VERCEL_OIDC_TOKEN || '';
-  if (oidcToken && storeId) return { token: oidcToken, storeId };
-  return {};
+  if (storeId) opts.storeId = storeId;
+  if (process.env.VERCEL_OIDC_TOKEN) opts.oidcToken = process.env.VERCEL_OIDC_TOKEN;
+  return opts;
 }
 
 module.exports.config = { api: { bodyParser: false } };
@@ -294,10 +304,20 @@ async function actionDebug(req, res) {
     blobTest = { ok: false, error: e.message, name: e.name, status: e.status || null };
   }
 
+  const resolved = blobOpts();
   return res.status(200).json({
     blobVarsFound: all.filter((k) => k.includes('BLOB')),
     blobTokenLength: tokenLen,
     blobTokenPrefix: tokenPrefix,
+    oidcTokenPresent: !!process.env.VERCEL_OIDC_TOKEN,
+    oidcTokenLength: (process.env.VERCEL_OIDC_TOKEN || '').length,
+    storeIdResolved: process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID || '(absent)',
+    blobOptsUsed: {
+      mode: process.env.BLOB_READ_WRITE_TOKEN ? 'classique (token statique)'
+            : (resolved.oidcToken ? 'OIDC (oidcToken+storeId)' : 'AUCUN credential disponible'),
+      hasStoreId: !!resolved.storeId,
+      hasOidcToken: !!resolved.oidcToken,
+    },
     blobOperation: blobTest,
     secureVarsFound: all.filter((k) => k.startsWith('SECURE_') || k === 'JWT_SECRET' || k === 'CRON_SECRET'),
     gmailVarsFound: all.filter((k) => k.startsWith('GMAIL_')),
