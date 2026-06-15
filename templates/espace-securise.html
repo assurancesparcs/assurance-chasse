@@ -100,14 +100,34 @@ async function checkAuthAndLoad() {
     var data = await res.json();
     if (data.email) document.getElementById('user-email').textContent = data.email;
     if (!res.ok) { showError('upload-error', data.error || 'Erreur ' + res.status); return; }
+    if (data.blobError) { renderBlobDiagnostic(data.blobError); }
     renderList(data.files || []);
     if (data.isAdmin) {
       document.getElementById('souscriptions-section').style.display = 'block';
-      loadSouscriptions();
+      if (!data.blobError) loadSouscriptions();
     }
   } catch(e) {
     showError('upload-error', 'Impossible de charger la liste : ' + (e.message || 'erreur réseau'));
   }
+}
+function renderBlobDiagnostic(diag) {
+  var d = diag.diagnostic || {};
+  var rows = [
+    ['Token classique (BLOB_READ_WRITE_TOKEN)', d.hasClassicToken ? '✓ présent' : '✗ absent'],
+    ['Store ID', d.hasStoreId ? '✓ ' + (d.storeIdSource || '') : '✗ absent'],
+    ['OIDC Token (VERCEL_OIDC_TOKEN)', d.hasOidcToken ? '✓ injecté au runtime' : '✗ absent'],
+    ['Variables BLOB détectées', (d.blobVarsDetected || []).join(', ') || '(aucune)'],
+  ];
+  var html = '<div style="background:#fff5e6;border:1px solid #f0c060;border-left:4px solid #d4970a;border-radius:10px;padding:18px 22px;margin:16px 0;font-family:Helvetica Neue,Arial,sans-serif">'
+    + '<h3 style="color:#7a4a00;font-size:15px;font-weight:700;margin:0 0 10px">⚠ Configuration Blob incomplète sur ce projet Vercel</h3>'
+    + '<p style="color:#5a4a2a;font-size:13px;line-height:1.55;margin:0 0 12px"><strong>À faire :</strong> ' + escHtml(diag.action || '') + '</p>'
+    + '<table style="width:100%;border-collapse:collapse;font-size:12.5px"><tbody>'
+    + rows.map(function(r){ return '<tr><td style="padding:4px 8px 4px 0;color:#7a6a4a;width:55%">' + escHtml(r[0]) + '</td><td style="padding:4px 0;color:#1a2e0a;font-family:monospace">' + escHtml(r[1]) + '</td></tr>'; }).join('')
+    + '</tbody></table>'
+    + '<p style="color:#7a6a4a;font-size:11.5px;margin:10px 0 0;font-style:italic">Détail technique : ' + escHtml(diag.message || '') + '</p>'
+    + '</div>';
+  var target = document.getElementById('file-list');
+  if (target) target.insertAdjacentHTML('beforebegin', html);
 }
 async function loadSouscriptions() {
   try {

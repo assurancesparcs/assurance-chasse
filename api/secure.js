@@ -208,8 +208,53 @@ async function actionLogout(req, res) {
   return res.status(200).json({ ok: true });
 }
 
+/**
+ * Diagnostic auto : si l'erreur Blob mentionne des credentials manquants,
+ * on renvoie un JSON exploitable côté UI au lieu de planter le serveur.
+ */
+function diagnosticBlobError(err) {
+  const msg = err && err.message ? err.message : String(err);
+  if (/blob credentials|BLOB_READ_WRITE_TOKEN|oidcToken|store id/i.test(msg)) {
+    const opts = blobOpts();
+    return {
+      isCredentialError: true,
+      message: msg,
+      diagnostic: {
+        hasClassicToken: !!process.env.BLOB_READ_WRITE_TOKEN,
+        hasStoreId: !!opts.storeId,
+        storeIdSource: process.env.BLOB_STORE_ID ? 'BLOB_STORE_ID'
+                     : process.env.BLOB_READ_WRITE_TOKEN_STORE_ID ? 'BLOB_READ_WRITE_TOKEN_STORE_ID'
+                     : '(absent)',
+        hasOidcToken: !!process.env.VERCEL_OIDC_TOKEN,
+        blobVarsDetected: Object.keys(process.env).filter((k) => k.includes('BLOB')).sort(),
+      },
+      action: process.env.BLOB_READ_WRITE_TOKEN || (opts.storeId && process.env.VERCEL_OIDC_TOKEN)
+        ? 'Erreur inattendue malgré credentials présents — vérifier les logs Vercel.'
+        : !opts.storeId
+          ? "Le Blob store n'est pas connecté à ce projet Vercel. Storage → ton store → Projects → Connect Project."
+          : "Le store est connecté mais VERCEL_OIDC_TOKEN absent : Settings du projet → activer OIDC Federation, puis redéployer (sans cache).",
+    };
+  }
+  return null;
+}
+
 async function actionList(req, res, session) {
-  const result = await list({ prefix: BLOB_PREFIX, ...blobOpts() });
+  let result;
+  try {
+    result = await list({ prefix: BLOB_PREFIX, ...blobOpts() });
+  } catch (err) {
+    const diag = diagnosticBlobError(err);
+    if (diag) {
+      logAccess('LIST_BLOB_KO', req, { email: session.email, msg: diag.message });
+      return res.status(200).json({
+        files: [],
+        email: session.email,
+        isAdmin: isAdminSession(session),
+        blobError: diag,
+      });
+    }
+    throw err;
+  }
   const files = (result.blobs || []).map((b) => ({
     key: b.pathname,
     url: b.url,
