@@ -289,6 +289,127 @@ async function actionCleanup(req, res) {
   return res.status(200).json({ ok: true, deleted, errors });
 }
 
+// === EXPORT CSV des souscriptions (archivées dans Blob par le webhook Stripe) ===
+
+const SOUSCRIPTIONS_PREFIX = 'souscriptions/';
+const ATTESTATIONS_PREFIX = 'attestations/';
+
+function csvEscape(v) {
+  if (v == null) return '';
+  const s = String(v);
+  if (/[",;\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+async function actionExportSouscriptionsCsv(req, res, session) {
+  const result = await list({ prefix: SOUSCRIPTIONS_PREFIX, ...blobOpts() });
+  const blobs = (result.blobs || []).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+
+  // Téléchargement parallèle des JSON
+  const records = await Promise.all(blobs.map(async (b) => {
+    try {
+      const r = await fetch(b.url);
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (_) { return null; }
+  }));
+
+  const cols = [
+    'Date paiement', 'N° Police', 'Département', 'FDC', 'Saison',
+    'Nom', 'Prénom', 'Email', 'Téléphone', 'Date naissance', 'Adresse postale', 'N° Permis',
+    'Options', 'Nb petits', 'Nb gros', 'Détail chiens',
+    'Type installation', 'Surface m²', 'Matériau', 'Adresse installation',
+    'Latitude', 'Longitude', 'Google Maps',
+    'Montant €', 'Stripe Session ID',
+  ];
+
+  const lines = [cols.join(';')];
+  for (const rec of records) {
+    if (!rec) continue;
+    const opts = (rec.options || []).join(' + ');
+    const chiensDetail = (rec.chiens || []).map((c) =>
+      `${c.nom || ''} (${c.race || ''}, ${c.age || ''} ans, ${c.type || ''}, ${c.identification || ''})`
+    ).join(' | ');
+    const ins = rec.installation || {};
+    const nbPetit = (rec.chiens || []).filter((c) => c.type === 'petit').length;
+    const nbGros = (rec.chiens || []).filter((c) => c.type === 'gros').length;
+    const cust = rec.customer || {};
+    lines.push([
+      rec.dateFr || '',
+      rec.policyNumber || '',
+      rec.department || '',
+      rec.fdc || '',
+      rec.saison || '',
+      cust.nom || '',
+      cust.prenom || '',
+      cust.email || '',
+      cust.tel || '',
+      cust.ddn || '',
+      cust.adressePostale || '',
+      cust.npermis || '',
+      opts,
+      nbPetit,
+      nbGros,
+      chiensDetail,
+      ins.type || '',
+      ins.surface || '',
+      ins.materiau || '',
+      ins.adresse || '',
+      ins.lat || '',
+      ins.lng || '',
+      ins.googleMaps || '',
+      rec.montantTotal || 0,
+      rec.stripeSessionId || '',
+    ].map(csvEscape).join(';'));
+  }
+
+  // BOM UTF-8 pour qu'Excel ouvre les accents correctement
+  const csv = '﻿' + lines.join('\r\n');
+  const filename = `souscriptions-adce-${new Date().toISOString().slice(0, 10)}.csv`;
+  logAccess('EXPORT_CSV', req, { email: session.email, count: records.filter(Boolean).length });
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  return res.status(200).send(csv);
+}
+
+async function actionListAttestations(req, res, session) {
+  const [souscriptions, attestations] = await Promise.all([
+    list({ prefix: SOUSCRIPTIONS_PREFIX, ...blobOpts() }),
+    list({ prefix: ATTESTATIONS_PREFIX, ...blobOpts() }),
+  ]);
+  const attestMap = new Map();
+  for (const b of attestations.blobs || []) {
+    const name = b.pathname.replace(ATTESTATIONS_PREFIX, '').replace(/\.pdf$/, '');
+    attestMap.set(name, { url: b.url, size: b.size });
+  }
+  const items = [];
+  for (const b of souscriptions.blobs || []) {
+    try {
+      const r = await fetch(b.url);
+      if (!r.ok) continue;
+      const rec = await r.json();
+      const key = b.pathname.replace(SOUSCRIPTIONS_PREFIX, '').replace(/\.json$/, '');
+      const att = attestMap.get(key);
+      items.push({
+        policyNumber: rec.policyNumber || '',
+        dateFr: rec.dateFr || '',
+        department: rec.department || '',
+        nom: (rec.customer || {}).nom || '',
+        prenom: (rec.customer || {}).prenom || '',
+        email: (rec.customer || {}).email || '',
+        montant: rec.montantTotal || 0,
+        options: (rec.options || []).join(' + '),
+        attestationUrl: att ? att.url : null,
+        attestationSize: att ? att.size : null,
+      });
+    } catch (_) {}
+  }
+  items.sort((a, b) => (b.dateFr || '').localeCompare(a.dateFr || ''));
+  logAccess('LIST_ATTESTATIONS', req, { email: session.email, count: items.length });
+  return res.status(200).json({ items, email: session.email });
+}
+
 async function actionDebug(req, res) {
   const all = Object.keys(process.env).sort();
   const tokenVar = process.env.BLOB_READ_WRITE_TOKEN || '';
@@ -368,6 +489,14 @@ module.exports = async (req, res) => {
     if (action === 'debug') {
       if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
       return await actionDebug(req, res);
+    }
+    if (action === 'export-souscriptions-csv') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      return await actionExportSouscriptionsCsv(req, res, session);
+    }
+    if (action === 'list-attestations') {
+      if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+      return await actionListAttestations(req, res, session);
     }
 
     return res.status(400).json({ error: 'Action inconnue' });

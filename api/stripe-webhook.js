@@ -9,7 +9,21 @@
  */
 const Stripe = require('stripe');
 const nodemailer = require('nodemailer');
+const { put } = require('@vercel/blob');
 const { generateAttestation, generatePolicyNumber } = require('./_attestation');
+
+// Alias OIDC pour @vercel/blob (cf. api/secure.js)
+if (!process.env.BLOB_STORE_ID && process.env.BLOB_READ_WRITE_TOKEN_STORE_ID) {
+  process.env.BLOB_STORE_ID = process.env.BLOB_READ_WRITE_TOKEN_STORE_ID;
+}
+function blobOpts() {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return {};
+  const opts = {};
+  const storeId = process.env.BLOB_STORE_ID || process.env.BLOB_READ_WRITE_TOKEN_STORE_ID || '';
+  if (storeId) opts.storeId = storeId;
+  if (process.env.VERCEL_OIDC_TOKEN) opts.oidcToken = process.env.VERCEL_OIDC_TOKEN;
+  return opts;
+}
 
 const TARIFS = {
   securite: 25,
@@ -291,6 +305,78 @@ async function logToGoogleSheets(session, metadata, payload, attestationBuffer) 
   }
 }
 
+/**
+ * Archivage Vercel Blob — solution PRINCIPALE de suivi des souscriptions.
+ * 1 souscription = 1 fichier JSON + 1 PDF d'attestation
+ * Téléchargeables (et exportables en CSV consolidé) depuis l'espace Siège.
+ *
+ * Aucune dépendance externe (pas de Google, pas d'Apps Script).
+ */
+async function archiveSouscriptionToBlob(session, metadata, payload, attestationBuffer) {
+  const opts = blobOpts();
+  // Si aucune credential Blob n'est dispo (ex. projet pas connecté à un Blob),
+  // on échoue silencieusement plutôt que de bloquer le webhook.
+  if (!process.env.BLOB_READ_WRITE_TOKEN && !opts.oidcToken) {
+    console.log('Archive Blob skip : aucun credential Blob configuré');
+    return;
+  }
+
+  const now = new Date();
+  const yyyymmdd = now.toISOString().slice(0, 10);
+  const policyNumber = (payload && payload.policyNumber) || ('TMP-' + Date.now());
+  const dept = (metadata.department || 'inconnu').toLowerCase();
+  const amount = session.amount_total / 100;
+
+  // Document JSON contenant toutes les infos de la souscription
+  const record = {
+    policyNumber,
+    date: now.toISOString(),
+    dateFr: now.toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+    department: dept,
+    fdc: FDC_CODE[dept] || '',
+    saison: metadata.saison || '',
+    customer: {
+      nom: metadata.nom || '',
+      prenom: metadata.prenom || '',
+      email: session.customer_email || '',
+      tel: metadata.tel || '',
+      ddn: metadata.ddn || '',
+      adressePostale: metadata.adresse_postale || '',
+      npermis: metadata.npermis || '',
+    },
+    options: (metadata.options || '').split(',').map((s) => s.trim()).filter(Boolean),
+    chiens: (() => { try { return JSON.parse(metadata.chiens_data || '[]'); } catch (_) { return []; } })(),
+    installation: metadata.ins_type ? {
+      type: metadata.ins_type,
+      surface: metadata.ins_surface || '',
+      materiau: metadata.ins_materiau || '',
+      adresse: metadata.ins_adresse || '',
+      lat: metadata.ins_lat || '',
+      lng: metadata.ins_lng || '',
+      googleMaps: (metadata.ins_lat && metadata.ins_lng)
+        ? `https://www.google.com/maps?q=${metadata.ins_lat},${metadata.ins_lng}` : '',
+    } : null,
+    montantTotal: amount,
+    stripeSessionId: session.id,
+  };
+
+  // 1. JSON de la souscription
+  await put(
+    `souscriptions/${yyyymmdd}-${dept}-${policyNumber}.json`,
+    JSON.stringify(record, null, 2),
+    { access: 'public', addRandomSuffix: false, contentType: 'application/json', ...opts }
+  );
+
+  // 2. PDF d'attestation
+  if (attestationBuffer) {
+    await put(
+      `attestations/${yyyymmdd}-${dept}-${policyNumber}.pdf`,
+      attestationBuffer,
+      { access: 'public', addRandomSuffix: false, contentType: 'application/pdf', ...opts }
+    );
+  }
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -334,11 +420,12 @@ module.exports = async (req, res) => {
       const tasks = await Promise.allSettled([
         sendEmails(session, metadata, payload, attestationBuffer),
         logToGoogleSheets(session, metadata, payload, attestationBuffer),
+        archiveSouscriptionToBlob(session, metadata, payload, attestationBuffer),
       ]);
+      const labels = ['✉ Emails', '📊 Google Sheets', '🗄  Archive Blob'];
       tasks.forEach((t, i) => {
-        const label = i === 0 ? '✉ Emails' : '📊 Google Sheets';
-        if (t.status === 'fulfilled') console.log(label + ' OK');
-        else console.error(label + ' KO', t.reason);
+        if (t.status === 'fulfilled') console.log(labels[i] + ' OK');
+        else console.error(labels[i] + ' KO', t.reason);
       });
       break;
     }
