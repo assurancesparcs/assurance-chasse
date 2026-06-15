@@ -71,7 +71,7 @@ body { font-family: 'Helvetica Neue', Arial, sans-serif; background: #f5f7f5; co
     </p>
   </div>
 
-  <div class="section">
+  <div class="section" id="souscriptions-section" style="display:none">
     <h2>Souscriptions reçues</h2>
     <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#5a6a4e;margin-bottom:12px;line-height:1.55">
       Chaque paiement confirmé sur le site génère automatiquement une entrée ci-dessous, avec son attestation PDF.
@@ -101,7 +101,10 @@ async function checkAuthAndLoad() {
     if (data.email) document.getElementById('user-email').textContent = data.email;
     if (!res.ok) { showError('upload-error', data.error || 'Erreur ' + res.status); return; }
     renderList(data.files || []);
-    loadSouscriptions();
+    if (data.isAdmin) {
+      document.getElementById('souscriptions-section').style.display = 'block';
+      loadSouscriptions();
+    }
   } catch(e) {
     showError('upload-error', 'Impossible de charger la liste : ' + (e.message || 'erreur réseau'));
   }

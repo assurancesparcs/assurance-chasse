@@ -218,7 +218,7 @@ async function actionList(req, res, session) {
     displayName: b.pathname.replace(new RegExp('^' + BLOB_PREFIX), '').replace(/^\d{13}-/, ''),
   })).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
   logAccess('LIST', req, { count: files.length, email: session.email });
-  return res.status(200).json({ files, email: session.email });
+  return res.status(200).json({ files, email: session.email, isAdmin: isAdminSession(session) });
 }
 
 async function actionUpload(req, res, session, urlObj) {
@@ -294,6 +294,15 @@ async function actionCleanup(req, res) {
 const SOUSCRIPTIONS_PREFIX = 'souscriptions/';
 const ATTESTATIONS_PREFIX = 'attestations/';
 
+/**
+ * Vérifie que la session courante est User1 (admin) — seul autorisé à voir les souscriptions.
+ * User2 n'a accès qu'aux fichiers déposés / téléchargements.
+ */
+function isAdminSession(session) {
+  const adminEmail = (process.env.SECURE_USER1_EMAIL || '').trim().toLowerCase();
+  return session && adminEmail && session.email && session.email.toLowerCase() === adminEmail;
+}
+
 function csvEscape(v) {
   if (v == null) return '';
   const s = String(v);
@@ -302,6 +311,10 @@ function csvEscape(v) {
 }
 
 async function actionExportSouscriptionsCsv(req, res, session) {
+  if (!isAdminSession(session)) {
+    logAccess('EXPORT_CSV_FORBIDDEN', req, { email: session.email });
+    return res.status(403).json({ error: 'Accès réservé à l\'administrateur du cabinet.' });
+  }
   const result = await list({ prefix: SOUSCRIPTIONS_PREFIX, ...blobOpts() });
   const blobs = (result.blobs || []).sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
@@ -374,6 +387,9 @@ async function actionExportSouscriptionsCsv(req, res, session) {
 }
 
 async function actionListAttestations(req, res, session) {
+  if (!isAdminSession(session)) {
+    return res.status(403).json({ error: 'Accès réservé à l\'administrateur du cabinet.' });
+  }
   const [souscriptions, attestations] = await Promise.all([
     list({ prefix: SOUSCRIPTIONS_PREFIX, ...blobOpts() }),
     list({ prefix: ATTESTATIONS_PREFIX, ...blobOpts() }),
