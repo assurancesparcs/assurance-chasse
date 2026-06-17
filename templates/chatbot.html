@@ -154,13 +154,18 @@ async function sendMsg() {
       body: JSON.stringify({ department: '{{slug}}', messages: history })
     });
     var data = await response.json();
+    removeTyping();
+    if (!response.ok || data.error) {
+      var diag = data.diagnostic ? ' [' + data.diagnostic + ']' : '';
+      addBotMsg("Désolé, je ne peux pas répondre pour le moment." + (data.error ? "\n\n" + data.error : '') + diag + "\n\nVous pouvez nous joindre au {{phone}} ou à {{emailGeneral}}.");
+      return;
+    }
     var reply = data.reply || "Je n'ai pas pu traiter votre question. Appelez-nous au {{phone}}.";
     history.push({ role: 'assistant', content: reply });
-    removeTyping();
     addBotMsg(reply);
   } catch(e) {
     removeTyping();
-    addBotMsg("Une erreur s'est produite. Contactez-nous au {{phone}} ou par email à {{emailGeneral}}.");
+    addBotMsg("Erreur réseau : " + (e.message || 'inconnue') + ".\n\nContactez-nous au {{phone}} ou par email à {{emailGeneral}}.");
   }
   document.getElementById('send-btn').disabled = false;
   document.getElementById('chat-input').focus();

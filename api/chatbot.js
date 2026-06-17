@@ -107,20 +107,37 @@ module.exports = async (req, res) => {
     .replace(/{{TARIF_ADMIN}}/g, '1');
 
   try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error('Chatbot : ANTHROPIC_API_KEY absente du projet Vercel');
+      return res.status(500).json({
+        error: 'Configuration manquante : ANTHROPIC_API_KEY absente côté serveur. L\'administrateur doit l\'ajouter dans les variables d\'environnement Vercel du projet.',
+        diagnostic: 'missing_api_key',
+      });
+    }
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 500, system: systemPrompt, messages }),
     });
     const data = await response.json();
-    if (data.error) {
-      console.error('Anthropic error:', data.error);
-      return res.status(500).json({ error: 'Service temporairement indisponible' });
+    if (!response.ok || data.error) {
+      const anthropicErr = (data && data.error) ? data.error : { type: 'http_' + response.status };
+      console.error('Anthropic API error:', anthropicErr);
+      const userMsg = anthropicErr.type === 'authentication_error'
+          ? 'Clé API Anthropic invalide ou expirée. À regénérer côté admin.'
+        : anthropicErr.type === 'rate_limit_error'
+          ? 'Trop de requêtes vers l\'IA. Réessayez dans une minute.'
+        : anthropicErr.type === 'overloaded_error'
+          ? 'L\'IA est surchargée. Réessayez dans quelques instants.'
+        : anthropicErr.type === 'not_found_error'
+          ? 'Modèle IA introuvable (vérifier le code-modèle dans api/chatbot.js).'
+        : 'Erreur côté IA : ' + (anthropicErr.message || anthropicErr.type || 'inconnue');
+      return res.status(500).json({ error: userMsg, diagnostic: anthropicErr.type || 'unknown' });
     }
     const reply = data.content && data.content[0] ? data.content[0].text : "Je n'ai pas pu traiter votre question.";
     return res.status(200).json({ reply });
   } catch (err) {
     console.error('Chatbot error:', err);
-    return res.status(500).json({ error: 'Service temporairement indisponible' });
+    return res.status(500).json({ error: 'Erreur réseau côté serveur : ' + (err.message || 'inconnue'), diagnostic: 'network' });
   }
 };
