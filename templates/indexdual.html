@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assurance chasse {{name}} ({{code}}) — Sécurité chasseur & chiens | ADC&E partenaire {{fdcShort}}</title>
+<meta name="description" content="Cabinet ADC&E — Assurance chasse complémentaire en {{name}} ({{code}}), partenaire de la {{fdcShort}}. Sécurité corporelle ({{tarifSecurite}}€/an), assurance chiens petits & gros gibiers, souscription 100% en ligne.">
+<meta name="keywords" content="assurance chasse {{name}}, assurance chasse {{code}}, assurance chasseur {{name}}, assurance chien chasse {{name}}, RC chasse {{code}}, sécurité chasse {{name}}, ACCA {{code}}, société de chasse {{name}}, groupement de chasse {{name}}, installation cynégétique, {{fdcShort}}">
+<link rel="canonical" href="https://{{domain}}/">
+<style>
+{{stylesCommon}}
+
+.hero { background: linear-gradient(135deg, #0d1b4b 0%, #0f2255 70%, #162e1a 100%); padding: 50px 32px; min-height: calc(100vh - 220px); display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.hero-title { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: clamp(24px, 4vw, 36px); color: #e8f0f8; font-weight: normal; line-height: 1.3; max-width: 720px; margin: 0 auto 14px; }
+.hero-sub { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; color: #8aaac8; line-height: 1.65; max-width: 560px; margin: 0 auto 38px; }
+.dual-entry-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 920px; margin: 0 auto; }
+@media(max-width:720px){ .dual-entry-grid { grid-template-columns: 1fr; } }
+.entry-card { display: block; text-decoration: none; padding: 30px 28px; border-radius: 16px; text-align: left; transition: transform 0.25s ease, box-shadow 0.25s ease; position: relative; overflow: hidden; cursor: pointer; }
+.entry-card:hover { transform: translateY(-4px); box-shadow: 0 16px 44px rgba(0,0,0,0.4); }
+.entry-card.individuel { background: linear-gradient(160deg, #1a3a6a 0%, #0d2040 100%); border: 1.5px solid rgba(106,191,123,0.4); }
+.entry-card.societe { background: linear-gradient(160deg, #5a3010 0%, #2a1808 100%); border: 1.5px solid rgba(212,151,10,0.4); }
+.entry-icon { width: 54px; height: 54px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+.entry-icon.individuel { background: rgba(106,191,123,0.2); }
+.entry-icon.societe { background: rgba(212,151,10,0.2); }
+.entry-tag { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 14px; }
+.entry-card.individuel .entry-tag { background: rgba(106,191,123,0.2); color: #6abf7b; border: 1px solid rgba(106,191,123,0.3); }
+.entry-card.societe .entry-tag { background: rgba(212,151,10,0.2); color: #d4970a; border: 1px solid rgba(212,151,10,0.3); }
+.entry-card h2 { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 22px; font-weight: 700; line-height: 1.25; margin-bottom: 10px; }
+.entry-card.individuel h2 { color: #e0f0ff; }
+.entry-card.societe h2 { color: #f0e8d8; }
+.entry-card p.desc { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; line-height: 1.65; margin-bottom: 18px; }
+.entry-card.individuel p.desc { color: #90b8d8; }
+.entry-card.societe p.desc { color: #c8a878; }
+.entry-list { list-style: none; padding: 0; margin: 0 0 22px; }
+.entry-list li { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12.5px; padding: 6px 0; padding-left: 22px; position: relative; }
+.entry-card.individuel .entry-list li { color: #b8d0e8; }
+.entry-card.societe .entry-list li { color: #d8b888; }
+.entry-list li::before { content: '✓'; position: absolute; left: 0; font-weight: 700; }
+.entry-card.individuel .entry-list li::before { color: #6abf7b; }
+.entry-card.societe .entry-list li::before { color: #d4970a; }
+.entry-cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border-radius: 8px; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 13px; font-weight: 700; transition: gap 0.2s; }
+.entry-card.individuel .entry-cta { background: #2d6a3f; color: #e0f5e8; }
+.entry-card.societe .entry-cta { background: #8b5e0a; color: #faf0d8; }
+.entry-card:hover .entry-cta { gap: 12px; }
+
+/* Question de pré-éligibilité (Gironde) */
+.permis-gate { padding: 18px 20px; background: rgba(106,191,123,0.12); border: 2px solid rgba(106,191,123,0.6); border-radius: 12px; margin-bottom: 6px; box-shadow: 0 0 0 4px rgba(106,191,123,0.08), 0 4px 16px rgba(0,0,0,0.2); animation: permisPulse 2.5s ease-in-out infinite; }
+@keyframes permisPulse { 0%, 100% { box-shadow: 0 0 0 4px rgba(106,191,123,0.08), 0 4px 16px rgba(0,0,0,0.2); } 50% { box-shadow: 0 0 0 8px rgba(106,191,123,0.14), 0 4px 20px rgba(0,0,0,0.25); } }
+.permis-gate.societe-gate { background: rgba(212,151,10,0.12); border-color: rgba(212,151,10,0.6); box-shadow: 0 0 0 4px rgba(212,151,10,0.08), 0 4px 16px rgba(0,0,0,0.2); animation: permisPulseAmber 2.5s ease-in-out infinite; }
+@keyframes permisPulseAmber { 0%, 100% { box-shadow: 0 0 0 4px rgba(212,151,10,0.08), 0 4px 16px rgba(0,0,0,0.2); } 50% { box-shadow: 0 0 0 8px rgba(212,151,10,0.14), 0 4px 20px rgba(0,0,0,0.25); } }
+.permis-btn { font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 12px; font-weight: 700; padding: 7px 18px; border-radius: 6px; cursor: pointer; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); color: #c8dbed; }
+.permis-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,0.16); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+.permis-btn.active { background: #2d6a3f; color: #e0f5e8; border-color: #2d6a3f; }
+.permis-btn.active.amber { background: #8b5e0a; color: #faf0d8; border-color: #8b5e0a; }
+.permis-btn-non.active { background: #b03050; color: #fff; border-color: #b03050; }
+</style>
+</head>
+<body>
+{{nav}}
+
+<!-- HERO double entrée — titre + 2 encadrés -->
+<div class="hero">
+  <h1 class="hero-title">Souscription en ligne — {{name}} ({{code}})</h1>
+  <p class="hero-sub">Quelques minutes suffisent. Choisissez vos options, renseignez vos informations et recevez votre attestation par email après paiement.</p>
+  <div class="dual-entry-grid">
+    <div class="entry-card individuel" id="card-individuel">
+      <div class="entry-icon individuel">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6abf7b" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 22v-2a8 8 0 0 1 16 0v2"/></svg>
+      </div>
+      <span class="entry-tag">Profil 1</span>
+      <h2>Je suis chasseur individuel</h2>
+      <p class="desc">Je veux compléter ma RC chasse de la {{fdcShort}} avec des garanties personnelles : protection de mes blessures et de mes chiens.</p>
+      <ul class="entry-list">
+        <li>Sécurité corporelle du chasseur</li>
+        <li>Frais vétérinaires chiens de chasse</li>
+        <li>Installation cynégétique (cabane, palombière, tonne, mirador, gabion)</li>
+      </ul>
+      <div class="permis-gate" id="permis-gate" style="margin-top:18px;margin-bottom:0">
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#6abf7b;line-height:1.5;margin-bottom:10px">
+          J'ai validé mon permis de chasseur auprès de la <strong style="color:#8edc9d">{{fdcShort}}</strong> ?
+        </p>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button type="button" onclick="permisChoice('non')" class="permis-btn permis-btn-non" id="btn-permis-non">Non</button>
+          <button type="button" onclick="permisChoice('oui')" class="permis-btn permis-btn-oui" id="btn-permis-oui">Oui</button>
+        </div>
+        <p id="permis-msg-non" style="display:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#fff;line-height:1.55;margin-top:10px;padding:12px 14px;background:#b03050;border-radius:6px;border-left:3px solid #ff5070;font-weight:700">
+          Nous ne pouvons pas vous faire bénéficier des contrats de ce site.
+        </p>
+      </div>
+    </div>
+
+    <div class="entry-card societe" id="card-societe">
+      <div class="entry-icon societe">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d4970a" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <span class="entry-tag">Profil 2</span>
+      <h2>Société de chasse, ACCA ou groupement</h2>
+      <p class="desc">Je représente une ACCA, un groupement de chasse ou une société de chasse privée. Je cherche des garanties collectives et des documents contractuels.</p>
+      <ul class="entry-list">
+        <li>Installation cynégétique (cabane, palombière, tonne, mirador, gabion)</li>
+        <li>Documents contractuels (CG, IPID, bulletins)</li>
+        <li>Étude personnalisée &amp; devis sur mesure</li>
+      </ul>
+      <div class="permis-gate societe-gate" id="adherent-gate" style="margin-top:18px;margin-bottom:0">
+        <p style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#d4970a;line-height:1.5;margin-bottom:10px">
+          Je suis adhérent au contrat organisation de chasse proposé par la <strong style="color:#f0c860">{{fdcShort}}</strong> ?
+        </p>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button type="button" onclick="adherentChoice('non')" class="permis-btn permis-btn-non" id="btn-adherent-non">Non</button>
+          <button type="button" onclick="adherentChoice('oui')" class="permis-btn permis-btn-oui amber" id="btn-adherent-oui">Oui</button>
+        </div>
+        <p id="adherent-msg-non" style="display:none;font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;color:#fff;line-height:1.55;margin-top:10px;padding:12px 14px;background:#b03050;border-radius:6px;border-left:3px solid #ff5070;font-weight:700">
+          Nous ne pouvons pas vous faire bénéficier des contrats de ce site.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function permisChoice(answer) {
+  if (answer === 'oui') {
+    window.location.href = '/presentation.html?profil=chasseur';
+    return;
+  }
+  // answer === 'non' : afficher message bloquant
+  // L'utilisateur peut toujours cliquer sur Oui pour continuer s'il change d'avis.
+  var msgNon = document.getElementById('permis-msg-non');
+  var btnNon = document.getElementById('btn-permis-non');
+  var btnOui = document.getElementById('btn-permis-oui');
+  btnNon.classList.add('active');
+  btnOui.classList.remove('active');
+  msgNon.style.display = 'block';
+}
+
+function adherentChoice(answer) {
+  if (answer === 'oui') {
+    window.location.href = '/installations.html';
+    return;
+  }
+  // answer === 'non' : afficher message bloquant
+  var msgNon = document.getElementById('adherent-msg-non');
+  var btnNon = document.getElementById('btn-adherent-non');
+  var btnOui = document.getElementById('btn-adherent-oui');
+  btnNon.classList.add('active');
+  btnOui.classList.remove('active');
+  msgNon.style.display = 'block';
+}
+</script>
+{{footer}}
+</body>
+</html>
